@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>WeAce — TOPIK</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇰🇷</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;--bg4:#1e1e24;
+  --text:#f0f0f2;--muted:#8a8a9a;--hint:#44444f;
+  --b1:rgba(255,255,255,.05);--b2:rgba(255,255,255,.09);--b3:rgba(255,255,255,.16);
+  --green:#22c55e;--gd:rgba(34,197,94,.1);--gm:rgba(34,197,94,.22);
+  --blue:#3b82f6;--bd:rgba(59,130,246,.1);--bm:rgba(59,130,246,.22);
+  --amber:#f59e0b;--ad:rgba(245,158,11,.1);--am:rgba(245,158,11,.22);
+  --red:#ef4444;--rd:rgba(239,68,68,.1);--rm:rgba(239,68,68,.22);
+  --purple:#a855f7;--pd:rgba(168,85,247,.1);--pm:rgba(168,85,247,.22);
+  --teal:#14b8a6;--td:rgba(20,184,166,.1);--tm:rgba(20,184,166,.22);
+  --sw:230px;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow-x:hidden}
+.shell{display:flex;min-height:100vh}
+.sb{width:var(--sw);background:var(--bg2);border-right:1px solid var(--b1);position:fixed;top:0;left:0;bottom:0;z-index:50;display:flex;flex-direction:column;overflow-y:auto}
+.sb-logo{padding:1rem 1.125rem;border-bottom:1px solid var(--b1)}
+.logo{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.5px;cursor:pointer}
+.logo em{color:var(--green);font-style:normal}
+.logo-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--hint);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.sb-user{padding:.75rem 1.125rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:9px}
+.ava{width:32px;height:32px;border-radius:50%;background:var(--gd);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--green);flex-shrink:0;font-family:'Sora',sans-serif}
+.chip{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:8px;margin-top:2px;display:inline-block}
+.chip.free{background:var(--b1);color:var(--muted);border:1px solid var(--b2)}
+.chip.plus{background:var(--bd);color:var(--blue);border:1px solid var(--bm)}
+.chip.pro{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.sb-xp{padding:.625rem 1.125rem;border-bottom:1px solid var(--b1)}
+.xp-row{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;margin-bottom:4px;color:var(--hint)}
+.xp-row span:last-child{color:var(--green)}
+.xp-t{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.xp-f{height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:2px;transition:width .5s}
+.sb-nav{flex:1;padding:.25rem 0}
+.nl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);padding:.5rem 1.125rem .2rem}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 1.125rem;font-size:12.5px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .1s;user-select:none}
+.ni:hover{color:var(--text);background:var(--bg3)}
+.ni.on{color:var(--green);background:var(--gd);border-left-color:var(--green);font-weight:600}
+.ni-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.nb{margin-left:auto;font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:8px;font-weight:700}
+.nb.g{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.nb.r{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.nb.a{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.nb.b{background:var(--bd);color:var(--blue);border:1px solid var(--bm);font-size:7px}
+.nb.p{background:var(--ad);color:var(--amber);border:1px solid var(--am);font-size:7px}
+.main{margin-left:var(--sw);flex:1;min-width:0}
+.topbar{height:52px;background:rgba(6,6,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:40}
+.tb-l{display:flex;align-items:center;gap:10px}
+.tb-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.3px}
+.streak{display:flex;align-items:center;gap:5px;background:var(--ad);border:1px solid var(--am);border-radius:20px;padding:3px 10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--amber)}
+.tb-r{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .12s}
+.btn:hover{opacity:.85}
+.btn.pri{background:var(--green);color:#000}
+.btn.sec{background:transparent;color:var(--text);border:1px solid var(--b2)}
+.btn.sec:hover{background:var(--bg3);border-color:var(--b3)}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.amber{background:var(--amber);color:#000}
+.btn.sm{padding:5px 12px;font-size:11px}
+.btn.lg{padding:13px 30px;font-size:14px;border-radius:10px}
+.page{display:none;padding:1.75rem 2.25rem;animation:fadeUp .18s ease}
+.page.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pg-h{font-family:'Sora',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px}
+.pg-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.25rem}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem}
+.card-title{font-size:13px;font-weight:700}
+.ey{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);display:block;margin-bottom:.75rem}
+.stat{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.125rem}
+.slbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--hint);margin-bottom:6px;display:block}
+.sval{font-family:'Sora',sans-serif;font-size:28px;font-weight:900;line-height:1;letter-spacing:-1px}
+.cg{color:var(--green)}.cb{color:#60a5fa}.ca{color:var(--amber)}.cm{color:var(--muted)}.ct{color:var(--teal)}.cr{color:var(--red)}
+.pbar{margin-bottom:12px}
+.pbar-top{display:flex;justify-content:space-between;margin-bottom:5px}
+.pbar-nm{font-size:11px;font-weight:500;display:flex;align-items:center;gap:6px}
+.pdot{width:6px;height:6px;border-radius:50%}
+.pdot.m{background:#60a5fa}.pdot.r{background:var(--green)}
+.pbar-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.pbar-track{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width .7s}
+.pbar-fill.m{background:#60a5fa}.pbar-fill.r{background:var(--green)}
+/* TOPIC GRID */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.tc{background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;padding:1rem 1.125rem;cursor:pointer;transition:all .15s;position:relative;display:flex;flex-direction:column}
+.tc:hover{border-color:var(--b3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.tc.math:hover{border-color:rgba(96,165,250,.5);background:rgba(59,130,246,.04)}
+.tc.rw:hover{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.04)}
+.tc.expanded{border-color:rgba(59,130,246,.4)}
+.tc.expanded.rw{border-color:rgba(34,197,94,.4)}
+.tc-icon{font-size:22px;margin-bottom:7px}
+.tc-name{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.tc-diff{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.tc-diff.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tc-diff.m{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.tc-diff.e{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tc-footer{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tc-cnt{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+.tc-weak{position:absolute;top:8px;right:8px;font-size:10px}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.start-btn{width:100%;padding:14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .12s}
+.start-btn:hover{opacity:.87}
+.sb-math{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff}
+.sb-rw{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff}
+.sb-daily{background:linear-gradient(135deg,#d97706,var(--amber));color:#000}
+.sb-mix{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+.sec-card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.375rem;cursor:pointer;transition:all .15s}
+.sec-card:hover{transform:translateY(-3px);border-color:var(--b3)}
+.sc-icon{font-size:28px;margin-bottom:10px}
+.sc-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.sc-sub{font-size:11.5px;color:var(--muted);line-height:1.65}
+.daily-banner{background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(59,130,246,.04));border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:1.375rem;display:flex;align-items:center;gap:16px;margin-bottom:1.375rem;cursor:pointer;transition:border-color .15s}
+.daily-banner:hover{border-color:rgba(34,197,94,.45)}
+/* VOCAB */
+.vcat{font-family:'DM Mono',monospace;font-size:9px;padding:5px 12px;border-radius:20px;border:1px solid var(--b2);cursor:pointer;transition:all .12s;color:var(--muted);display:inline-block}
+.vcat:hover{border-color:var(--b3);color:var(--text)}
+.vcat.on{background:var(--bd);color:#60a5fa;border-color:var(--bm)}
+.vcat-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}
+.vocab-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:16px;padding:2rem;margin-bottom:1rem;transition:border-color .2s}
+.vocab-word{font-family:'Sora',sans-serif;font-size:38px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.vocab-phone{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:8px}
+.vocab-pos{font-family:'DM Mono',monospace;font-size:8px;background:var(--bd);color:#60a5fa;border:1px solid var(--bm);border-radius:3px;padding:2px 7px;display:inline-block;margin-bottom:12px}
+.vocab-def{font-size:15px;line-height:1.8;margin-bottom:10px}
+.vocab-ex{font-size:13px;color:var(--muted);font-style:italic;border-left:3px solid var(--blue);padding-left:12px;line-height:1.75}
+.vocab-list{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;overflow:hidden;margin-top:1.5rem}
+.vl-head{padding:.875rem 1.25rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.vl-item{padding:.875rem 1.25rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .1s}
+.vl-item:last-child{border-bottom:none}
+.vl-item:hover{background:var(--bg3)}
+.vl-item.on{background:var(--gd)}
+.vl-word{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;min-width:150px}
+.vl-def{font-size:12.5px;color:var(--muted);flex:1}
+.vl-day{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+/* REVIEW */
+.rcard{background:var(--bg2);border:1px solid var(--b2);border-radius:11px;margin-bottom:8px;overflow:hidden;border-left:3px solid var(--rm)}
+.rcard-top{padding:.875rem 1.125rem;display:flex;gap:11px}
+.rtag{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px}
+.rtag.m{background:var(--bd);color:#60a5fa;border:1px solid var(--bm)}
+.rtag.r{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.rtag.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.rtag.md{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.rcard-q{font-size:12px;line-height:1.75;flex:1}
+.rcard-acts{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.ra{font-family:'DM Mono',monospace;font-size:8px;padding:5px 10px;border-radius:6px;border:1px solid var(--b2);background:var(--bg3);color:var(--muted);cursor:pointer;white-space:nowrap}
+.ra:hover{border-color:var(--b3);color:var(--text)}
+.rcard-bot{padding:.75rem 1.125rem;border-top:1px solid var(--b1)}
+.rans{display:flex;gap:7px;margin-bottom:8px}
+.ran{font-family:'DM Mono',monospace;font-size:10px;padding:3px 11px;border-radius:6px;border:1px solid var(--b2)}
+.ran.w{background:var(--rd);border-color:var(--rm);color:var(--red)}
+.ran.c{background:var(--gd);border-color:var(--gm);color:var(--green)}
+.rexpl{background:var(--bg3);border-left:3px solid var(--green);padding:9px 13px;border-radius:0 7px 7px 0;font-size:11px;color:var(--muted);line-height:1.85}
+/* GATE / TIERS */
+.gate{background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(168,85,247,.04));border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:1.375rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:16px}
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px}
+.tier-card{background:var(--bg2);border:1px solid var(--b2);border-radius:16px;padding:1.75rem;position:relative;overflow:hidden;transition:transform .15s}
+.tier-card:hover{transform:translateY(-4px)}
+.tier-card.plus{border-color:rgba(59,130,246,.4)}
+.tier-card.pro{border-color:rgba(245,158,11,.4);background:linear-gradient(160deg,rgba(245,158,11,.04),var(--bg2))}
+.tier-badge{position:absolute;top:1.25rem;right:1.25rem;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;border-radius:10px;padding:3px 9px}
+.tier-badge.plus{background:var(--blue);color:#fff}
+.tier-badge.pro{background:var(--amber);color:#000}
+.tier-plan{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.875rem}
+.tier-price{font-family:'Sora',sans-serif;font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:.25rem}
+.tier-per{font-size:12px;color:var(--muted);margin-bottom:1.5rem}
+.tier-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem}
+.tf{display:flex;align-items:flex-start;gap:9px;font-size:12.5px}
+.tf-ic{width:18px;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.tf-ic.y{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tf-ic.n{background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
+/* PRACTICE SCREEN */
+.ps{display:none;position:fixed;inset:0;z-index:100;background:var(--bg);flex-direction:column}
+.ps.on{display:flex;animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ps-bar{height:54px;border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 1.5rem;gap:12px;flex-shrink:0;background:var(--bg2)}
+.ps-lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:4px}
+.ps-lbl.math{background:var(--bd);color:#60a5fa;border:1px solid var(--bm)}
+.ps-lbl.rw{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.ps-lbl.daily{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.ps-lbl.mix{background:var(--pd);color:var(--purple);border:1px solid var(--pm)}
+.ps-dots{display:flex;gap:5px;flex-wrap:wrap;max-width:320px}
+.psd{width:8px;height:8px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);transition:all .2s}
+.psd.cur{background:var(--blue);border-color:var(--blue);transform:scale(1.3)}
+.psd.ok{background:var(--green);border-color:var(--green)}
+.psd.bad{background:var(--red);border-color:var(--red)}
+.ps-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--hint);white-space:nowrap}
+.t-box{display:flex;align-items:center;gap:8px;margin-left:auto}
+.t-ring svg{transform:rotate(-90deg)}
+.t-bg{fill:none;stroke:var(--bg4);stroke-width:3}
+.t-fg{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s}
+.t-num{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;min-width:38px}
+.t-num.warn{color:var(--red)}
+.ps-exit{background:var(--bg3);border:1px solid var(--b2);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--muted);cursor:pointer}
+.ps-exit:hover{color:var(--text)}
+.ps-body{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 400px;min-height:0}
+.ps-left{overflow-y:auto;display:flex;flex-direction:column}
+.ps-right{border-left:1px solid var(--b1);background:var(--bg2);display:flex;flex-direction:column}
+.ptabs{display:flex;border-bottom:1px solid var(--b1);flex-shrink:0}
+.ptab{flex:1;padding:11px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .12s}
+.ptab:hover{color:var(--text)}
+.ptab.on{color:var(--green);border-bottom-color:var(--green)}
+.panel-body{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.lesson-wrap{padding:2rem 2.25rem}
+.lesson-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;overflow:hidden}
+.lesson-head{padding:1.25rem 1.75rem;border-bottom:1px solid var(--b1)}
+.lesson-head.math{background:rgba(59,130,246,.05)}
+.lesson-head.rw{background:rgba(34,197,94,.05)}
+.l-ey{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.l-ey.math{color:#60a5fa}.l-ey.rw{color:var(--green)}
+.l-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800}
+.lesson-body{padding:1.25rem 1.75rem}
+.lesson-body p{font-size:12.5px;line-height:1.9;margin-bottom:.75rem}
+.lesson-body h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;margin:.875rem 0 5px}
+.lesson-body h4.m{color:#60a5fa}.lesson-body h4.r{color:var(--green)}
+.formula{font-family:'DM Mono',monospace;font-size:12px;background:var(--bg3);border:1px solid var(--b2);border-radius:6px;padding:7px 14px;display:inline-block;margin:3px 0;color:var(--amber)}
+.ex-block{background:var(--bg3);border-left:3px solid var(--b3);padding:9px 13px;border-radius:0 7px 7px 0;font-size:12px;color:var(--muted);margin:6px 0;line-height:1.8}
+.ex-block.m{border-left-color:#60a5fa}.ex-block.r{border-left-color:var(--green)}
+.mn-insight{background:var(--td);border:1px solid var(--tm);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--teal);margin-top:10px;line-height:1.75}
+.lesson-go{width:100%;padding:14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:0 0 13px 13px;transition:opacity .12s}
+.lesson-go.math{background:var(--blue);color:#fff}
+.lesson-go.rw{background:var(--green);color:#000}
+.lesson-go:hover{opacity:.87}
+.q-wrap{padding:2rem 2.25rem;flex:1;display:flex;flex-direction:column}
+.q-passage{background:var(--bg2);border:1px solid var(--b2);border-left:4px solid var(--green);border-radius:11px;padding:1.125rem 1.375rem;font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:1.75rem}
+.q-num{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.q-text{font-size:17px;line-height:1.8;font-weight:600;margin-bottom:1.75rem;white-space:pre-line}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.opt{display:flex;align-items:flex-start;gap:14px;padding:1rem 1.375rem;border:1.5px solid var(--b2);border-radius:12px;cursor:pointer;background:var(--bg2);font-size:14px;text-align:left;transition:all .12s;line-height:1.6;width:100%;color:var(--text)}
+.opt:hover:not(:disabled){border-color:var(--b3);background:var(--bg3)}
+.opt.correct{border-color:var(--green)!important;background:rgba(34,197,94,.08)!important}
+.opt.wrong{border-color:var(--red)!important;background:rgba(239,68,68,.08)!important}
+.opt:disabled{cursor:default}
+.ol{width:26px;min-width:26px;height:26px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--b2);font-family:'DM Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.correct .ol{background:var(--green)!important;color:#000!important;border-color:var(--green)!important}
+.opt.wrong .ol{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}
+.q-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:1rem}
+.q-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+.next-btn{background:var(--green);color:#000;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;padding:11px 28px;border-radius:9px;border:none;cursor:pointer;transition:opacity .12s}
+.next-btn:hover{opacity:.87}
+.next-btn:disabled{opacity:.3;cursor:default}
+.fb-wrap{padding:1.25rem;overflow-y:auto;flex:1}
+.fb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;text-align:center;color:var(--hint)}
+.fb-verdict{font-family:'Sora',sans-serif;font-size:20px;font-weight:900;margin-bottom:9px}
+.fb-verdict.ok{color:var(--green)}.fb-verdict.bad{color:var(--red)}
+.fb-explain{font-size:12.5px;color:var(--muted);line-height:1.9;margin-bottom:1rem}
+.fb-explain strong{color:var(--text)}
+.fb-mn{background:var(--td);border:1px solid var(--tm);border-radius:8px;padding:9px 12px;font-size:11.5px;color:var(--teal);margin-bottom:1rem;line-height:1.75}
+.fb-mn::before{content:"🇲🇳 "}
+.fb-btn{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;padding:9px 13px;border-radius:9px;border:1px solid var(--b2);background:var(--bg3);color:var(--text);cursor:pointer;transition:all .12s;text-align:left;display:flex;align-items:center;gap:8px;width:100%;margin-bottom:7px}
+.fb-btn:hover{border-color:var(--b3);background:var(--bg4)}
+.ai-box{background:var(--bg3);border:1px solid var(--b2);border-radius:11px;padding:.875rem;margin-top:1rem}
+.ai-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:9px}
+.ai-btns{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
+.ai-btn{font-family:'DM Mono',monospace;font-size:9px;padding:6px 11px;border-radius:7px;border:1px solid var(--pm);background:var(--pd);color:var(--purple);cursor:pointer;text-align:left}
+.ai-btn:hover{background:rgba(168,85,247,.18)}
+.ai-resp{background:rgba(168,85,247,.07);border:1px solid var(--pm);border-radius:8px;padding:.875rem;margin-top:7px;font-size:11.5px;color:var(--text);line-height:1.9;display:none}
+.ai-resp.show{display:block}
+.ai-load{display:flex;align-items:center;gap:6px;color:var(--purple);font-family:'DM Mono',monospace;font-size:10px}
+.aidot{width:5px;height:5px;border-radius:50%;background:var(--purple);animation:blink 1s ease-in-out infinite}
+.aidot:nth-child(2){animation-delay:.2s}.aidot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.sum-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.sum-card{background:var(--bg2);border:1px solid var(--b2);border-radius:16px;padding:2.25rem;text-align:center;width:100%;max-width:480px}
+.sum-pct{font-family:'Sora',sans-serif;font-size:72px;font-weight:900;line-height:1;margin-bottom:5px}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:1.375rem}
+.sum-cell{background:var(--bg3);border-radius:9px;padding:.875rem}
+.sum-cell-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:900}
+.sum-cell-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--hint);margin-top:2px}
+.sum-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.sbtn{padding:11px 22px;border-radius:9px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;border:none;transition:opacity .12s}
+.sbtn:hover{opacity:.87}
+.sbtn.p{background:var(--green);color:#000}
+.sbtn.s{background:var(--bg3);color:var(--text);border:1px solid var(--b2)}
+.sbtn.b{background:var(--blue);color:#fff}
+.tutor-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:1.5rem;margin-bottom:12px}
+.tutor-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;display:inline-block;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-box{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:1.25rem;min-height:180px;max-height:300px;overflow-y:auto;margin-bottom:.875rem;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:76%;padding:.75rem 1rem;border-radius:12px;font-size:13px;line-height:1.7}
+.chat-msg.tutor{background:var(--bg4);border:1px solid var(--b2);border-radius:12px 12px 12px 2px;align-self:flex-start}
+.chat-msg.user{background:var(--green);color:#000;border-radius:12px 12px 2px 12px;align-self:flex-end}
+.chat-input{flex:1;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none}
+.chat-input:focus{border-color:var(--green)}
+.plan-card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.25rem;margin-bottom:10px}
+.plan-opts{display:flex;gap:7px;flex-wrap:wrap}
+.plan-opt{padding:7px 14px;border-radius:7px;border:1.5px solid var(--b2);background:var(--bg3);font-size:12.5px;cursor:pointer;transition:all .12s;color:var(--muted)}
+.plan-opt:hover{border-color:var(--b3);color:var(--text)}
+.plan-opt.sel{border-color:var(--green);background:var(--gd);color:var(--green)}
+.plan-opt.sm{padding:5px 10px;font-size:11.5px}
+.plan-input{width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:7px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text);outline:none}
+.plan-input:focus{border-color:var(--green)}
+.task-row{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid var(--b1)}
+.task-row:last-child{border-bottom:none}
+.task-chk{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:10px;transition:all .12s}
+.task-chk.done{background:var(--green);border-color:var(--green);color:#000}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b1)}
+.setting-row:last-child{border-bottom:none}
+.empty{text-align:center;padding:2.5rem 1rem}
+.empty-icon{font-size:36px;margin-bottom:9px}
+.empty-h{font-size:13px;font-weight:700;margin-bottom:4px}
+.empty-s{font-size:11.5px;color:var(--muted);max-width:230px;margin:0 auto 1.125rem;line-height:1.65}
+
+/* TOPIC DETAIL */
+.tq-row{display:flex;align-items:flex-start;gap:16px;padding:1.25rem 1.5rem;background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;margin-bottom:10px;transition:all .15s;cursor:pointer}
+.tq-row:hover{border-color:var(--b3);transform:translateX(4px)}
+.tq-row.math:hover{border-color:rgba(96,165,250,.5)}
+.tq-row.rw:hover{border-color:rgba(34,197,94,.5)}
+.tq-num{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--hint);min-width:32px;padding-top:2px;flex-shrink:0}
+.tq-body{flex:1;min-width:0}
+.tq-text{font-size:14px;line-height:1.7;margin-bottom:8px;font-weight:500}
+.tq-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tq-diff{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px}
+.tq-diff.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tq-diff.m{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.tq-diff.e{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tq-done{font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tq-wrong{font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tq-btn{flex-shrink:0;padding-top:2px}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+
+/* ═══════════════════════════════
+   MOBILE RESPONSIVE
+   ═══════════════════════════════ */
+@media(max-width:768px){
+  /* Hide sidebar, show mobile nav */
+  .sb{display:none!important}
+  .main{margin-left:0!important}
+  
+  /* Mobile bottom nav */
+  .mob-nav{display:flex!important}
+  
+  /* Topbar */
+  .topbar{padding:0 1rem}
+  .tb-l .btn{display:none}
+  .streak{font-size:10px}
+  
+  /* Pages */
+  .page{padding:.875rem}
+  .pg-h{font-size:18px}
+  
+  /* Grids → single column on mobile */
+  .g2,.g3,.g4{grid-template-columns:1fr!important}
+  
+  /* Cards */
+  .card{padding:1rem}
+  
+  /* Practice screen */
+  .ps-wrap{grid-template-columns:1fr!important}
+  .ps-right{display:none}
+  
+  /* Exam overlay */
+  #exam-overlay .shell-body{flex-direction:column}
+  #exam-nav-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  
+  /* Score hero */
+  #score-hero{font-size:42px!important}
+  
+  /* Section cards */
+  .g3{grid-template-columns:1fr 1fr!important}
+  
+  /* Stats grid */
+  .g4{grid-template-columns:1fr 1fr!important}
+  
+  /* Topic grid */
+  #math-tgrid,#rw-tgrid{grid-template-columns:1fr 1fr!important}
+}
+
+@media(max-width:480px){
+  .g3,.g4{grid-template-columns:1fr!important}
+  #math-tgrid,#rw-tgrid{grid-template-columns:1fr!important}
+  .pg-h{font-size:16px}
+  .card{padding:.75rem}
+}
+
+/* Mobile bottom nav (hidden on desktop) */
+.mob-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:var(--bg2);border-top:1px solid var(--b2);
+  padding:.5rem 0 calc(.5rem + env(safe-area-inset-bottom));
+  grid-template-columns:repeat(5,1fr);
+}
+.mob-nav-item{
+  display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:.5rem .25rem;cursor:pointer;
+  font-family:var(--fm);font-size:8px;color:var(--hint);
+  transition:color .12s;
+}
+.mob-nav-item.on{color:var(--green)}
+.mob-nav-item .mn-ic{font-size:20px}
+
+/* ── TOPIK overrides ─────────────────────────────── */
+:root{--topik:#ef4444;--topik-d:rgba(239,68,68,.1);--topik-m:rgba(239,68,68,.22);}
+
+.lv-badge{display:inline-flex;align-items:center;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.5px;padding:3px 10px;border-radius:6px;text-transform:uppercase;cursor:pointer;transition:opacity .12s;}
+.lv-badge:hover{opacity:.8;}
+.lv1{background:var(--gd);color:var(--green);border:1px solid var(--gm);}
+.lv2{background:var(--bd);color:var(--blue);border:1px solid var(--bm);}
+.lv3{background:var(--ad);color:var(--amber);border:1px solid var(--am);}
+.lv4{background:var(--rd);color:var(--red);border:1px solid var(--rm);}
+.lv5{background:var(--pd);color:var(--purple);border:1px solid var(--pm);}
+.lv6{background:linear-gradient(135deg,var(--pd),var(--bd));color:#f0f0f2;border:1px solid var(--pm);}
+
+.t-opt{background:var(--bg2);border:1.5px solid var(--b2);border-radius:10px;padding:12px 16px;font-size:14px;cursor:pointer;transition:all .12s;display:flex;align-items:flex-start;gap:12px;text-align:left;width:100%;font-family:inherit;color:var(--text);line-height:1.6;}
+.t-opt:hover:not(:disabled){border-color:var(--b3);background:var(--bg3);}
+.t-opt.correct{border-color:var(--green);background:var(--gd);}
+.t-opt.wrong{border-color:var(--red);background:var(--rd);}
+.onum{width:22px;height:22px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;flex-shrink:0;color:var(--hint);}
+.t-opt.correct .onum{background:var(--green);color:#000;border-color:var(--green);}
+.t-opt.wrong   .onum{background:var(--red);color:#fff;border-color:var(--red);}
+
+.fb-box{border-radius:10px;padding:.875rem 1.125rem;margin-top:1rem;font-size:13px;line-height:1.7;}
+.fb-box.ok{background:var(--gd);border:1px solid var(--gm);}
+.fb-box.bad{background:var(--rd);border:1px solid var(--rm);}
+.fb-title{font-weight:700;margin-bottom:5px;font-size:14px;}
+.fb-box.ok .fb-title{color:var(--green);}
+.fb-box.bad .fb-title{color:var(--red);}
+.fb-ex{color:var(--muted);}
+
+.passage{background:var(--bg3);border:1px solid var(--b2);border-left:3px solid var(--topik);border-radius:10px;padding:1.125rem 1.375rem;font-size:15px;line-height:2.1;color:var(--text);margin-bottom:1.25rem;}
+
+.qdots{display:flex;gap:5px;align-items:center;}
+.qdot{width:9px;height:9px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);transition:all .12s;}
+.qdot.done{background:var(--green);border-color:var(--green);}
+.qdot.curr{background:var(--topik);border-color:var(--topik);width:11px;height:11px;}
+
+.word-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;padding:1rem 1.125rem;cursor:pointer;transition:all .15s;}
+.word-card:hover{border-color:var(--b3);transform:translateY(-2px);}
+.word-card.known{border-color:var(--gm);background:rgba(34,197,94,.04);}
+
+@media(max-width:768px){
+  .sb{display:none!important;}
+  .main{margin-left:0!important;}
+  #mob-nav{display:grid!important;}
+  .g2,.g3,.g4{grid-template-columns:1fr!important;}
+  .page{padding:.875rem!important;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<aside class="sb">
+  <div class="sb-logo"><div class="logo" onclick="window.location.href='choose.html'">We<em>Ace</em></div><div class="logo-sub" style="color:var(--topik)">TOPIK · Mongolia</div></div>
+  <div class="sb-user"><div class="ava" id="sb-ava">W</div><div><div style="font-size:12.5px;font-weight:600;line-height:1.2" id="sb-name">Оюутан</div><span class="chip free" id="sb-chip">Free</span></div></div>
+  <div class="sb-xp" style="display:none"><div class="xp-row"><span>Lv <strong id="xp-lv">1</strong></span><span><span id="xp-cur">0</span>/<span id="xp-max">100</span> XP</span></div><div class="xp-t"><div class="xp-f" id="xp-bar" style="width:0%"></div></div></div>
+  
+<nav class="sb-nav">
+  <div class="ni on" data-pg="home" onclick="goTo('home')"><span class="ni-ic">🏠</span><span class="ni-label">Dashboard</span></div>
+  <div class="ni-section">TOPIK I · 초급</div>
+  <div class="ni" data-pg="vocab1" onclick="goTo('vocab1')"><span class="ni-ic">📝</span><span class="ni-label">어휘·문법 I</span></div>
+  <div class="ni" data-pg="reading1" onclick="goTo('reading1')"><span class="ni-ic">📖</span><span class="ni-label">읽기 I</span></div>
+  <div class="ni" data-pg="listening1" onclick="goTo('listening1')"><span class="ni-ic">🎧</span><span class="ni-label">듣기 I</span></div>
+  <div class="ni-section">TOPIK II · 중고급</div>
+  <div class="ni" data-pg="vocab2" onclick="goTo('vocab2')"><span class="ni-ic">📝</span><span class="ni-label">어휘·문법 II</span></div>
+  <div class="ni" data-pg="reading2" onclick="goTo('reading2')"><span class="ni-ic">📖</span><span class="ni-label">읽기 II</span></div>
+  <div class="ni" data-pg="writing2" onclick="goTo('writing2')"><span class="ni-ic">✍️</span><span class="ni-label">쓰기 II</span></div>
+  <div class="ni-section">PRACTICE</div>
+  <div class="ni" data-pg="mock" onclick="goTo('mock')"><span class="ni-ic">📋</span><span class="ni-label">Mock Test</span></div>
+  <div class="ni" data-pg="wordbook" onclick="goTo('wordbook')"><span class="ni-ic">📚</span><span class="ni-label">Word Book</span></div>
+  <div class="ni-section">ACCOUNT</div>
+  <div class="ni" onclick="window.location.href='choose.html'"><span class="ni-ic">🔄</span><span class="ni-label">Switch Exam</span></div>
+  <div class="ni" onclick="doLogout()"><span class="ni-ic">🚪</span><span class="ni-label">Log out</span></div>
+</nav>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="tb-l">
+      <div class="tb-title" id="pg-title">TOPIK Dashboard</div>
+      <div class="streak">🔥 <span id="t-streak">0</span> day streak</div>
+    </div>
+    <div class="tb-r">
+      <button class="btn pri sm" onclick="goTo('vocab1')" style="background:var(--topik);border-color:var(--topik)">⚡ Practice</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <div class="page on" id="p-home">
+    <div style="margin-bottom:1.5rem">
+      <div style="font-family:'Sora',sans-serif;font-size:24px;font-weight:900;letter-spacing:-.5px" id="t-greeting">안녕하세요!</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:4px">Your TOPIK prep dashboard</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="g4" style="margin-bottom:1.375rem">
+      <div class="stat"><span class="slbl">Questions</span><div class="sval cb cm" id="stat-total">0</div></div>
+      <div class="stat"><span class="slbl">Accuracy</span><div class="sval cg cm" id="stat-acc">—</div></div>
+      <div class="stat"><span class="slbl">Words Known</span><div class="sval ca cm" id="stat-words">0</div></div>
+      <div class="stat"><span class="slbl">Streak</span><div class="sval cp cm" id="stat-streak">0</div></div>
+    </div>
+
+    <!-- Target -->
+    <div class="card" style="margin-bottom:1.25rem;border-color:var(--topik-m)">
+      <div class="card-head">
+        <span class="card-title">🎯 Target Level</span>
+        <span id="target-chip" style="font-family:var(--fm);font-size:9px;color:var(--topik);background:var(--topik-d);border:1px solid var(--topik-m);padding:3px 10px;border-radius:6px">Not set</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="lv-badge lv1" onclick="setTarget(1)" id="lv-btn-1">Level 1 (초급)</button>
+        <button class="lv-badge lv2" onclick="setTarget(2)" id="lv-btn-2">Level 2 (초급+)</button>
+        <button class="lv-badge lv3" onclick="setTarget(3)" id="lv-btn-3">Level 3 (중급)</button>
+        <button class="lv-badge lv4" onclick="setTarget(4)" id="lv-btn-4">Level 4 (중급+)</button>
+        <button class="lv-badge lv5" onclick="setTarget(5)" id="lv-btn-5">Level 5 (고급)</button>
+        <button class="lv-badge lv6" onclick="setTarget(6)" id="lv-btn-6">Level 6 (최고급)</button>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <span class="ey">Practice Sections</span>
+    <div class="g3" style="margin:1rem 0 1.375rem">
+      <div class="sec-card" style="border-color:rgba(239,68,68,.2)" onclick="goTo('vocab1')">
+        <div class="sc-icon">📝</div><div class="sc-title">어휘·문법</div>
+        <div class="sc-sub">Vocabulary &amp; Grammar</div>
+      </div>
+      <div class="sec-card" style="border-color:rgba(59,130,246,.2)" onclick="goTo('reading1')">
+        <div class="sc-icon">📖</div><div class="sc-title">읽기</div>
+        <div class="sc-sub">Reading Comprehension</div>
+      </div>
+      <div class="sec-card" style="border-color:rgba(168,85,247,.2)" onclick="goTo('listening1')">
+        <div class="sc-icon">🎧</div><div class="sc-title">듣기</div>
+        <div class="sc-sub">Listening Practice</div>
+      </div>
+    </div>
+
+    <!-- Word of the Day -->
+    <div class="card" style="border-color:var(--topik-m)">
+      <div class="card-head">
+        <span class="card-title">📌 Word of the Day</span>
+        <button onclick="nextWOD()" class="btn sec sm">Next →</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:1.5rem;padding:.25rem 0">
+        <div style="text-align:center;min-width:80px">
+          <div style="font-size:28px;font-weight:900;letter-spacing:-1px;color:var(--text)" id="wod-kor">가족</div>
+          <div style="font-family:var(--fm);font-size:9px;color:var(--hint);margin-top:2px" id="wod-rom">[ga-jok]</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;color:var(--green);font-weight:600;margin-bottom:5px" id="wod-mean">family</div>
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.7" id="wod-ex">우리 가족은 4명이에요.</div>
+        </div>
+        <span class="lv-badge lv1" id="wod-level">Level 1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOCAB I -->
+  <div class="page" id="p-vocab1">
+    <div class="pg-h">📝 어휘·문법 I</div>
+    <div class="pg-sub">TOPIK I — Vocabulary &amp; Grammar · Levels 1–2</div>
+    <div id="v1-area"></div>
+  </div>
+
+  <!-- READING I -->
+  <div class="page" id="p-reading1">
+    <div class="pg-h">📖 읽기 I</div>
+    <div class="pg-sub">TOPIK I — Reading Comprehension · Levels 1–2</div>
+    <div id="r1-area"></div>
+  </div>
+
+  <!-- LISTENING I -->
+  <div class="page" id="p-listening1">
+    <div class="pg-h">🎧 듣기 I</div>
+    <div class="pg-sub">TOPIK I — Listening Practice · Read dialogue, answer questions</div>
+    <div id="l1-area"></div>
+  </div>
+
+  <!-- VOCAB II -->
+  <div class="page" id="p-vocab2">
+    <div class="pg-h">📝 어휘·문법 II</div>
+    <div class="pg-sub">TOPIK II — Vocabulary &amp; Grammar · Levels 3–6</div>
+    <div id="v2-area"></div>
+  </div>
+
+  <!-- READING II -->
+  <div class="page" id="p-reading2">
+    <div class="pg-h">📖 읽기 II</div>
+    <div class="pg-sub">TOPIK II — Advanced Reading · Levels 3–6</div>
+    <div id="r2-area"></div>
+  </div>
+
+  <!-- WRITING II -->
+  <div class="page" id="p-writing2">
+    <div class="pg-h">✍️ 쓰기 II</div>
+    <div class="pg-sub">TOPIK II — Essay Writing with model answers</div>
+    <div id="w2-card" class="card" style="border-color:var(--topik-m)">
+      <div class="card-head">
+        <span class="card-title">Writing Prompt</span>
+        <span id="w2-level-chip" class="lv-badge lv4">Level 4</span>
+      </div>
+      <div id="w2-prompt" class="passage" style="font-size:14px;margin-bottom:1.25rem"></div>
+      <div style="font-family:var(--fm);font-size:9px;color:var(--hint);margin-bottom:.5rem">YOUR ANSWER:</div>
+      <textarea id="w2-input" placeholder="여기에 답을 쓰세요..." style="width:100%;min-height:160px;background:var(--bg3);border:1.5px solid var(--b2);border-radius:10px;padding:1rem;font-size:14px;color:var(--text);resize:vertical;font-family:inherit;line-height:1.8;outline:none;box-sizing:border-box;transition:border-color .12s" onfocus="this.style.setProperty('border-color','var(--topik)')" onblur="this.style.setProperty('border-color','var(--b2)')"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.875rem">
+        <div style="font-family:var(--fm);font-size:9px;color:var(--hint)" id="w2-charcount">0자</div>
+        <div style="display:flex;gap:8px">
+          <button onclick="showModel()" class="btn sec">Model Answer</button>
+          <button onclick="nextPrompt()" class="btn pri" style="background:var(--topik);border-color:var(--topik)">Next Prompt →</button>
+        </div>
+      </div>
+    </div>
+    <div id="w2-model" class="card" style="display:none;border-color:var(--gm);margin-top:.875rem">
+      <div class="card-head"><span class="card-title">✓ Model Answer</span></div>
+      <div id="w2-model-text" style="font-size:14px;line-height:2;color:var(--muted)"></div>
+    </div>
+  </div>
+
+  <!-- MOCK TEST -->
+  <div class="page" id="p-mock">
+    <div class="pg-h">📋 Mock Test</div>
+    <div class="pg-sub">Full TOPIK I or II practice simulation</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:1.5rem">
+      <div class="daily-banner" style="border-color:var(--gm);cursor:pointer" onclick="startMock(1)">
+        <div style="font-size:32px">🟢</div>
+        <div style="flex:1">
+          <div style="font-family:var(--fd);font-size:15px;font-weight:800;margin-bottom:3px">TOPIK I Mock</div>
+          <div style="font-size:12px;color:var(--muted)">어휘·문법 30 + 읽기 20 + 듣기 30 문항 · ~100분</div>
+        </div>
+        <button class="btn pri" onclick="startMock(1);event.stopPropagation()">Start →</button>
+      </div>
+      <div class="daily-banner" style="border-color:var(--topik-m);cursor:pointer" onclick="startMock(2)">
+        <div style="font-size:32px">🔴</div>
+        <div style="flex:1">
+          <div style="font-family:var(--fd);font-size:15px;font-weight:800;margin-bottom:3px">TOPIK II Mock</div>
+          <div style="font-size:12px;color:var(--muted)">어휘·문법 50 + 쓰기 4 + 읽기 50 + 듣기 50 문항 · ~180분</div>
+        </div>
+        <button class="btn pri" style="background:var(--topik);border-color:var(--topik)" onclick="startMock(2);event.stopPropagation()">Start →</button>
+      </div>
+    </div>
+    <div id="mock-result-area"></div>
+  </div>
+
+  <!-- WORD BOOK -->
+  <div class="page" id="p-wordbook">
+    <div class="pg-h">📚 Word Book</div>
+    <div class="pg-sub">Essential TOPIK vocabulary · Tap to mark known</div>
+    <div style="display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap">
+      <button class="btn pri sm" onclick="filterWB('all')" id="wbf-all">All</button>
+      <button class="btn sec sm" onclick="filterWB(1)" id="wbf-1">Level 1</button>
+      <button class="btn sec sm" onclick="filterWB(2)" id="wbf-2">Level 2</button>
+      <button class="btn sec sm" onclick="filterWB(3)" id="wbf-3">Level 3</button>
+      <button class="btn sec sm" onclick="filterWB(4)" id="wbf-4">Level 4+</button>
+    </div>
+    <div id="wb-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+  </div>
+
+</div><!-- .main -->
+</div><!-- .shell -->
+
+<!-- MOBILE NAV -->
+<div id="mob-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bg2);border-top:1px solid var(--b2);padding:.5rem 0 calc(.5rem + env(safe-area-inset-bottom));grid-template-columns:repeat(5,1fr)">
+  <div onclick="goTo('home')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem;cursor:pointer;font-family:var(--fm);font-size:8px;color:var(--topik)">🏠<span>Home</span></div>
+  <div onclick="goTo('vocab1')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem;cursor:pointer;font-family:var(--fm);font-size:8px;color:var(--hint)">📝<span>Vocab</span></div>
+  <div onclick="goTo('reading1')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem;cursor:pointer;font-family:var(--fm);font-size:8px;color:var(--hint)">📖<span>Read</span></div>
+  <div onclick="goTo('mock')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem;cursor:pointer;font-family:var(--fm);font-size:8px;color:var(--hint)">📋<span>Mock</span></div>
+  <div onclick="goTo('wordbook')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:.5rem;cursor:pointer;font-family:var(--fm);font-size:8px;color:var(--hint)">📚<span>Words</span></div>
+</div>
+
+<script>
+
+/* ============================================================
+   TOPIK Question Bank
+   ============================================================ */
+/* ============================================================
+   EXPANDED TOPIK Question Bank — 150+ questions, 200+ words
+   ============================================================ */
+var QB = {
+
+  /* ── VOCAB / GRAMMAR I  (30 questions, Levels 1-2) ── */
+  vocab1: [
+    {id:'tv1', lv:1, q:'빈칸에 알맞은 것을 고르세요.\n"저는 아침에 ( )을/를 마셔요."',
+     opts:['우유','바람','구름','소리'], ans:0,
+     ex:'우유 = milk. "I drink milk in the morning." 바람=wind, 구름=cloud, 소리=sound are not drinks.'},
+    {id:'tv2', lv:1, q:'다음 중 반대말끼리 짝지어진 것을 고르세요.',
+     opts:['크다 ↔ 작다','빠르다 ↔ 높다','좋다 ↔ 멀다','많다 ↔ 무겁다'], ans:0,
+     ex:'크다(big) ↔ 작다(small) are true antonyms. The other pairs are unrelated.'},
+    {id:'tv3', lv:1, q:'빈칸에 알맞은 것을 고르세요.\n"저는 학생( )."',
+     opts:['이에요','에서','부터','한테'], ans:0,
+     ex:'이에요/예요 = am/is/are (copula). Used after noun ending in consonant: 학생이에요.'},
+    {id:'tv4', lv:1, q:'다음 중 날씨와 관련이 없는 것을 고르세요.',
+     opts:['의자','눈','비','바람'], ans:0,
+     ex:'의자 = chair (furniture). 눈=snow, 비=rain, 바람=wind are all weather words.'},
+    {id:'tv5', lv:1, q:'빈칸에 알맞은 것을 고르세요.\n"학교( ) 가요."',
+     opts:['에','이','을','은'], ans:0,
+     ex:'"에" marks direction/destination. 학교에 가요 = I go to school.'},
+    {id:'tv6', lv:1, q:'다음 중 과일이 아닌 것을 고르세요.',
+     opts:['우산','사과','바나나','딸기'], ans:0,
+     ex:'우산 = umbrella. 사과=apple, 바나나=banana, 딸기=strawberry are fruits.'},
+    {id:'tv7', lv:1, q:'빈칸에 알맞은 것을 고르세요.\n"저는 한국어를 ( ) 공부해요."',
+     opts:['열심히','천천히가','빠르게서','조용히를'], ans:0,
+     ex:'열심히 = diligently/hard. It is an adverb and modifies the verb 공부해요.'},
+    {id:'tv8', lv:1, q:'"오늘 날씨가 흐려요." — 흐리다의 뜻은?',
+     opts:['Cloudy/overcast','Sunny','Windy','Rainy'], ans:0,
+     ex:'흐리다 = to be cloudy/overcast. 맑다=sunny, 바람이 불다=windy, 비가 오다=rainy.'},
+    {id:'tv9', lv:1, q:'다음 중 색깔이 아닌 것을 고르세요.',
+     opts:['무거운','빨간','파란','노란'], ans:0,
+     ex:'무거운 = heavy (not a colour). 빨간=red, 파란=blue, 노란=yellow are colours.'},
+    {id:'tv10', lv:1, q:'빈칸에 알맞은 것을 고르세요.\n"저는 커피를 좋아( )."',
+     opts:['해요','이에요','예요','가요'], ans:0,
+     ex:'좋아하다 = to like. 좋아해요 = I like (it). 커피를 좋아해요 = I like coffee.'},
+    {id:'tv11', lv:2, q:'밑줄 친 부분과 의미가 비슷한 것을 고르세요.\n"오늘 날씨가 매우 덥네요."',
+     opts:['아주','조금','천천히','자주'], ans:0,
+     ex:'매우 = 아주 = very/extremely. 조금=a little, 천천히=slowly, 자주=often.'},
+    {id:'tv12', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"어제 친구를 ( ) 영화를 봤어요."',
+     opts:['만나서','만나고','만나면','만나지만'], ans:0,
+     ex:'-아서/어서 shows sequential cause. Met a friend and (then) watched a movie.'},
+    {id:'tv13', lv:2, q:'"그 사람은 매우 친절해요." — 친절하다의 뜻은?',
+     opts:['Kind','Smart','Quiet','Tall'], ans:0,
+     ex:'친절하다 = to be kind/friendly. 친절한 사람 = a kind person.'},
+    {id:'tv14', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"수업이 ( ) 전에 책을 읽었어요."',
+     opts:['시작하기','시작해서','시작하면','시작하는'], ans:0,
+     ex:'-기 전에 = before (doing). I read a book before class started.'},
+    {id:'tv15', lv:2, q:'다음 중 가족을 나타내는 단어가 아닌 것은?',
+     opts:['친구','어머니','아버지','누나'], ans:0,
+     ex:'친구 = friend (not family). 어머니=mother, 아버지=father, 누나=older sister.'},
+    {id:'tv16', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"배가 ( ) 밥을 먹었어요."',
+     opts:['고파서','고프고','고프면','고프지만'], ans:0,
+     ex:'-아서/어서 = because. 배가 고파서 = because I was hungry.'},
+    {id:'tv17', lv:2, q:'"이 옷은 너무 비싸요." — 비싸다의 반대말은?',
+     opts:['싸다','크다','작다','길다'], ans:0,
+     ex:'비싸다(expensive) ↔ 싸다(cheap/inexpensive) are antonyms.'},
+    {id:'tv18', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"저는 매일 아침 운동( ) 해요."',
+     opts:['을','이','에','가'], ans:0,
+     ex:'운동을 하다 = to exercise. 을/를 marks the object of 하다.'},
+    {id:'tv19', lv:2, q:'다음 중 장소를 나타내는 단어가 아닌 것은?',
+     opts:['행복','병원','학교','도서관'], ans:0,
+     ex:'행복 = happiness (emotion, not a place). 병원=hospital, 학교=school, 도서관=library.'},
+    {id:'tv20', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"날씨가 ( ) 공원에 갔어요."',
+     opts:['좋아서','좋아도','좋으면','좋지만'], ans:0,
+     ex:'-아서/어서 = because/so. The weather was good, so I went to the park.'},
+    {id:'tv21', lv:2, q:'"그는 매일 운동을 합니다." — 이 문장의 뜻은?',
+     opts:['He exercises every day.','He never exercises.','He exercised yesterday.','He will exercise.'], ans:0,
+     ex:'매일 = every day. 운동을 합니다 = exercises (present habitual). 합니다 is formal present.'},
+    {id:'tv22', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"시험이 어( ) 걱정이에요."',
+     opts:['려워서','렵고','려우면','렵지만'], ans:0,
+     ex:'어렵다 = difficult. -아서/어서 form: 어려워서 = because it is difficult.'},
+    {id:'tv23', lv:2, q:'다음 중 동사가 아닌 것은?',
+     opts:['예쁘다','먹다','자다','가다'], ans:0,
+     ex:'예쁘다 = to be pretty (adjective/descriptive verb). 먹다=eat, 자다=sleep, 가다=go are action verbs.'},
+    {id:'tv24', lv:2, q:'밑줄 친 단어의 뜻으로 알맞은 것은?\n"저는 책을 자주 읽어요."',
+     opts:['Often','Sometimes','Never','Always'], ans:0,
+     ex:'자주 = often/frequently. 가끔=sometimes, 절대=never, 항상/언제나=always.'},
+    {id:'tv25', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"저는 영어( ) 한국어( ) 공부해요."',
+     opts:['와/를','가/이','에서/에','은/도'], ans:0,
+     ex:'영어와 한국어를: 와/과 = and (between nouns), 를 = object marker. Correct linkage.'},
+    {id:'tv26', lv:2, q:'"저는 어제 집에서 쉬었어요." — 어제의 뜻은?',
+     opts:['Yesterday','Today','Tomorrow','Last week'], ans:0,
+     ex:'어제 = yesterday. 오늘=today, 내일=tomorrow, 지난주=last week.'},
+    {id:'tv27', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"저는 커피( ) 우유를 좋아해요."',
+     opts:['보다','에서','한테','로'], ans:0,
+     ex:'보다 = compared to / rather than. 커피보다 우유를 좋아해요 = I prefer milk to coffee.'},
+    {id:'tv28', lv:2, q:'다음 중 음식이 아닌 것은?',
+     opts:['가방','김치','비빔밥','냉면'], ans:0,
+     ex:'가방 = bag (not food). 김치=kimchi, 비빔밥=bibimbap, 냉면=cold noodles.'},
+    {id:'tv29', lv:2, q:'빈칸에 알맞은 것을 고르세요.\n"오늘 날씨가 춥( ) 코트를 입었어요."',
+     opts:['어서','어도','으면','지만'], ans:0,
+     ex:'-어서/아서 = because. 추워서 코트를 입었어요 = Because it was cold, I wore a coat.'},
+    {id:'tv30', lv:2, q:'"그 영화는 정말 재미있었어요." — 재미있다의 뜻은?',
+     opts:['Interesting/fun','Boring','Scary','Sad'], ans:0,
+     ex:'재미있다 = interesting/fun. 재미없다=boring, 무섭다=scary, 슬프다=sad.'}
+  ],
+
+  /* ── VOCAB / GRAMMAR II  (20 questions, Levels 3-6) ── */
+  vocab2: [
+    {id:'tv31', lv:3, q:'밑줄 친 부분과 의미가 가장 비슷한 것은?\n"그 계획은 실현되기 어렵다."',
+     opts:['이루어지기','생각하기','바라보기','기다리기'], ans:0,
+     ex:'실현되다 = 이루어지다 = to be realized/achieved.'},
+    {id:'tv32', lv:3, q:'빈칸에 알맞은 것을 고르세요.\n"시간이 ( ) 일을 마치겠습니다."',
+     opts:['허락하는 한','허락할수록','허락해서야','허락하더니'], ans:0,
+     ex:'-는 한 = as long as. As long as time allows, I will finish the work.'},
+    {id:'tv33', lv:3, q:'다음 중 뜻이 나머지와 다른 것은?',
+     opts:['아름답다','예쁘다','못생기다','곱다'], ans:2,
+     ex:'못생기다 = to be ugly (opposite). 아름답다, 예쁘다, 곱다 all mean beautiful/pretty.'},
+    {id:'tv34', lv:3, q:'빈칸에 알맞은 것을 고르세요.\n"그는 문제를 ( ) 해결했다."',
+     opts:['현명하게','현명한','현명하고','현명하면'], ans:0,
+     ex:'-게 makes an adjective into an adverb. 현명하게 = wisely (manner of solving).'},
+    {id:'tv35', lv:3, q:'밑줄 친 부분과 의미가 같은 것은?\n"그는 약속을 어겼다."',
+     opts:['지키지 않았다','지켰다','잊었다','변경했다'], ans:0,
+     ex:'약속을 어기다 = to break a promise = 약속을 지키지 않다.'},
+    {id:'tv36', lv:3, q:'빈칸에 알맞은 것을 고르세요.\n"날씨가 좋( ) 소풍을 가기로 했어요."',
+     opts:['으면','아서','아도','지만'], ans:0,
+     ex:'-으면 = if/when (conditional). If the weather is good, we decided to go on a picnic.'},
+    {id:'tv37', lv:3, q:'다음 중 감정을 나타내는 단어가 아닌 것은?',
+     opts:['창문','기쁘다','슬프다','화나다'], ans:0,
+     ex:'창문 = window (not an emotion). 기쁘다=joyful, 슬프다=sad, 화나다=angry.'},
+    {id:'tv38', lv:3, q:'빈칸에 알맞은 것을 고르세요.\n"그녀는 노래를 ( ) 잘한다."',
+     opts:['정말로','정말인','정말의','정말에'], ans:0,
+     ex:'정말로 = really/truly (adverb). Used to intensify the verb 잘한다.'},
+    {id:'tv39', lv:4, q:'밑줄 친 어휘의 쓰임이 옳지 않은 것은?',
+     opts:['약속을 이행했다','실력이 향상되었다','문제를 회피했다','약속을 명심했다'], ans:3,
+     ex:'"약속을 명심하다" is unnatural — 명심하다 means "keep in mind" not "keep a promise." Use 약속을 지키다.'},
+    {id:'tv40', lv:4, q:'빈칸에 알맞은 것을 고르세요.\n"아무리 ( ) 노력해도 결과는 달라지지 않는다."',
+     opts:['열심히','빠르게','쉽게','조용히'], ans:0,
+     ex:'"아무리 열심히 노력해도" = No matter how hard you try. 열심히 = diligently.'},
+    {id:'tv41', lv:4, q:'다음 중 뜻이 다른 하나를 고르세요.',
+     opts:['귀찮다','번거롭다','짜증스럽다','서운하다'], ans:3,
+     ex:'귀찮다, 번거롭다, 짜증스럽다 = annoying/bothersome. 서운하다 = disappointed/sad.'},
+    {id:'tv42', lv:4, q:'빈칸에 알맞은 것을 고르세요.\n"그는 아무 말도 하지 않은 ( ) 자리를 떠났다."',
+     opts:['채로','척으로','법으로','만큼'], ans:0,
+     ex:'-ㄴ 채로 = while still in the state of. He left without saying a word.'},
+    {id:'tv43', lv:4, q:'밑줄 친 표현의 의미로 알맞은 것은?\n"그는 눈 하나 깜짝하지 않았다."',
+     opts:['He showed no reaction.','He was surprised.','He fell asleep.','He looked away.'], ans:0,
+     ex:'"눈 하나 깜짝하지 않다" = to not bat an eyelid = to show no reaction at all.'},
+    {id:'tv44', lv:5, q:'문맥상 가장 자연스럽지 않은 것은?',
+     opts:['주장이 설득력 있다','주장에 근거가 있다','주장에 타당성 있다','주장이 이해심 풍부하다'], ans:3,
+     ex:'"이해심이 풍부하다" describes a person, not an argument. Arguments need 설득력, 근거, 타당성.'},
+    {id:'tv45', lv:5, q:'문법적으로 가장 자연스러운 문장은?',
+     opts:['그녀는 아는 척을 한다','그녀는 아는 체한다','그녀는 알은 척을 한다','그녀는 아는 척이다'], ans:1,
+     ex:'-는 체하다 = to pretend. 아는 체하다 is the most natural standard form.'},
+    {id:'tv46', lv:5, q:'빈칸에 알맞은 것을 고르세요.\n"그 일은 내가 할 ( ) 없다."',
+     opts:['수밖에','수만큼','수대로','수조차'], ans:0,
+     ex:'-(으)ㄹ 수밖에 없다 = have no choice but to. There is no choice but to do it.'},
+    {id:'tv47', lv:5, q:'밑줄 친 말과 바꿔 쓸 수 있는 것은?\n"그는 일을 미루는 버릇이 있다."',
+     opts:['습관','취미','특기','재능'], ans:0,
+     ex:'버릇 = 습관 = habit. 취미=hobby, 특기=specialty, 재능=talent are different.'},
+    {id:'tv48', lv:6, q:'다음 중 문장 구조가 나머지와 다른 것은?',
+     opts:['꽃이 아름답게 피었다','새가 높이 날았다','그는 빠르게 달렸다','산이 높다'], ans:3,
+     ex:'"산이 높다" is S+adj (descriptive). The others are S+adv+verb (action sentences).'},
+    {id:'tv49', lv:6, q:'빈칸에 알맞은 것을 고르세요.\n"사회 변화에 ( ) 대응해야 한다."',
+     opts:['능동적으로','수동적으로','개인적으로','무관심하게'], ans:0,
+     ex:'능동적으로 = actively/proactively. Responding actively to social change is the positive meaning here.'},
+    {id:'tv50', lv:6, q:'다음 글의 주제로 알맞은 것은?\n"기술 발전은 우리의 삶을 편리하게 만들지만, 동시에 인간 고유의 능력을 약화시킬 위험도 있다."',
+     opts:['기술 발전의 양면성','기술의 중요성','인간 능력의 우수성','편리한 생활'], ans:0,
+     ex:'The sentence presents both benefits and risks of tech. 양면성 = two-sidedness/duality.'}
+  ],
+
+  /* ── READING I  (10 questions, Levels 1-2) ── */
+  reading1: [
+    {id:'tr1', lv:1,
+     passage:'저는 서울에 살아요. 저의 집은 학교 근처에 있어요.\n집에서 학교까지 걸어서 10분이에요.',
+     q:'이 글을 쓴 사람은 어디에 살아요?',
+     opts:['서울','부산','제주도','인천'], ans:0,
+     ex:'"저는 서울에 살아요" directly states Seoul.'},
+    {id:'tr2', lv:1,
+     passage:'오늘은 토요일이에요. 저는 친구와 함께 영화를 봤어요.\n영화가 너무 재미있었어요. 다음에 또 보고 싶어요.',
+     q:'오늘은 무슨 요일이에요?',
+     opts:['토요일','일요일','금요일','월요일'], ans:0,
+     ex:'"오늘은 토요일이에요" — stated in the first sentence.'},
+    {id:'tr3', lv:1,
+     passage:'저는 고양이를 키워요. 이름은 나비예요.\n나비는 하루에 두 번 밥을 먹어요. 저는 나비가 정말 좋아요.',
+     q:'이 사람의 고양이 이름은 무엇이에요?',
+     opts:['나비','구름','달','별'], ans:0,
+     ex:'"이름은 나비예요" — the cat\'s name is 나비 (butterfly).'},
+    {id:'tr4', lv:2,
+     passage:'제 취미는 요리예요. 요리를 할 때 매우 행복해요.\n특히 한국 음식 만드는 것을 좋아해요.\n친구들에게 음식을 나눠 줄 때가 가장 기뻐요.',
+     q:'이 사람이 가장 기쁠 때는 언제예요?',
+     opts:['친구들에게 음식을 나눠 줄 때','요리를 배울 때','한국 음식을 먹을 때','혼자 요리할 때'], ans:0,
+     ex:'"친구들에게 음식을 나눠 줄 때가 가장 기뻐요" — sharing food is the happiest moment.'},
+    {id:'tr5', lv:2,
+     passage:'[도서관 안내]\n평일: 09:00~21:00\n주말: 10:00~18:00\n매월 마지막 월요일 휴관',
+     q:'토요일에 도서관은 몇 시에 문을 닫아요?',
+     opts:['오후 6시','오후 9시','오전 10시','오전 9시'], ans:0,
+     ex:'토요일(Saturday) = 주말(weekend). Closes at 18:00 = 오후 6시.'},
+    {id:'tr6', lv:2,
+     passage:'가: 오늘 점심에 뭐 먹었어요?\n나: 김치찌개를 먹었어요. 진짜 맛있었어요.\n가: 어디서 먹었어요?\n나: 학교 앞 식당에서요. 가격도 싸고 양도 많아요.',
+     q:'나(지수)가 점심을 먹은 곳은 어디예요?',
+     opts:['학교 앞 식당','집','편의점','회사 식당'], ans:0,
+     ex:'"학교 앞 식당에서요" — directly stated.'},
+    {id:'tr7', lv:2,
+     passage:'저는 오늘 백화점에 갔어요. 어머니께 드릴 선물을 샀어요.\n빨간 스카프를 골랐어요. 어머니가 빨간색을 좋아하시거든요.',
+     q:'이 사람은 누구를 위해 선물을 샀어요?',
+     opts:['어머니','친구','선생님','동생'], ans:0,
+     ex:'"어머니께 드릴 선물을 샀어요" — bought a gift for mother.'},
+    {id:'tr8', lv:2,
+     passage:'[공지사항]\n이번 주 토요일에 회사 야유회가 있습니다.\n장소: 한강 공원\n시간: 오전 10시\n참가비: 무료',
+     q:'야유회 참가비는 얼마예요?',
+     opts:['무료','1만 원','5만 원','10만 원'], ans:0,
+     ex:'"참가비: 무료" — attendance fee is free (무료).'},
+    {id:'tr9', lv:2,
+     passage:'저는 매일 아침 7시에 일어나요. 샤워를 하고 아침을 먹어요.\n그리고 8시에 지하철을 타요. 회사에는 9시에 도착해요.',
+     q:'이 사람은 아침에 제일 먼저 무엇을 해요?',
+     opts:['일어나요','샤워해요','아침을 먹어요','지하철을 타요'], ans:0,
+     ex:'"매일 아침 7시에 일어나요" — waking up is the first thing mentioned.'},
+    {id:'tr10', lv:2,
+     passage:'민준 씨는 운동을 좋아해요. 특히 수영을 잘해요.\n일주일에 세 번 수영장에 가요. 건강을 위해서 운동하는 거예요.',
+     q:'민준 씨는 일주일에 몇 번 수영장에 가요?',
+     opts:['세 번','두 번','네 번','매일'], ans:0,
+     ex:'"일주일에 세 번 수영장에 가요" — three times per week.'}
+  ],
+
+  /* ── LISTENING I  (8 questions, Levels 1-2) ── */
+  listening1: [
+    {id:'tl1', lv:1,
+     script:'가: 저 좀 도와주세요.\n나: 네, 어떻게 도와드릴까요?\n가: 화장실이 어디에 있어요?\n나: 저쪽으로 가세요. 오른쪽에 있어요.',
+     q:'두 사람은 어디에 대해 이야기하고 있어요?',
+     opts:['화장실 위치','버스 정류장','음식 주문','영화 표'], ans:0,
+     ex:'They are asking and answering about the bathroom location (화장실 위치).'},
+    {id:'tl2', lv:1,
+     script:'가: 내일 같이 공원에 갈까요?\n나: 좋아요! 몇 시에 만날까요?\n가: 오전 10시 어때요?\n나: 조금 일러요. 11시는 어때요?\n가: 네, 그럼 11시에 공원 입구에서 만나요.',
+     q:'두 사람은 내일 몇 시에 만나기로 했어요?',
+     opts:['오전 11시','오전 10시','오후 1시','오후 2시'], ans:0,
+     ex:'가 suggested 10시, 나 said too early, proposed 11시. 가 agreed.'},
+    {id:'tl3', lv:2,
+     script:'가: 요즘 왜 이렇게 피곤해 보여요?\n나: 새 직장을 시작해서 스트레스를 많이 받아요.\n가: 퇴근 후에 운동을 해 보는 건 어때요?\n나: 좋은 생각이네요. 해 볼게요.',
+     q:'나는 왜 피곤해 보여요?',
+     opts:['새 직장 때문에 스트레스를 받아서','운동을 너무 많이 해서','밤새 공부해서','아파서'], ans:0,
+     ex:'"새 직장을 시작해서 스트레스를 많이 받아요" — stress from starting new job.'},
+    {id:'tl4', lv:1,
+     script:'가: 오늘 저녁에 뭐 먹을까요?\n나: 삼겹살 어때요?\n가: 좋아요! 근데 어제도 삼겹살을 먹었는데...\n나: 그럼 비빔밥은 어때요?\n가: 좋아요, 그걸로 해요.',
+     q:'두 사람은 오늘 저녁에 무엇을 먹기로 했어요?',
+     opts:['비빔밥','삼겹살','김치찌개','불고기'], ans:0,
+     ex:'가 rejected 삼겹살 (ate it yesterday), so they agreed on 비빔밥.'},
+    {id:'tl5', lv:1,
+     script:'가: 실례합니다. 이 버스가 강남역에 가나요?\n나: 아니요, 이 버스는 홍대에 가요.\n가: 그럼 강남역에 가려면 어떻게 해야 해요?\n나: 저쪽 2번 버스를 타세요.',
+     q:'강남역에 가려면 몇 번 버스를 타야 해요?',
+     opts:['2번','1번','3번','4번'], ans:0,
+     ex:'"저쪽 2번 버스를 타세요" — take bus number 2 to get to Gangnam station.'},
+    {id:'tl6', lv:2,
+     script:'가: 여보세요? 지금 통화 가능해요?\n나: 잠깐만요, 지금 회의 중이에요.\n가: 아, 그렇군요. 그럼 나중에 다시 전화할게요.\n나: 30분 후에 전화해 주세요.',
+     q:'나는 지금 무엇을 하고 있어요?',
+     opts:['회의 중','전화 중','식사 중','수업 중'], ans:0,
+     ex:'"지금 회의 중이에요" — currently in a meeting.'},
+    {id:'tl7', lv:2,
+     script:'가: 이번 주말에 뭐 할 거예요?\n나: 부모님 생신이라서 외식하러 가려고요.\n가: 어디로 가요?\n나: 부모님이 일식을 좋아하셔서 일식당에 가려고요.\n가: 좋겠네요! 즐거운 시간 보내세요.',
+     q:'이번 주말에 왜 외식하러 가요?',
+     opts:['부모님 생신이라서','가: 결혼기념일이라서','부모님 만나려고','일식이 먹고 싶어서'], ans:0,
+     ex:'"부모님 생신이라서 외식하러 가려고요" — going out because it is the parents\' birthday.'},
+    {id:'tl8', lv:2,
+     script:'가: 오늘 날씨가 많이 춥네요.\n나: 그러게요. 내일은 더 춥대요.\n가: 정말요? 그럼 두꺼운 옷을 입고 나와야겠네요.\n나: 맞아요. 내일 눈도 온다고 하더라고요.',
+     q:'내일 날씨는 어떨 것 같아요?',
+     opts:['더 춥고 눈이 올 것 같아요','오늘보다 따뜻할 것 같아요','비가 올 것 같아요','바람이 많이 불 것 같아요'], ans:0,
+     ex:'"내일은 더 춥대요" and "내일 눈도 온다고" — colder and snow tomorrow.'}
+  ],
+
+  /* ── READING II  (6 questions, Levels 3-6) ── */
+  reading2: [
+    {id:'tr21', lv:4,
+     passage:'최근 연구에 의하면 도시 녹지 공간이 주민들의 정신 건강에 긍정적인 영향을 미치는 것으로 나타났다. 공원이나 가로수 등의 녹지 공간은 스트레스를 줄이고 심리적 안정감을 높이는 것으로 조사되었다. 특히 규칙적으로 녹지 공간을 이용하는 사람들은 그렇지 않은 사람들에 비해 우울감과 불안감이 낮게 측정되었다.',
+     q:'이 글의 주제로 가장 알맞은 것은?',
+     opts:['녹지 공간과 정신 건강의 관계','도시 개발의 문제점','공원 이용 방법','스트레스 관리법'], ans:0,
+     ex:'The whole passage discusses how green spaces positively affect mental health.'},
+    {id:'tr22', lv:5,
+     passage:'디지털 기술의 발전은 교육 분야에 혁명적인 변화를 가져왔다. 온라인 학습 플랫폼의 등장으로 시간과 장소에 구애받지 않고 학습할 수 있게 되었다. 그러나 디지털 기기 사용 증가로 인한 집중력 저하와 대면 소통 능력 감퇴가 우려되고 있다.',
+     q:'이 글에서 필자가 말하고자 하는 것은?',
+     opts:['디지털 교육의 장단점을 균형 있게 봐야 한다','온라인 학습이 전통 교육보다 우수하다','기기 사용을 금지해야 한다','기술 투자를 늘려야 한다'], ans:0,
+     ex:'Both benefits and risks are presented, so the author urges a balanced view.'},
+    {id:'tr23', lv:4,
+     passage:'우리나라 청소년들의 스마트폰 사용 시간이 증가하면서 수면 부족 문제가 심각해지고 있다. 전문가들은 잠자리에서 스마트폰 사용을 줄이고, 규칙적인 수면 습관을 형성할 것을 권고하고 있다.',
+     q:'전문가들이 권고하는 내용은?',
+     opts:['규칙적인 수면 습관 형성','스마트폰 완전 금지','낮잠 자기','야간 운동 하기'], ans:0,
+     ex:'"규칙적인 수면 습관을 형성할 것을 권고" — recommending regular sleep habits.'},
+    {id:'tr24', lv:5,
+     passage:'언어는 단순한 의사소통의 수단을 넘어 사고와 문화를 반영하는 거울이다. 특정 언어에만 존재하는 단어나 표현은 해당 문화의 독특한 가치관과 경험을 담고 있다. 따라서 언어를 배운다는 것은 그 언어의 문화와 사고방식을 이해하는 것과 다르지 않다.',
+     q:'이 글의 핵심 주장은?',
+     opts:['언어 학습은 문화 이해를 포함한다','언어는 의사소통 수단일 뿐이다','모든 언어는 동일한 구조를 가진다','번역은 불가능하다'], ans:0,
+     ex:'"언어를 배운다는 것은 문화와 사고방식을 이해하는 것과 다르지 않다" — the core claim.'},
+    {id:'tr25', lv:3,
+     passage:'[안내문]\n오는 토요일 오후 2시에 지역 문화센터에서 한국 전통 음식 만들기 체험 행사가 열립니다.\n참가 신청은 문화센터 홈페이지에서 가능하며, 참가비는 1인당 15,000원입니다.\n선착순 30명으로 제한되니 서둘러 신청하세요.',
+     q:'이 행사에 대한 설명으로 맞는 것은?',
+     opts:['선착순 30명으로 제한된다','참가비는 무료이다','일요일에 열린다','참가 신청은 현장에서 한다'], ans:0,
+     ex:'"선착순 30명으로 제한되니" — limited to 30 first-come-first-served registrants.'},
+    {id:'tr26', lv:6,
+     passage:'현대 사회에서 개인의 정보 보호와 공익을 위한 정보 공개 사이의 갈등은 점점 첨예해지고 있다. 정보 기술의 발달로 방대한 개인 데이터가 수집되고 활용되면서, 프라이버시 침해에 대한 우려가 높아지고 있다. 반면 투명한 정보 공개는 민주주의 발전과 사회적 신뢰 구축에 필수적이라는 주장도 있다.',
+     q:'이 글의 주요 내용은?',
+     opts:['개인 정보 보호와 정보 공개의 갈등','정보 기술의 발전 과정','민주주의와 정보의 관계','프라이버시법의 역사'], ans:0,
+     ex:'The passage centers on the tension between privacy protection and public information disclosure.'}
+  ],
+
+  /* ── WRITING II  (5 prompts, Levels 4-6) ── */
+  writing2: [
+    {lv:4,
+     prompt:'주제: 현대 사회에서 인터넷의 장점과 단점에 대해 자신의 의견을 쓰세요. (200~300자)',
+     model:'인터넷은 현대 사회에서 없어서는 안 될 중요한 도구가 되었습니다. 가장 큰 장점은 정보를 쉽고 빠르게 얻을 수 있다는 것입니다. 또한 전 세계 사람들과 소통할 수 있어 국제적인 교류가 활발해졌습니다.\n\n그러나 잘못된 정보가 빠르게 퍼질 수 있고, 지나친 사용으로 직접적인 소통이 줄어들고 있습니다. 따라서 인터넷을 현명하게 사용하는 것이 중요합니다.'},
+    {lv:4,
+     prompt:'주제: 현대인의 건강을 위협하는 요소와 건강을 유지하는 방법에 대해 쓰세요. (200~300자)',
+     model:'현대인의 건강을 위협하는 주요 요소로는 불규칙한 식습관, 운동 부족, 과도한 스트레스 등이 있습니다. 특히 장시간 앉아서 일하는 직장인들에게는 운동 부족이 심각한 문제입니다.\n\n건강을 유지하기 위해서는 규칙적인 운동과 균형 잡힌 식사가 필요합니다. 또한 충분한 수면을 취하고 스트레스를 적절히 관리하는 것도 중요합니다.'},
+    {lv:5,
+     prompt:'주제: 환경 보호를 위해 개인이 할 수 있는 일은 무엇인지 구체적인 예를 들어 쓰세요. (400~500자)',
+     model:'환경 문제는 오늘날 전 세계가 직면한 심각한 과제입니다. 개인의 작은 실천이 모여 큰 변화를 만들 수 있습니다.\n\n첫째, 쓰레기 분리수거를 철저히 해야 합니다. 재활용을 통해 자원 낭비를 줄이고 환경 오염을 방지할 수 있습니다. 둘째, 대중교통을 이용하면 탄소 배출량을 줄일 수 있습니다. 셋째, 물과 전기를 절약하는 습관을 길러야 합니다.\n\n이러한 노력들이 모이면 지구 환경을 지키는 데 큰 역할을 할 수 있습니다.'},
+    {lv:5,
+     prompt:'주제: 소셜 미디어가 현대 사회에 미치는 긍정적, 부정적 영향을 논하시오. (400~500자)',
+     model:'소셜 미디어는 현대인의 일상에 깊이 자리 잡은 소통 수단입니다. 긍정적인 면에서는 물리적 거리에 관계없이 사람들이 연결될 수 있으며, 정보와 아이디어를 빠르게 공유할 수 있습니다. 또한 개인이 자신의 생각과 창작물을 세상에 알릴 기회를 제공합니다.\n\n반면 부정적인 면도 있습니다. 허위 정보의 급속한 확산, 개인 정보 침해, 그리고 사이버 폭력 문제가 심각합니다. 또한 지나친 사용으로 인해 현실 대인관계가 약화될 수 있습니다.\n\n따라서 소셜 미디어의 혜택을 누리되, 비판적 사고로 정보를 선별하고 건강한 사용 습관을 갖추는 것이 중요합니다.'},
+    {lv:6,
+     prompt:'주제: 인공지능(AI) 발전이 미래 사회에 미치는 영향 — 긍정적·부정적 측면을 논하시오. (600~700자)',
+     model:'AI 기술의 급속한 발전은 미래 사회를 근본적으로 변화시킬 것입니다.\n\n긍정적으로는, AI가 의료 진단 정확성을 높이고 개인화된 교육을 제공할 수 있습니다. 반복적이고 위험한 작업을 대신해 삶의 질도 향상됩니다. 나아가 기후 변화 대응이나 신약 개발 등 인류의 난제 해결에도 기여할 수 있습니다.\n\n그러나 많은 직업이 사라질 수 있고, 개인 정보 침해와 AI 편향성 문제도 우려됩니다. 또한 AI 시스템에 대한 과도한 의존은 인간 고유의 판단력을 약화시킬 위험이 있습니다.\n\n결론적으로, AI는 양날의 검입니다. 사회적 합의와 제도적 장치를 통해 혜택을 극대화하고 부작용을 최소화해야 합니다. 인간과 AI가 상호 보완적으로 공존하는 미래를 만들어 나가야 합니다.'}
+  ]
+};
+
+/* ============================================================
+   Word Bank
+   ============================================================ */
+/* ============================================================
+   EXPANDED WORD BANK — 200 words, Levels 1-4
+   ============================================================ */
+var WORDS = [
+  /* ── Level 1 (60 words) ── */
+  {w:'가족',r:'ga-jok',m:'family',l:1,ex:'우리 가족은 4명이에요.'},
+  {w:'학교',r:'hak-gyo',m:'school',l:1,ex:'저는 학교에 가요.'},
+  {w:'친구',r:'chin-gu',m:'friend',l:1,ex:'친구와 함께 공부해요.'},
+  {w:'음식',r:'eum-sik',m:'food',l:1,ex:'한국 음식이 맛있어요.'},
+  {w:'시간',r:'si-gan',m:'time',l:1,ex:'시간이 없어요.'},
+  {w:'날씨',r:'nal-ssi',m:'weather',l:1,ex:'오늘 날씨가 좋아요.'},
+  {w:'사람',r:'sa-ram',m:'person/people',l:1,ex:'많은 사람이 있어요.'},
+  {w:'집',r:'jip',m:'house/home',l:1,ex:'집에 가요.'},
+  {w:'돈',r:'don',m:'money',l:1,ex:'돈이 없어요.'},
+  {w:'책',r:'chaek',m:'book',l:1,ex:'책을 읽어요.'},
+  {w:'밥',r:'bap',m:'rice/meal',l:1,ex:'밥을 먹어요.'},
+  {w:'물',r:'mul',m:'water',l:1,ex:'물을 마셔요.'},
+  {w:'버스',r:'beo-seu',m:'bus',l:1,ex:'버스를 타요.'},
+  {w:'영화',r:'yeong-hwa',m:'movie/film',l:1,ex:'영화를 봐요.'},
+  {w:'음악',r:'eum-ak',m:'music',l:1,ex:'음악을 들어요.'},
+  {w:'병원',r:'byeong-won',m:'hospital',l:1,ex:'병원에 가요.'},
+  {w:'나라',r:'na-ra',m:'country',l:1,ex:'어느 나라예요?'},
+  {w:'지하철',r:'ji-ha-cheol',m:'subway',l:1,ex:'지하철을 타요.'},
+  {w:'시장',r:'si-jang',m:'market',l:1,ex:'시장에서 샀어요.'},
+  {w:'일',r:'il',m:'work/day',l:1,ex:'오늘 일이 많아요.'},
+  {w:'아침',r:'a-chim',m:'morning/breakfast',l:1,ex:'아침을 먹어요.'},
+  {w:'저녁',r:'jeo-nyeok',m:'evening/dinner',l:1,ex:'저녁을 먹어요.'},
+  {w:'점심',r:'jeom-sim',m:'lunch',l:1,ex:'점심을 먹어요.'},
+  {w:'의자',r:'ui-ja',m:'chair',l:1,ex:'의자에 앉아요.'},
+  {w:'책상',r:'chaek-sang',m:'desk',l:1,ex:'책상 위에 책이 있어요.'},
+  {w:'전화',r:'jeon-hwa',m:'phone/call',l:1,ex:'전화해 주세요.'},
+  {w:'사진',r:'sa-jin',m:'photo/picture',l:1,ex:'사진을 찍어요.'},
+  {w:'공원',r:'gong-won',m:'park',l:1,ex:'공원에서 운동해요.'},
+  {w:'가게',r:'ga-ge',m:'shop/store',l:1,ex:'가게에서 샀어요.'},
+  {w:'고양이',r:'go-yang-i',m:'cat',l:1,ex:'고양이가 귀여워요.'},
+  {w:'강아지',r:'gang-a-ji',m:'puppy/dog',l:1,ex:'강아지가 좋아요.'},
+  {w:'사과',r:'sa-gwa',m:'apple',l:1,ex:'사과를 먹어요.'},
+  {w:'커피',r:'keo-pi',m:'coffee',l:1,ex:'커피를 마셔요.'},
+  {w:'주스',r:'ju-seu',m:'juice',l:1,ex:'주스를 마셔요.'},
+  {w:'빵',r:'ppang',m:'bread',l:1,ex:'빵을 먹어요.'},
+  {w:'옷',r:'ot',m:'clothes',l:1,ex:'옷을 입어요.'},
+  {w:'신발',r:'sin-bal',m:'shoes',l:1,ex:'신발을 신어요.'},
+  {w:'가방',r:'ga-bang',m:'bag',l:1,ex:'가방을 들어요.'},
+  {w:'우산',r:'u-san',m:'umbrella',l:1,ex:'우산을 써요.'},
+  {w:'이름',r:'i-reum',m:'name',l:1,ex:'이름이 뭐예요?'},
+  {w:'나이',r:'na-i',m:'age',l:1,ex:'나이가 몇 살이에요?'},
+  {w:'키',r:'ki',m:'height',l:1,ex:'키가 얼마예요?'},
+  {w:'눈',r:'nun',m:'eyes / snow',l:1,ex:'눈이 예뻐요. / 눈이 와요.'},
+  {w:'입',r:'ip',m:'mouth',l:1,ex:'입을 크게 벌려요.'},
+  {w:'손',r:'son',m:'hand',l:1,ex:'손을 씻어요.'},
+  {w:'발',r:'bal',m:'foot',l:1,ex:'발이 아파요.'},
+  {w:'산',r:'san',m:'mountain',l:1,ex:'산에 올라가요.'},
+  {w:'바다',r:'ba-da',m:'sea/ocean',l:1,ex:'바다가 좋아요.'},
+  {w:'하늘',r:'ha-neul',m:'sky',l:1,ex:'하늘이 파래요.'},
+  {w:'꽃',r:'kkot',m:'flower',l:1,ex:'꽃이 예뻐요.'},
+  {w:'봄',r:'bom',m:'spring',l:1,ex:'봄이 좋아요.'},
+  {w:'여름',r:'yeo-reum',m:'summer',l:1,ex:'여름은 더워요.'},
+  {w:'가을',r:'ga-eul',m:'autumn/fall',l:1,ex:'가을은 시원해요.'},
+  {w:'겨울',r:'gyeo-ul',m:'winter',l:1,ex:'겨울은 추워요.'},
+  {w:'오늘',r:'o-neul',m:'today',l:1,ex:'오늘 날씨가 좋아요.'},
+  {w:'어제',r:'eo-je',m:'yesterday',l:1,ex:'어제 뭐 했어요?'},
+  {w:'내일',r:'nae-il',m:'tomorrow',l:1,ex:'내일 만나요.'},
+  {w:'지금',r:'ji-geum',m:'now',l:1,ex:'지금 어디에 있어요?'},
+  {w:'여기',r:'yeo-gi',m:'here',l:1,ex:'여기에 앉아요.'},
+  {w:'거기',r:'geo-gi',m:'there',l:1,ex:'거기는 어때요?'},
+
+  /* ── Level 2 (60 words) ── */
+  {w:'경험',r:'gyeong-heom',m:'experience',l:2,ex:'좋은 경험이에요.'},
+  {w:'생각',r:'saeng-gak',m:'thought/idea',l:2,ex:'좋은 생각이에요.'},
+  {w:'계획',r:'gye-hoek',m:'plan',l:2,ex:'여행 계획을 세워요.'},
+  {w:'결과',r:'gyeol-gwa',m:'result',l:2,ex:'좋은 결과가 나왔어요.'},
+  {w:'방법',r:'bang-beop',m:'method/way',l:2,ex:'다른 방법을 찾아요.'},
+  {w:'목표',r:'mok-pyo',m:'goal/target',l:2,ex:'목표를 달성했어요.'},
+  {w:'습관',r:'seup-gwan',m:'habit',l:2,ex:'좋은 습관을 만들어요.'},
+  {w:'건강',r:'geon-gang',m:'health',l:2,ex:'건강이 중요해요.'},
+  {w:'환경',r:'hwan-gyeong',m:'environment',l:2,ex:'환경을 보호해야 해요.'},
+  {w:'문화',r:'mun-hwa',m:'culture',l:2,ex:'한국 문화가 좋아요.'},
+  {w:'여행',r:'yeo-haeng',m:'travel/trip',l:2,ex:'여행을 좋아해요.'},
+  {w:'요리',r:'yo-ri',m:'cooking',l:2,ex:'요리를 잘해요.'},
+  {w:'운동',r:'un-dong',m:'exercise/sports',l:2,ex:'매일 운동을 해요.'},
+  {w:'공부',r:'gong-bu',m:'study',l:2,ex:'열심히 공부해요.'},
+  {w:'회사',r:'hoe-sa',m:'company/office',l:2,ex:'회사에 다녀요.'},
+  {w:'직업',r:'ji-geop',m:'job/occupation',l:2,ex:'직업이 뭐예요?'},
+  {w:'월급',r:'wol-geup',m:'monthly salary',l:2,ex:'월급을 받았어요.'},
+  {w:'약속',r:'yak-sok',m:'promise/appointment',l:2,ex:'약속이 있어요.'},
+  {w:'모임',r:'mo-im',m:'gathering/meeting',l:2,ex:'모임에 참석해요.'},
+  {w:'식당',r:'sik-dang',m:'restaurant',l:2,ex:'식당에서 먹어요.'},
+  {w:'주문',r:'ju-mun',m:'order',l:2,ex:'주문했어요.'},
+  {w:'계산',r:'gye-san',m:'payment/calculation',l:2,ex:'계산할게요.'},
+  {w:'쇼핑',r:'syo-ping',m:'shopping',l:2,ex:'쇼핑을 좋아해요.'},
+  {w:'할인',r:'ha-rin',m:'discount',l:2,ex:'할인이 돼요.'},
+  {w:'교통',r:'gyo-tong',m:'traffic/transport',l:2,ex:'교통이 복잡해요.'},
+  {w:'길',r:'gil',m:'road/way',l:2,ex:'길을 찾아요.'},
+  {w:'방향',r:'bang-hyang',m:'direction',l:2,ex:'방향을 몰라요.'},
+  {w:'지도',r:'ji-do',m:'map',l:2,ex:'지도를 봐요.'},
+  {w:'날',r:'nal',m:'day',l:2,ex:'좋은 날이에요.'},
+  {w:'주',r:'ju',m:'week',l:2,ex:'이번 주에 만나요.'},
+  {w:'달',r:'dal',m:'month/moon',l:2,ex:'한 달이 지났어요.'},
+  {w:'해',r:'hae',m:'year/sun',l:2,ex:'새해 복 많이 받으세요.'},
+  {w:'다음',r:'da-eum',m:'next',l:2,ex:'다음에 만나요.'},
+  {w:'먼저',r:'meon-jeo',m:'first/before others',l:2,ex:'먼저 가세요.'},
+  {w:'나중',r:'na-jung',m:'later',l:2,ex:'나중에 이야기해요.'},
+  {w:'갑자기',r:'gap-ja-gi',m:'suddenly',l:2,ex:'갑자기 비가 왔어요.'},
+  {w:'드디어',r:'deu-di-eo',m:'finally/at last',l:2,ex:'드디어 끝났어요.'},
+  {w:'아직',r:'a-jik',m:'still/yet',l:2,ex:'아직 안 왔어요.'},
+  {w:'벌써',r:'beol-sseo',m:'already',l:2,ex:'벌써 끝났어요?'},
+  {w:'진짜',r:'jin-jja',m:'really/true',l:2,ex:'진짜예요?'},
+  {w:'가끔',r:'ga-kkeum',m:'sometimes',l:2,ex:'가끔 만나요.'},
+  {w:'항상',r:'hang-sang',m:'always',l:2,ex:'항상 감사해요.'},
+  {w:'혼자',r:'hon-ja',m:'alone',l:2,ex:'혼자 왔어요.'},
+  {w:'같이',r:'ga-chi',m:'together',l:2,ex:'같이 가요.'},
+  {w:'조심',r:'jo-sim',m:'caution/care',l:2,ex:'조심하세요.'},
+  {w:'다양',r:'da-yang',m:'various/diverse',l:2,ex:'다양한 음식이 있어요.'},
+  {w:'특별',r:'teuk-byeol',m:'special',l:2,ex:'특별한 날이에요.'},
+  {w:'보통',r:'bo-tong',m:'usually/ordinary',l:2,ex:'보통 9시에 자요.'},
+  {w:'적당',r:'jeok-dang',m:'appropriate/moderate',l:2,ex:'적당히 먹어요.'},
+  {w:'중요',r:'jung-yo',m:'important',l:2,ex:'중요한 일이에요.'},
+  {w:'편리',r:'pyeol-li',m:'convenient',l:2,ex:'편리한 도구예요.'},
+  {w:'불편',r:'bul-pyeon',m:'inconvenient',l:2,ex:'불편해요.'},
+  {w:'안전',r:'an-jeon',m:'safety/safe',l:2,ex:'안전하게 운전하세요.'},
+  {w:'위험',r:'wi-heom',m:'danger/dangerous',l:2,ex:'위험해요.'},
+  {w:'도움',r:'do-um',m:'help',l:2,ex:'도움이 필요해요.'},
+  {w:'문제',r:'mun-je',m:'problem/question',l:2,ex:'문제가 생겼어요.'},
+  {w:'해결',r:'hae-gyeol',m:'solution/solve',l:2,ex:'문제를 해결했어요.'},
+  {w:'준비',r:'jun-bi',m:'preparation',l:2,ex:'준비됐어요.'},
+  {w:'연습',r:'yeon-seup',m:'practice',l:2,ex:'연습이 필요해요.'},
+  {w:'실수',r:'sil-su',m:'mistake',l:2,ex:'실수했어요. 죄송해요.'},
+  {w:'성공',r:'seong-gong',m:'success',l:2,ex:'성공했어요!'},
+
+  /* ── Level 3 (50 words) ── */
+  {w:'발전',r:'bal-jeon',m:'development/progress',l:3,ex:'기술이 발전했어요.'},
+  {w:'영향',r:'yeong-hyang',m:'influence/effect',l:3,ex:'큰 영향을 미쳤어요.'},
+  {w:'변화',r:'byeon-hwa',m:'change',l:3,ex:'사회가 변화했어요.'},
+  {w:'원인',r:'won-in',m:'cause/reason',l:3,ex:'원인을 찾아요.'},
+  {w:'주장',r:'ju-jang',m:'argument/claim',l:3,ex:'강하게 주장했어요.'},
+  {w:'분석',r:'bun-seok',m:'analysis',l:3,ex:'데이터를 분석해요.'},
+  {w:'특징',r:'teuk-jing',m:'characteristic/feature',l:3,ex:'특징을 설명해요.'},
+  {w:'현상',r:'hyeon-sang',m:'phenomenon',l:3,ex:'사회적 현상이에요.'},
+  {w:'과정',r:'gwa-jeong',m:'process',l:3,ex:'배우는 과정이에요.'},
+  {w:'목적',r:'mok-jeok',m:'purpose/goal',l:3,ex:'목적이 뭐예요?'},
+  {w:'역할',r:'yeok-hal',m:'role',l:3,ex:'중요한 역할을 해요.'},
+  {w:'관계',r:'gwan-gye',m:'relationship',l:3,ex:'관계가 중요해요.'},
+  {w:'태도',r:'tae-do',m:'attitude',l:3,ex:'태도가 좋아요.'},
+  {w:'노력',r:'no-ryeok',m:'effort',l:3,ex:'노력했어요.'},
+  {w:'성장',r:'seong-jang',m:'growth',l:3,ex:'많이 성장했어요.'},
+  {w:'경쟁',r:'gyeong-jaeng',m:'competition',l:3,ex:'경쟁이 심해요.'},
+  {w:'협력',r:'hyeom-nyeok',m:'cooperation',l:3,ex:'협력이 필요해요.'},
+  {w:'갈등',r:'gal-deung',m:'conflict',l:3,ex:'갈등이 생겼어요.'},
+  {w:'토론',r:'to-ron',m:'discussion/debate',l:3,ex:'토론을 해요.'},
+  {w:'주제',r:'ju-je',m:'topic/theme',l:3,ex:'주제가 뭐예요?'},
+  {w:'근거',r:'geun-geo',m:'basis/evidence',l:3,ex:'근거를 제시해요.'},
+  {w:'예시',r:'ye-si',m:'example',l:3,ex:'예시를 들어요.'},
+  {w:'결론',r:'gyeol-lon',m:'conclusion',l:3,ex:'결론을 내려요.'},
+  {w:'서론',r:'seo-ron',m:'introduction',l:3,ex:'서론을 써요.'},
+  {w:'본론',r:'bon-ron',m:'main body',l:3,ex:'본론으로 들어가요.'},
+  {w:'비교',r:'bi-gyo',m:'comparison',l:3,ex:'비교해 봐요.'},
+  {w:'대조',r:'dae-jo',m:'contrast',l:3,ex:'대조가 뚜렷해요.'},
+  {w:'강조',r:'gang-jo',m:'emphasis',l:3,ex:'강조하고 싶어요.'},
+  {w:'표현',r:'pyo-hyeon',m:'expression',l:3,ex:'표현이 좋아요.'},
+  {w:'의미',r:'ui-mi',m:'meaning',l:3,ex:'의미가 뭐예요?'},
+  {w:'전통',r:'jeon-tong',m:'tradition',l:3,ex:'전통을 지켜요.'},
+  {w:'현대',r:'hyeon-dae',m:'modern times',l:3,ex:'현대 사회예요.'},
+  {w:'사회',r:'sa-hoe',m:'society',l:3,ex:'사회가 변했어요.'},
+  {w:'교육',r:'gyo-yuk',m:'education',l:3,ex:'교육이 중요해요.'},
+  {w:'경제',r:'gyeong-je',m:'economy',l:3,ex:'경제가 좋아요.'},
+  {w:'정치',r:'jeong-chi',m:'politics',l:3,ex:'정치에 관심 있어요.'},
+  {w:'법',r:'beop',m:'law',l:3,ex:'법을 지켜야 해요.'},
+  {w:'권리',r:'gwon-ri',m:'right/rights',l:3,ex:'권리를 주장해요.'},
+  {w:'의무',r:'ui-mu',m:'duty/obligation',l:3,ex:'의무를 다해야 해요.'},
+  {w:'책임',r:'chaek-im',m:'responsibility',l:3,ex:'책임이 있어요.'},
+  {w:'가치',r:'ga-chi',m:'value/worth',l:3,ex:'소중한 가치예요.'},
+  {w:'원칙',r:'won-chik',m:'principle',l:3,ex:'원칙을 지켜요.'},
+  {w:'기준',r:'gi-jun',m:'standard/criterion',l:3,ex:'기준이 높아요.'},
+  {w:'통계',r:'tong-gye',m:'statistics',l:3,ex:'통계를 보면 알 수 있어요.'},
+  {w:'조사',r:'jo-sa',m:'survey/investigation',l:3,ex:'조사를 했어요.'},
+  {w:'연구',r:'yeon-gu',m:'research',l:3,ex:'연구를 진행해요.'},
+  {w:'결과',r:'gyeol-gwa',m:'result/outcome',l:3,ex:'결과가 좋아요.'},
+  {w:'효과',r:'hyo-gwa',m:'effect/effectiveness',l:3,ex:'효과가 있어요.'},
+  {w:'반응',r:'ban-eung',m:'reaction/response',l:3,ex:'반응이 좋아요.'},
+  {w:'인식',r:'in-sik',m:'awareness/perception',l:3,ex:'인식이 바뀌었어요.'},
+
+  /* ── Level 4 (30 words) ── */
+  {w:'설득',r:'seol-deuk',m:'persuasion',l:4,ex:'설득에 성공했어요.'},
+  {w:'논리',r:'nol-li',m:'logic',l:4,ex:'논리적으로 말해요.'},
+  {w:'본질',r:'bon-jil',m:'essence/nature',l:4,ex:'본질을 파악해요.'},
+  {w:'실현',r:'sil-hyeon',m:'realization/achievement',l:4,ex:'꿈을 실현했어요.'},
+  {w:'모순',r:'mo-sun',m:'contradiction',l:4,ex:'모순이 있어요.'},
+  {w:'합리적',r:'ham-ni-jeok',m:'rational/reasonable',l:4,ex:'합리적인 선택이에요.'},
+  {w:'추상적',r:'chu-sang-jeok',m:'abstract',l:4,ex:'추상적인 개념이에요.'},
+  {w:'구체적',r:'gu-che-jeok',m:'concrete/specific',l:4,ex:'구체적으로 말해요.'},
+  {w:'객관적',r:'gaek-gwan-jeok',m:'objective',l:4,ex:'객관적으로 봐야 해요.'},
+  {w:'주관적',r:'ju-gwan-jeok',m:'subjective',l:4,ex:'주관적인 의견이에요.'},
+  {w:'비판',r:'bi-pan',m:'criticism',l:4,ex:'비판적으로 생각해요.'},
+  {w:'평가',r:'pyeong-ga',m:'evaluation/assessment',l:4,ex:'공정하게 평가해요.'},
+  {w:'관점',r:'gwan-jeom',m:'perspective/viewpoint',l:4,ex:'다양한 관점이 있어요.'},
+  {w:'입장',r:'ip-jang',m:'position/stance',l:4,ex:'입장을 밝혀요.'},
+  {w:'타협',r:'ta-hyeop',m:'compromise',l:4,ex:'타협이 필요해요.'},
+  {w:'배려',r:'bae-ryeo',m:'consideration/care',l:4,ex:'배려가 중요해요.'},
+  {w:'존중',r:'jon-jung',m:'respect',l:4,ex:'서로 존중해요.'},
+  {w:'차별',r:'cha-byeol',m:'discrimination',l:4,ex:'차별은 안 돼요.'},
+  {w:'평등',r:'pyeong-deung',m:'equality',l:4,ex:'평등이 중요해요.'},
+  {w:'자유',r:'ja-yu',m:'freedom/liberty',l:4,ex:'자유가 소중해요.'},
+  {w:'창의',r:'chang-ui',m:'creativity',l:4,ex:'창의적인 생각이에요.'},
+  {w:'혁신',r:'hyeok-sin',m:'innovation',l:4,ex:'혁신이 필요해요.'},
+  {w:'전략',r:'jeol-lyak',m:'strategy',l:4,ex:'전략을 세워요.'},
+  {w:'효율',r:'hyo-yul',m:'efficiency',l:4,ex:'효율이 높아요.'},
+  {w:'심층',r:'sim-cheung',m:'in-depth/deep',l:4,ex:'심층 분석이 필요해요.'},
+  {w:'맥락',r:'maeng-nnak',m:'context',l:4,ex:'맥락을 파악해요.'},
+  {w:'함의',r:'ha-mui',m:'implication',l:4,ex:'함의를 이해해요.'},
+  {w:'전제',r:'jeon-je',m:'premise/assumption',l:4,ex:'전제를 확인해요.'},
+  {w:'귀납',r:'gwi-nap',m:'induction',l:4,ex:'귀납적 추론이에요.'},
+  {w:'연역',r:'yeon-yeok',m:'deduction',l:4,ex:'연역적 방식으로 증명해요.'}
+];
+
+/* ============================================================
+   State
+   ============================================================ */
+var TS = (function(){
+  try {
+    var s = JSON.parse(localStorage.getItem('weace_topik') || 'null');
+    return s || {total:0, correct:0, streak:0, knownWords:[], target:0};
+  } catch(e) {
+    return {total:0, correct:0, streak:0, knownWords:[], target:0};
+  }
+})();
+function saveTS(){ try{localStorage.setItem('weace_topik', JSON.stringify(TS));}catch(e){} }
+
+/* Auth check */
+var _sess = null;
+try { _sess = JSON.parse(localStorage.getItem('weace_session') || 'null'); } catch(e){}
+if (!_sess || !_sess.name) { window.location.href = 'intro.html'; }
+
+/* Init user display */
+(function(){
+  if (!_sess) return;
+  var p = (_sess.name||'').trim().split(' ');
+  var ini = ((p[0]?p[0][0]:'') + (p[1]?p[1][0]:'')).toUpperCase() || 'W';
+  var ava = document.getElementById('sb-ava');  if(ava) ava.textContent = ini;
+  var nm  = document.getElementById('sb-name'); if(nm)  nm.textContent  = _sess.name;
+  var pl  = document.getElementById('sb-chip'); if(pl)  pl.textContent  = {free:'Free',plus:'Plus',pro:'Pro'}[_sess.plan||'free']||'Free';
+  // Hide XP bar (SAT-specific)
+  var xpBar = document.querySelector('.sb-xp'); if(xpBar) xpBar.style.display='none';
+  var h = new Date().getHours();
+  var g = h<12 ? '좋은 아침이에요' : h<17 ? '안녕하세요' : '좋은 저녁이에요';
+  var gel = document.getElementById('t-greeting');
+  if(gel) gel.textContent = g + ', ' + (p[0]||'') + '!';
+  renderStats();
+  if(TS.target > 0) markTarget(TS.target);
+  renderWOD();
+})();
+
+function renderStats(){
+  var e;
+  e = document.getElementById('stat-total');  if(e) e.textContent = TS.total;
+  e = document.getElementById('stat-acc');    if(e) e.textContent = TS.total > 0 ? Math.round(TS.correct/TS.total*100)+'%' : '—';
+  e = document.getElementById('stat-words'); if(e) e.textContent = TS.knownWords.length;
+  e = document.getElementById('stat-streak');if(e) e.textContent = TS.streak;
+  e = document.getElementById('t-streak');   if(e) e.textContent = TS.streak;
+}
+
+/* ============================================================
+   Navigation
+   ============================================================ */
+var PAGE_TITLES = {
+  home:'TOPIK Dashboard', vocab1:'어휘·문법 I', reading1:'읽기 I',
+  listening1:'듣기 I', vocab2:'어휘·문법 II', reading2:'읽기 II',
+  writing2:'쓰기 II', mock:'Mock Test', wordbook:'Word Book'
+};
+
+function goTo(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  var pg = document.getElementById('p-' + id);
+  if(pg) pg.classList.add('on');
+  var tl = document.getElementById('pg-title');
+  if(tl) tl.textContent = PAGE_TITLES[id] || id;
+  document.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('on'); });
+  var ni = document.querySelector('[data-pg="' + id + '"]');
+  if(ni) ni.classList.add('on');
+  window.scrollTo(0,0);
+  if(id==='vocab1')    initSection('v1');
+  if(id==='vocab2')    initSection('v2');
+  if(id==='reading1')  initSection('r1');
+  if(id==='reading2')  initSection('r2');
+  if(id==='listening1')initSection('l1');
+  if(id==='writing2')  initWriting();
+  if(id==='wordbook')  renderWordbook('all');
+}
+
+function doLogout(){
+  localStorage.removeItem('weace_session');
+  window.location.href = 'intro.html';
+}
+
+/* ============================================================
+   Target level
+   ============================================================ */
+function setTarget(n){
+  TS.target = n; saveTS(); markTarget(n);
+}
+function markTarget(n){
+  var chip = document.getElementById('target-chip');
+  if(chip) chip.textContent = 'TOPIK '+(n<=2?'I':'II')+' Level '+n;
+  for(var i=1;i<=6;i++){
+    var btn = document.getElementById('lv-btn-'+i);
+    if(btn) btn.style.opacity = i===n ? '1' : '0.4';
+  }
+}
+
+/* ============================================================
+   Question engine
+   ============================================================ */
+var sections = {};
+
+function initSection(key){
+  var bankMap = {v1:'vocab1',v2:'vocab2',r1:'reading1',r2:'reading2',l1:'listening1'};
+  var bank = QB[bankMap[key]];
+  if(!bank) return;
+  sections[key] = {qs: bank.slice(), idx:0, correct:0, answered:false};
+  renderQ(key);
+}
+
+var AREA_MAP = {v1:'v1-area',v2:'v2-area',r1:'r1-area',r2:'r2-area',l1:'l1-area'};
+var LV_CLS   = ['','lv1','lv2','lv3','lv4','lv5','lv6'];
+
+function renderQ(key){
+  var s = sections[key];
+  var area = document.getElementById(AREA_MAP[key]);
+  if(!area || !s) return;
+  if(s.idx >= s.qs.length){ renderDone(key); return; }
+  var q = s.qs[s.idx];
+
+  /* dots */
+  var dots = s.qs.map(function(_,i){
+    var cls = i < s.idx ? 'done' : i === s.idx ? 'curr' : '';
+    return '<div class="qdot '+cls+'"></div>';
+  }).join('');
+
+  /* passage/script block */
+  var top = '';
+  if(q.passage){
+    top = '<div class="passage">' + q.passage.replace(/\n/g,'<br>') + '</div>';
+  }
+  if(q.script){
+    top = '<div class="passage" style="border-left-color:var(--purple)">'
+        + '<div style="font-family:var(--fm);font-size:9px;color:var(--hint);margin-bottom:.5rem;letter-spacing:1px">DIALOGUE</div>'
+        + q.script.replace(/\n/g,'<br>') + '</div>';
+  }
+
+  /* options */
+  var lvCls = LV_CLS[q.lv||1];
+  var optsHTML = q.opts.map(function(o,i){
+    return '<button class="t-opt" id="topt-'+key+'-'+i+'" onclick="pickAns(\''+key+'\','+i+')">'
+         + '<div class="onum">'+(i+1)+'</div>'
+         + '<div style="flex:1">'+o+'</div></button>';
+  }).join('');
+
+  area.innerHTML =
+    '<div class="card" style="border-color:rgba(239,68,68,.2)">'
+   +'<div class="card-head" style="margin-bottom:.875rem">'
+   +'<span style="font-family:var(--fm);font-size:9px;color:var(--hint)">Q'+(s.idx+1)+' / '+s.qs.length+'</span>'
+   +'<span class="lv-badge '+lvCls+'">Level '+(q.lv||1)+'</span>'
+   +'</div>'
+   + top
+   +'<div style="font-size:15px;font-weight:600;line-height:1.85;margin-bottom:1.25rem;white-space:pre-line">'+q.q+'</div>'
+   +'<div style="display:flex;flex-direction:column;gap:8px">'+optsHTML+'</div>'
+   +'<div id="fb-'+key+'" style="display:none"></div>'
+   +'<div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem">'
+   +'<div class="qdots">'+dots+'</div>'
+   +'<button id="nxt-'+key+'" onclick="nextQ(\''+key+'\')" disabled class="btn pri" style="opacity:.4;background:var(--topik);border-color:var(--topik)">Next →</button>'
+   +'</div></div>';
+}
+
+function pickAns(key, i){
+  var s = sections[key];
+  if(!s || s.answered) return;
+  s.answered = true;
+  var q = s.qs[s.idx];
+  var ok = (i === q.ans);
+  for(var j=0;j<q.opts.length;j++){
+    var btn = document.getElementById('topt-'+key+'-'+j);
+    if(btn){
+      btn.disabled = true;
+      if(j===q.ans) btn.classList.add('correct');
+      else if(j===i && !ok) btn.classList.add('wrong');
+    }
+  }
+  var fb = document.getElementById('fb-'+key);
+  if(fb){
+    fb.style.display = 'block';
+    fb.innerHTML = '<div class="fb-box '+(ok?'ok':'bad')+'">'
+      +'<div class="fb-title">'+(ok?'✓ 정답!':'✗ 오답 — 정답: '+(q.ans+1)+'번')+'</div>'
+      +'<div class="fb-ex">'+(q.ex||'')+'</div></div>';
+  }
+  var nxt = document.getElementById('nxt-'+key);
+  if(nxt){ nxt.disabled=false; nxt.style.opacity='1'; }
+  if(ok) s.correct++;
+  TS.total++; if(ok) TS.correct++;
+  renderStats(); saveTS();
+}
+
+function nextQ(key){
+  var s = sections[key];
+  if(!s) return;
+  s.idx++; s.answered=false;
+  renderQ(key);
+}
+
+function renderDone(key){
+  var area = document.getElementById(AREA_MAP[key]);
+  if(!area) return;
+  var s = sections[key];
+  var acc = s ? Math.round(s.correct/s.qs.length*100) : 0;
+  TS.streak++; renderStats(); saveTS();
+  area.innerHTML =
+    '<div class="card" style="text-align:center;padding:2rem;border-color:var(--gm)">'
+   +'<div style="font-size:52px;margin-bottom:1rem">'+(acc>=70?'🎉':'💪')+'</div>'
+   +'<div style="font-family:var(--fd);font-size:22px;font-weight:900;margin-bottom:.5rem">Section Complete!</div>'
+   +'<div style="color:var(--muted);margin-bottom:.5rem">Score: <strong style="color:'+(acc>=70?'var(--green)':'var(--amber)')+'">'+acc+'%</strong></div>'
+   +'<div style="color:var(--hint);font-size:12px;margin-bottom:2rem">'+s.correct+' / '+s.qs.length+' correct</div>'
+   +'<div style="display:flex;gap:10px;justify-content:center">'
+   +'<button class="btn sec" onclick="initSection(\''+key+'\')">Try Again</button>'
+   +'<button class="btn pri" style="background:var(--topik);border-color:var(--topik)" onclick="goTo(\'home\')">Dashboard</button>'
+   +'</div></div>';
+}
+
+/* ============================================================
+   Writing
+   ============================================================ */
+var w2idx = 0;
+function initWriting(){
+  w2idx = 0; renderPrompt();
+  var ta = document.getElementById('w2-input');
+  if(ta) ta.oninput = function(){
+    var cc = document.getElementById('w2-charcount');
+    if(cc) cc.textContent = ta.value.replace(/\s/g,'').length + '자';
+  };
+  var mc = document.getElementById('w2-model');
+  if(mc) mc.style.display = 'none';
+}
+function renderPrompt(){
+  var p = QB.writing2[w2idx];
+  var el = document.getElementById('w2-prompt');
+  if(el) el.innerHTML = p.prompt.replace(/\n/g,'<br>');
+  var chip = document.getElementById('w2-level-chip');
+  if(chip){ chip.textContent='Level '+p.lv; chip.className='lv-badge '+LV_CLS[p.lv]; }
+  var ta = document.getElementById('w2-input');
+  if(ta) ta.value = '';
+  var cc = document.getElementById('w2-charcount');
+  if(cc) cc.textContent = '0자';
+  var mc = document.getElementById('w2-model');
+  if(mc) mc.style.display = 'none';
+}
+function showModel(){
+  var p = QB.writing2[w2idx];
+  var mc = document.getElementById('w2-model');
+  var mt = document.getElementById('w2-model-text');
+  if(mc) mc.style.display = 'block';
+  if(mt) mt.innerHTML = p.model.replace(/\n\n/g,'</p><p style="margin-top:.875rem">').replace(/^/,'<p>')+'</p>';
+}
+function nextPrompt(){
+  w2idx = (w2idx+1) % QB.writing2.length;
+  renderPrompt();
+}
+
+/* ============================================================
+   Word of the Day
+   ============================================================ */
+var wodIdx = new Date().getDate() % WORDS.length;
+function renderWOD(){
+  var w = WORDS[wodIdx];
+  var e;
+  e=document.getElementById('wod-kor');   if(e) e.textContent=w.w;
+  e=document.getElementById('wod-rom');   if(e) e.textContent='['+w.r+']';
+  e=document.getElementById('wod-mean');  if(e) e.textContent=w.m;
+  e=document.getElementById('wod-ex');    if(e) e.innerHTML=w.ex+'<br><span style="color:var(--hint);font-size:11px">Level '+w.l+' vocabulary</span>';
+  e=document.getElementById('wod-level'); if(e){ e.textContent='Level '+w.l; e.className='lv-badge '+LV_CLS[w.l]; }
+}
+function nextWOD(){ wodIdx=(wodIdx+1)%WORDS.length; renderWOD(); }
+
+/* ============================================================
+   Word Book
+   ============================================================ */
+function renderWordbook(filter){
+  var grid = document.getElementById('wb-grid');
+  if(!grid) return;
+  var words = filter==='all' ? WORDS : WORDS.filter(function(w){ return w.l===filter; });
+  grid.innerHTML = words.map(function(w){
+    var known = TS.knownWords.indexOf(w.w) >= 0;
+    return '<div class="word-card'+(known?' known':'')+'" onclick="toggleKnown(\''+w.w+'\')">'
+      +'<div style="font-size:22px;font-weight:900;margin-bottom:3px;color:'+(known?'var(--green)':'var(--text)')+'">'+w.w+'</div>'
+      +'<div style="font-family:var(--fm);font-size:9px;color:var(--hint);margin-bottom:4px">['+w.r+'] · Level '+w.l+'</div>'
+      +'<div style="font-size:12.5px;color:var(--muted);margin-bottom:.375rem">'+w.m+'</div>'
+      +'<div style="font-size:11px;color:var(--hint);font-style:italic;margin-bottom:.375rem">'+w.ex+'</div>'
+      +'<div style="font-family:var(--fm);font-size:8px;color:'+(known?'var(--green)':'var(--hint)')+'">'+( known?'✓ Known — click to unmark':'Tap to mark known')+'</div>'
+      +'</div>';
+  }).join('');
+  ['all',1,2,3,4].forEach(function(f){
+    var btn=document.getElementById('wbf-'+f);
+    if(btn) btn.className = f===filter ? 'btn pri sm' : 'btn sec sm';
+  });
+}
+function filterWB(f){ renderWordbook(f); }
+function toggleKnown(word){
+  var idx = TS.knownWords.indexOf(word);
+  if(idx>=0) TS.knownWords.splice(idx,1); else TS.knownWords.push(word);
+  saveTS(); renderStats();
+  var active='all';
+  ['all',1,2,3,4].forEach(function(f){
+    var btn=document.getElementById('wbf-'+f);
+    if(btn && btn.className.indexOf('pri')>=0) active=f;
+  });
+  renderWordbook(active);
+}
+
+/* ============================================================
+   Mock test
+   ============================================================ */
+function startMock(level){
+  var area = document.getElementById('mock-result-area');
+  if(!area) return;
+  area.innerHTML='<div class="card" style="border-color:rgba(239,68,68,.2);text-align:center;padding:2rem">'
+    +'<div style="font-size:36px;margin-bottom:1rem">🚧</div>'
+    +'<div style="font-family:var(--fd);font-size:18px;font-weight:800;margin-bottom:.5rem">Coming Soon</div>'
+    +'<div style="color:var(--muted);margin-bottom:1.5rem">Full TOPIK '+(level===1?'I':'II')+' mock is in development.<br>Use the individual sections to practice now.</div>'
+    +'<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'
+    +'<button class="btn sec" onclick="goTo(\'vocab'+level+'\')">📝 어휘</button>'
+    +'<button class="btn sec" onclick="goTo(\'reading'+level+'\')">📖 읽기</button>'
+    +(level===1?'<button class="btn sec" onclick="goTo(\'listening1\')">🎧 듣기</button>':'<button class="btn sec" onclick="goTo(\'writing2\')">✍️ 쓰기</button>')
+    +'</div></div>';
+}
+
+/* Mobile nav */
+(function(){
+  function checkMobile(){
+    var nav = document.getElementById('mob-nav');
+    if(nav) nav.style.display = window.innerWidth <= 768 ? 'grid' : 'none';
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+})();
+
+</script>
+</body>
+</html>

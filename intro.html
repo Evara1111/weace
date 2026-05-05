@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>We Ace The Exam — SAT Prep</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;--bg4:#1e1e24;
+  --text:#f0f0f2;--muted:#888;--hint:#444;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.1);--b3:rgba(255,255,255,.18);
+  --green:#22c55e;--gd:rgba(34,197,94,.1);--gm:rgba(34,197,94,.22);
+  --blue:#3b82f6;--bd:rgba(59,130,246,.1);--bm:rgba(59,130,246,.22);
+  --amber:#f59e0b;--ad:rgba(245,158,11,.1);--am:rgba(245,158,11,.22);
+  --red:#ef4444;--rd:rgba(239,68,68,.1);--rm:rgba(239,68,68,.22);
+  --purple:#a855f7;--pd:rgba(168,85,247,.1);--pm:rgba(168,85,247,.22);
+  --teal:#14b8a6;--td:rgba(20,184,166,.1);--tm:rgba(20,184,166,.22);
+  --sw:238px;--f:'Inter',sans-serif;--fd:'Sora',sans-serif;--fm:'DM Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;font-size:15px}
+a{text-decoration:none;color:inherit}
+
+/* CANVAS */
+#c{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:80;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);background:rgba(6,6,8,.75)}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:900;letter-spacing:-.5px;cursor:pointer}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:2.5rem}
+.nav-links a{font-size:14px;color:var(--muted);transition:color .15s;cursor:pointer}
+.nav-links a:hover{color:var(--text)}
+.nav-ctas{display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--f);font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .15s}
+.btn.p{background:var(--green);color:#000}.btn.p:hover{opacity:.88;transform:translateY(-1px)}
+.btn.gh{background:transparent;color:var(--text);border:1px solid var(--b2)}.btn.gh:hover{background:var(--bg3);border-color:var(--b3)}
+.btn.lg{padding:14px 32px;font-size:15px;border-radius:10px}
+.btn.xl{padding:16px 40px;font-size:16px;border-radius:12px;font-weight:700}
+
+/* HERO */
+.hero{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 2rem 6rem;text-align:center}
+
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:30px;padding:6px 18px;font-family:var(--fm);font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:2.5rem}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+
+/* ANIMATED TITLE */
+.hero-title{font-family:var(--fd);font-size:clamp(64px,10vw,130px);font-weight:900;line-height:.9;letter-spacing:-5px;margin-bottom:2rem;position:relative}
+.word-we{display:block;color:var(--text);opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards .2s}
+.word-ace{display:block;position:relative;overflow:visible}
+.word-ace-text{background:linear-gradient(135deg,#22c55e,#3b82f6,#a855f7,#f59e0b,#22c55e);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 3s ease-in-out infinite,wordIn .8s ease forwards .5s;opacity:0;transform:translateY(40px);display:inline-block}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.word-the{display:block;color:var(--text);opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards .8s}
+.word-exam{display:block;opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards 1.1s}
+.word-exam-inner{position:relative;display:inline-block}
+.word-exam-inner::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:4px;background:var(--green);border-radius:2px;animation:underlineIn .6s ease forwards 1.8s;transform:scaleX(0);transform-origin:left}
+@keyframes underlineIn{to{transform:scaleX(1)}}
+@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
+.word-period{color:var(--green);animation:blink-period 2s ease-in-out infinite 2s}
+@keyframes blink-period{0%,90%,100%{opacity:1}95%{opacity:.3}}
+
+.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:560px;margin:0 auto 3rem;line-height:1.8;font-weight:300;opacity:0;animation:fadeUp .8s ease forwards 1.4s}
+.hero-sub strong{color:var(--text);font-weight:600}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fadeUp .8s ease forwards 1.6s}
+
+.hero-proof{display:flex;align-items:center;gap:2.5rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease forwards 1.8s}
+.proof-item{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:11px;color:var(--hint);letter-spacing:.5px}
+.proof-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.proof-sep{width:1px;height:16px;background:var(--b2)}
+
+/* SCROLL INDICATOR */
+.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--hint);font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:0;animation:fadeIn 1s ease forwards 2.5s}
+@keyframes fadeIn{to{opacity:1}}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--hint));animation:scrollAnim 2s ease-in-out infinite}
+@keyframes scrollAnim{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.5);opacity:.4}}
+
+/* SECTION BASE */
+section{position:relative;z-index:10}
+.wrap{max-width:1140px;margin:0 auto;padding:0 2rem}
+.section-pad{padding:7rem 0}
+.sec-ey{font-family:var(--fm);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:block}
+.sec-title{font-family:var(--fd);font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-.5px;line-height:1.05;margin-bottom:1.25rem}
+.sec-sub{font-size:16px;color:var(--muted);line-height:1.8;font-weight:300}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--b2),transparent)}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--b1);border:1px solid var(--b1);border-radius:20px;overflow:hidden;margin-top:4rem}
+.feat{background:var(--bg2);padding:2.25rem;transition:background .2s;cursor:default}
+.feat:hover{background:var(--bg3)}
+.feat-ic{font-size:30px;margin-bottom:1rem}
+.feat-title{font-size:16px;font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
+.feat-sub{font-size:13px;color:var(--muted);line-height:1.75}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);border-radius:20px;overflow:hidden;border:1px solid var(--b1)}
+.stat-item{background:var(--bg2);padding:2.5rem;text-align:center}
+.stat-num{font-family:var(--fd);font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--green);margin-bottom:5px;line-height:1}
+.stat-lbl{font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--hint)}
+
+/* HOW */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:4rem}
+.step{background:var(--bg2);border:1px solid var(--b1);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
+.step-num{font-family:var(--fd);font-size:80px;font-weight:900;color:var(--b1);position:absolute;top:-10px;right:16px;line-height:1;user-select:none}
+.step-icon{font-size:26px;margin-bottom:12px;position:relative}
+.step-title{font-size:15px;font-weight:700;margin-bottom:6px;position:relative}
+.step-sub{font-size:13px;color:var(--muted);line-height:1.7;position:relative}
+
+/* PRICING */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:820px;margin:4rem auto 0}
+.price-card{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:2.75rem;position:relative;overflow:hidden;transition:transform .2s}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.pro{border-color:rgba(34,197,94,.35);background:linear-gradient(160deg,rgba(34,197,94,.06),var(--bg2))}
+.price-card.pro::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 10%,rgba(34,197,94,.08),transparent 60%);pointer-events:none}
+.price-popular-badge{position:absolute;top:1.5rem;right:1.5rem;background:var(--green);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:12px;padding:4px 12px}
+.price-plan{font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.price-amt{font-family:var(--fd);font-size:58px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:.25rem}
+.price-per{font-size:13px;color:var(--muted);margin-bottom:2.25rem;font-weight:300}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:2.25rem}
+.pf{display:flex;align-items:flex-start;gap:11px;font-size:14px;line-height:1.5}
+.pf-check{width:20px;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px}
+.pf-check.y{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.pf-check.n{background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
+.price-btn{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .15s;font-family:var(--f)}
+.price-btn:hover{opacity:.88;transform:translateY(-1px)}
+
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
+.testi{background:var(--bg2);border:1px solid var(--b1);border-radius:16px;padding:2rem;transition:border-color .2s}
+.testi:hover{border-color:var(--b2)}
+.testi-stars{color:var(--amber);font-size:15px;letter-spacing:3px;margin-bottom:1rem}
+.testi-text{font-size:14px;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;font-style:italic}
+.testi-author{font-size:13px;font-weight:600}
+.testi-meta{font-family:var(--fm);font-size:10px;color:var(--hint);margin-top:3px}
+
+/* FAQ */
+.faq-wrap{max-width:700px}
+.faq-item{border-bottom:1px solid var(--b1);overflow:hidden}
+.faq-q{font-size:16px;font-weight:600;padding:1.375rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;user-select:none;transition:color .15s}
+.faq-q:hover{color:var(--green)}
+.faq-arrow{font-size:18px;color:var(--hint);flex-shrink:0;transition:transform .3s}
+.faq-item.open .faq-arrow{transform:rotate(45deg)}
+.faq-a{font-size:14px;color:var(--muted);line-height:1.85;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s ease;padding-bottom:0}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:1.25rem}
+
+/* CTA BAND */
+.cta-band{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(59,130,246,.08),rgba(168,85,247,.06));border:1px solid rgba(34,197,94,.2);border-radius:24px;padding:5rem;text-align:center;max-width:800px;margin:0 auto}
+.cta-band-title{font-family:var(--fd);font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-.5px;margin-bottom:1rem;line-height:1.1}
+.cta-band-sub{font-size:16px;color:var(--muted);margin-bottom:2.5rem;line-height:1.7}
+
+/* FOOTER */
+.footer{border-top:1px solid var(--b1);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:10}
+.footer-logo{font-family:var(--fd);font-size:16px;font-weight:900}
+.footer-logo span{color:var(--green)}
+.footer-links{display:flex;gap:2rem}
+.footer-links a{font-size:13px;color:var(--hint);cursor:pointer;transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+.footer-copy{font-family:var(--fm);font-size:10px;color:var(--hint);letter-spacing:.5px}
+
+/* AUTH MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex;animation:fadeIn .2s ease}
+.auth-modal{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:3rem;width:100%;max-width:440px;position:relative;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.auth-close{position:absolute;top:1.25rem;right:1.25rem;background:var(--bg3);border:1px solid var(--b1);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;transition:color .15s}
+.auth-close:hover{color:var(--text)}
+.auth-logo{font-family:var(--fd);font-size:16px;font-weight:900;margin-bottom:2rem;text-align:center}
+.auth-logo span{color:var(--green)}
+.auth-title{font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:-.3px;margin-bottom:.5rem;text-align:center}
+.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:2rem;line-height:1.6}
+.auth-tabs{display:flex;background:var(--bg3);border-radius:10px;padding:4px;gap:4px;margin-bottom:2rem}
+.auth-tab{flex:1;padding:9px;border-radius:7px;font-family:var(--f);font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s;text-align:center}
+.auth-tab.on{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.auth-form{display:flex;flex-direction:column;gap:14px}
+.auth-field{display:flex;flex-direction:column;gap:6px}
+.auth-label{font-family:var(--fm);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--hint)}
+.auth-input{background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;padding:12px 14px;font-family:var(--f);font-size:14px;color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.auth-input:focus{border-color:var(--green)}
+.auth-input::placeholder{color:var(--hint)}
+.auth-submit{width:100%;padding:13px;background:var(--green);color:#000;font-family:var(--f);font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:all .15s;margin-top:4px}
+.auth-submit:hover{opacity:.88;transform:translateY(-1px)}
+.auth-error{background:var(--rd,rgba(239,68,68,.1));border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#ef4444;display:none}
+.auth-error.show{display:block}
+.auth-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--green);display:none;text-align:center}
+.auth-success.show{display:block}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:4px 0}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1)}
+.auth-divider span{font-family:var(--fm);font-size:10px;color:var(--hint);letter-spacing:1px}
+.auth-switch{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
+.auth-switch a{color:var(--green);cursor:pointer;font-weight:600}
+.auth-switch a:hover{text-decoration:underline}
+.auth-pro-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--amber);margin-bottom:14px;text-align:center;display:none}
+
+@media(max-width:768px){
+  nav{padding:0 1rem!important}
+  section{padding:4rem 1rem!important}
+  h1{font-size:clamp(48px,15vw,90px)!important;letter-spacing:-2px!important}
+  h2{font-size:28px!important}
+  .grid-3,.grid-2,[style*="grid-template-columns:repeat(3"],[style*="grid-template-columns:1fr 1fr 1fr"]{display:flex!important;flex-direction:column!important}
+  [style*="grid-template-columns:repeat(5"]{gap:0!important}
+  nav [style*="display:flex"][style*="gap:2rem"]{display:none!important}
+  footer [style*="justify-content:space-between"]{flex-direction:column!important;text-align:center!important}
+}
+@media(max-width:480px){
+  h1{font-size:clamp(40px,18vw,72px)!important}
+  [style*="gap:12px"][style*="flex-wrap:wrap"]{flex-direction:column!important}
+  button[style*="padding:14px 28px"]{width:100%!important;padding:13px!important}
+}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo" onclick="scrollTo(0,0)">We<span>Ace</span></div>
+  <div class="nav-links">
+    <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</a>
+    <a onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</a>
+    <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a>
+  </div>
+  <div class="nav-ctas" id="nav-ctas">
+    <button class="btn gh" onclick="openAuth('login')" id="nav-signin">Sign in</button>
+    <button class="btn p" onclick="openAuth('signup')" id="nav-signup">Get started free</button>
+    <button class="btn p" id="nav-continue" style="display:none" onclick="window.location.href='choose.html'">Continue →</button>
+    <div style="display:flex;gap:4px;margin-left:8px">
+      <button onclick="setIntroLang('mn')" id="intro-lang-mn" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid var(--b2);background:var(--gd);color:var(--green);cursor:pointer">🇲🇳</button>
+      <button onclick="setIntroLang('en')" id="intro-lang-en" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid var(--b2);background:transparent;color:var(--muted);cursor:pointer">🇺🇸</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    SAT prep for Mongolian students
+  </div>
+
+  <h1 class="hero-title">
+    <span class="word-we">WE</span>
+    <span class="word-ace"><span class="word-ace-text">ACE</span></span>
+    <span class="word-the">THE</span>
+    <span class="word-exam"><span class="word-exam-inner">EXAM<span class="word-period">.</span></span></span>
+  </h1>
+
+  <p class="hero-sub" id="hero-sub">
+    Real SAT questions. Instant explanations.<br>
+    Smart weakness detection. <strong>Start free today.</strong>
+  </p>
+
+  <div class="hero-ctas" id="hero-ctas-guest">
+    <button class="btn p xl" onclick="openAuth('signup')">Create free account →</button>
+    <button class="btn gh lg" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See how it works</button>
+  </div>
+  <div class="hero-ctas" id="hero-ctas-user" style="display:none">
+    <button class="btn p xl" onclick="window.location.href='choose.html'">Continue to Dashboard →</button>
+    <button class="btn gh lg" onclick="openAuth('login')">Sign in to different account</button>
+  </div>
+
+  <div class="hero-proof">
+    <div class="proof-item"><span class="proof-dot"></span>21 hard SAT questions</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-dot"></span>Desmos calculator built-in</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-dot"></span>383 vocabulary words</div>
+    <div class="proof-sep"></div>
+    <div class="proof-item"><span class="proof-dot"></span>100% free to start</div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- STATS -->
+<section>
+  <div class="wrap" style="padding:5rem 2rem">
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">200+</div><div class="stat-lbl">SAT questions</div></div>
+      <div class="stat-item"><div class="stat-num">383</div><div class="stat-lbl">Vocab words</div></div>
+      <div class="stat-item"><div class="stat-num">6</div><div class="stat-lbl">Pro courses</div></div>
+      <div class="stat-item"><div class="stat-num">Free</div><div class="stat-lbl">To start</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="wrap section-pad">
+    <span class="sec-ey">Features</span>
+    <div class="sec-title">Everything you need<br>to score higher</div>
+    <div class="feat-grid">
+      <div class="feat"><div class="feat-ic">🧮</div><div class="feat-title">Desmos Calculator</div><div class="feat-sub">The exact same calculator used in the real digital SAT, built directly into every math question. No switching tabs.</div></div>
+      <div class="feat"><div class="feat-ic">📐</div><div class="feat-title">Real SAT Difficulty</div><div class="feat-sub">Questions at 1300–1600 difficulty. Every question is preceded by a concept lesson — so you learn, not just guess.</div></div>
+      <div class="feat"><div class="feat-ic">⚠️</div><div class="feat-title">Weakness Detection</div><div class="feat-sub">Your accuracy per topic is tracked live. Topics below 60% are automatically flagged and prioritised.</div></div>
+      <div class="feat"><div class="feat-ic">📝</div><div class="feat-title">Error Review System</div><div class="feat-sub">Every wrong answer is saved with full explanation. Retry it correctly to remove it from your list.</div></div>
+      <div class="feat"><div class="feat-ic">🤖</div><div class="feat-title">AI Explanations</div><div class="feat-sub">Three AI explanation modes: simple English, step-by-step, and "why is my answer wrong?" — powered by Claude.</div></div>
+      <div class="feat"><div class="feat-ic">📚</div><div class="feat-title">383 Vocab Words</div><div class="feat-sub">High-frequency SAT vocabulary with phonetics, definitions, and real example sentences. Organised by category.</div></div>
+      <div class="feat"><div class="feat-ic">🎯</div><div class="feat-title">Daily Challenges</div><div class="feat-sub">5 questions every day. Complete them to earn XP, grow your streak, and stay consistent.</div></div>
+      <div class="feat"><div class="feat-ic">🎬</div><div class="feat-title">Video Courses</div><div class="feat-sub">Expert-taught SAT prep videos by top Mongolian tutors. 6 courses across Math and Reading & Writing. Pro only.</div></div>
+      <div class="feat"><div class="feat-ic">📊</div><div class="feat-title">Score Prediction</div><div class="feat-sub">Your predicted SAT score updates in real time based on your actual practice accuracy across all topics.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap section-pad">
+    <span class="sec-ey">How it works</span>
+    <div class="sec-title">A learning system,<br>not a question dump</div>
+    <div class="how-grid">
+      <div class="step" data-n="1">
+        <div class="step-num">1</div>
+        <div class="step-icon">📖</div>
+        <div class="step-title">Learn the concept</div>
+        <div class="step-sub">Every practice session starts with a short lesson explaining exactly what the question will test.</div>
+      </div>
+      <div class="step" data-n="2">
+        <div class="step-num">2</div>
+        <div class="step-icon">✎</div>
+        <div class="step-title">Answer the question</div>
+        <div class="step-sub">Real SAT-level questions with a countdown timer. Use the built-in Desmos calculator for math.</div>
+      </div>
+      <div class="step" data-n="3">
+        <div class="step-num">3</div>
+        <div class="step-icon">💡</div>
+        <div class="step-title">See the explanation</div>
+        <div class="step-sub">Instant step-by-step explanations. Ask the AI tutor for three different explanation styles.</div>
+      </div>
+      <div class="step" data-n="4">
+        <div class="step-num">4</div>
+        <div class="step-icon">📈</div>
+        <div class="step-title">Track and improve</div>
+        <div class="step-sub">Weak areas flagged. Errors saved. Score prediction updates live. The loop repeats until you ace it.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap section-pad">
+    <span class="sec-ey">Pricing</span>
+    <div class="sec-title" style="text-align:center">Start free.<br>Upgrade when ready.</div>
+    <p class="sec-sub" style="text-align:center;max-width:500px;margin:0 auto 3rem">Everything you need is in the free plan. Plus adds mock exams. Pro adds human tutors &amp; video courses.</p>
+    <div class="pricing-grid" style="grid-template-columns:repeat(3,1fr);max-width:960px;margin:0 auto">
+
+      <div class="price-card">
+        <div class="price-plan">Free</div>
+        <div class="price-amt">₮0</div>
+        <div class="price-per">хязгааргүй · картгүй</div>
+        <ul class="price-features">
+          <li class="pf"><div class="pf-check y">✓</div>100 Math + 100 R&amp;W асуулт</li>
+          <li class="pf"><div class="pf-check y">✓</div>Desmos calculator</li>
+          <li class="pf"><div class="pf-check y">✓</div>Өдрийн даалгавар + streak</li>
+          <li class="pf"><div class="pf-check y">✓</div>383 үгийн сан</li>
+          <li class="pf"><div class="pf-check y">✓</div>AI тайлбар (Claude)</li>
+          <li class="pf"><div class="pf-check y">✓</div>Алдааны дэвтэр</li>
+          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Mock exam engine</span></li>
+          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Human tutor</span></li>
+        </ul>
+        <button class="btn p" style="width:100%;padding:13px" onclick="openAuth('signup')">Үнэгүй эхлэх →</button>
+      </div>
+
+      <div class="price-card" style="border-color:rgba(59,130,246,.4);position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-family:var(--fm);font-size:9px;font-weight:700;padding:4px 14px;border-radius:10px;letter-spacing:1px">PLUS</div>
+        <div class="price-plan">Plus</div>
+        <div class="price-amt" style="color:#60a5fa">₮19,900</div>
+        <div class="price-per">сард нэг · хүссэн үед цуцлах</div>
+        <ul class="price-features">
+          <li class="pf"><div class="pf-check y">✓</div>Free-ийн бүгд</li>
+          <li class="pf"><div class="pf-check y">✓</div><strong>Mock exam engine</strong></li>
+          <li class="pf"><div class="pf-check y">✓</div>Дэлгэрэнгүй шинжилгээ</li>
+          <li class="pf"><div class="pf-check y">✓</div>SAT оноо таамаглал</li>
+          <li class="pf"><div class="pf-check y">✓</div>Судалгааны хуваарь</li>
+          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Video courses</span></li>
+          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Human tutor</span></li>
+        </ul>
+        <button class="btn" style="width:100%;padding:13px;background:var(--blue);color:#fff" onclick="openAuth('signup')">Plus авах →</button>
+      </div>
+
+      <div class="price-card" style="border-color:rgba(245,158,11,.4);background:linear-gradient(160deg,rgba(245,158,11,.05),var(--bg2));position:relative">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--amber);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;padding:4px 14px;border-radius:10px;letter-spacing:1px">PRO</div>
+        <div class="price-plan">Pro</div>
+        <div class="price-amt" style="color:var(--amber)">₮29,900</div>
+        <div class="price-per">сард нэг · хүссэн үед цуцлах</div>
+        <ul class="price-features">
+          <li class="pf"><div class="pf-check y">✓</div>Plus-ийн бүгд</li>
+          <li class="pf"><div class="pf-check y">✓</div><strong>Human tutor 1:1</strong></li>
+          <li class="pf"><div class="pf-check y">✓</div><strong>6 video courses</strong></li>
+          <li class="pf"><div class="pf-check y">✓</div>Багштай чат (2ц дотор)</li>
+          <li class="pf"><div class="pf-check y">✓</div>Хувийн судалгааны план</li>
+          <li class="pf"><div class="pf-check y">✓</div>Сар бүр шинэ контент</li>
+        </ul>
+        <button class="btn" style="width:100%;padding:13px;background:var(--amber);color:#000" onclick="openAuth('signup')">Pro авах →</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="wrap section-pad">
+    <span class="sec-ey">Student stories</span>
+    <div class="sec-title">Students who used the system</div>
+    <div class="testi-grid">
+      <div class="testi">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The weakness detection found things I didn't know I was struggling with. My score went from 1180 to 1390 in six weeks."</div>
+        <div class="testi-author">Munkhbayar E.</div>
+        <div class="testi-meta">Ulaanbaatar · SAT 1390</div>
+      </div>
+      <div class="testi">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"Finally a prep platform actually designed for us. The daily challenge keeps me consistent and the explanations are genuinely clear."</div>
+        <div class="testi-author">Ariunaa B.</div>
+        <div class="testi-meta">Ulaanbaatar · SAT 1450</div>
+      </div>
+      <div class="testi">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text">"The Desmos calculator and concept lessons changed everything. I understood WHY answers were wrong, not just what the right answer was."</div>
+        <div class="testi-author">Gantulga S.</div>
+        <div class="testi-meta">Darkhan · SAT 1510</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section>
+  <div class="wrap section-pad">
+    <span class="sec-ey">FAQ</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
+      <div>
+        <div class="sec-title" style="font-size:clamp(28px,3vw,40px)">Questions<br>answered</div>
+        <p class="sec-sub" style="margin-top:1rem">Everything you need to know before you start.</p>
+      </div>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">Is the free plan really free? <span class="faq-arrow">+</span></div>
+          <div class="faq-a">Yes — no credit card, no trial period, no hidden fees. The free plan includes all SAT practice questions, vocabulary, mock exam links, and the daily challenge. Video courses require Pro.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">Is the calculator the same as the real SAT? <span class="faq-arrow">+</span></div>
+          <div class="faq-a">Yes. We embed Desmos Scientific, which is the exact same calculator used in the real digital SAT. Practicing with it means you'll be comfortable on exam day.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">How are the questions made? <span class="faq-arrow">+</span></div>
+          <div class="faq-a">Questions are written to match the exact format, difficulty, and topic distribution of the College Board's digital SAT — targeting the 1300–1600 score range. Every question includes a step-by-step explanation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">Does my progress save? <span class="faq-arrow">+</span></div>
+          <div class="faq-a">Yes. Your account, progress, XP, streaks, errors, and vocabulary are all saved to your account using local storage. Cloud sync across devices is coming soon.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">Can teachers upload courses? <span class="faq-arrow">+</span></div>
+          <div class="faq-a">Yes. Email hello@shalgalt.mn and we'll review your content before publishing. The teacher upload portal is launching soon.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<section>
+  <div class="wrap section-pad">
+    <div class="cta-band">
+      <div class="cta-band-title">Ready to ace the exam?</div>
+      <div class="cta-band-sub">Create a free account and start practicing in under a minute.<br>No credit card. No commitments.</div>
+      <button class="btn p xl" onclick="openAuth('signup')">Create free account →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">We<span>Ace</span></div>
+  <div class="footer-links">
+    <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</a>
+    <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a>
+    <a href="choose.html">Dashboard</a>
+    <a href="mailto:hello@shalgalt.mn">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 · Ulaanbaatar, Mongolia</div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-overlay" onclick="overlayClick(event)">
+  <div class="auth-modal">
+    <div class="auth-close" onclick="closeAuth()">✕</div>
+    <div class="auth-logo">We<span>Ace</span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tab-signup" onclick="switchTab('signup')">Create account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign in</button>
+    </div>
+    <div class="auth-pro-badge" id="pro-badge">🌟 You're signing up for Pro — ₮29,900/month after free trial</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+
+    <!-- SIGNUP FORM -->
+    <div id="form-signup">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label class="auth-label">Full name</label>
+          <input class="auth-input" id="su-name" type="text" placeholder="Baterdene Dolgorsuren" autocomplete="name"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Email address</label>
+          <input class="auth-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+        </div>
+        <button class="auth-submit" onclick="doSignup()">Create account →</button>
+      </div>
+      <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="form-login" style="display:none">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label class="auth-label">Email address</label>
+          <input class="auth-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="li-pass" type="password" placeholder="Your password" autocomplete="current-password"/>
+        </div>
+        <button class="auth-submit" onclick="doLogin()">Sign in →</button>
+      </div>
+      <div class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── CANVAS ANIMATION ── */
+var C = document.getElementById('c'), ctx = C.getContext('2d');
+var W, H, particles = [];
+var COLORS = ['#22c55e','#3b82f6','#a855f7','#f59e0b','#ffffff'];
+
+function resize() { W = C.width = window.innerWidth; H = C.height = window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+
+function Particle() { this.init(); }
+Particle.prototype.init = function() {
+  this.x = Math.random() * W; this.y = Math.random() * H;
+  this.vx = (Math.random() - .5) * .45; this.vy = (Math.random() - .5) * .45;
+  this.r = Math.random() * 1.8 + .4;
+  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  this.alpha = Math.random() * .5 + .1;
+};
+Particle.prototype.update = function() {
+  this.x += this.vx; this.y += this.vy;
+  if (this.x < -10 || this.x > W+10 || this.y < -10 || this.y > H+10) this.init();
+};
+
+for (var i = 0; i < 90; i++) { var p = new Particle(); p.x = Math.random()*W; p.y = Math.random()*H; particles.push(p); }
+
+var gridOff = 0;
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Glowing orbs
+  [
+    {x:.12,y:.2,r:260,c:'34,197,94'},
+    {x:.88,y:.12,r:220,c:'59,130,246'},
+    {x:.5,y:.85,r:200,c:'168,85,247'},
+    {x:.75,y:.5,r:180,c:'245,158,11'}
+  ].forEach(function(o) {
+    var g = ctx.createRadialGradient(o.x*W, o.y*H, 0, o.x*W, o.y*H, o.r);
+    g.addColorStop(0, 'rgba('+o.c+',.07)'); g.addColorStop(1, 'rgba('+o.c+',0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x*W, o.y*H, o.r, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Grid
+  gridOff = (gridOff + .25) % 80;
+  ctx.strokeStyle = 'rgba(255,255,255,.018)'; ctx.lineWidth = .5;
+  for (var x = -80+gridOff; x < W+80; x += 80) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + H*.15, H); ctx.stroke();
+  }
+  for (var y = -80+gridOff; y < H+80; y += 80) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Connect particles
+  for (var i = 0; i < particles.length; i++) {
+    for (var j = i+1; j < particles.length; j++) {
+      var dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      var d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 110) {
+        ctx.strokeStyle = 'rgba(255,255,255,'+(1-d/110)*.07+')';
+        ctx.lineWidth = .5;
+        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+      }
+    }
+  }
+
+  // Particles
+  ctx.save();
+  particles.forEach(function(p) {
+    p.update();
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ── FAQ ── */
+function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+
+/* ── AUTH STORAGE ── */
+var USERS_KEY = 'weace_users';
+var SESSION_KEY = 'weace_session';
+
+function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch(e) { return {}; } }
+function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } }
+function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+
+/* Check if already logged in */
+(function() {
+  var sess = getSession();
+  if (sess && sess.email) {
+    var nav_ctas = document.getElementById('nav-ctas');
+    if (nav_ctas) nav_ctas.innerHTML = '<span style="font-family:var(--fm);font-size:11px;color:var(--muted);margin-right:6px">'+sess.name+'</span><button class="btn p" onclick="goToDashboard()">Open dashboard →</button>';
+  }
+})();
+
+var wantPro = false;
+
+
+
+/* ── INTRO LANGUAGE ── */
+var _introLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
+
+var INTRO_T = {
+  mn:{
+    signin:'Нэвтрэх', signup:'Үнэгүй эхлэх',
+    hero_sub:'Монгол оюутнуудад зориулсан SAT бэлтгэл',
+    feat_title:'Яагаад WeAce вэ?',
+    pricing_title:'Үнэ',
+    faq_title:'Нийтлэг асуултууд',
+    cta:'Одоо эхлэх →'
+  },
+  en:{
+    signin:'Sign in', signup:'Get started free',
+    hero_sub:'SAT prep built for Mongolian students',
+    feat_title:'Why WeAce?',
+    pricing_title:'Pricing',
+    faq_title:'FAQ',
+    cta:'Start now →'
+  }
+};
+
+function setIntroLang(lang){
+  _introLang = lang;
+  try{localStorage.setItem('weace_lang', lang);}catch(e){}
+  var T = INTRO_T[lang]||INTRO_T.mn;
+  var el;
+  el=document.getElementById('nav-signin'); if(el)el.textContent=T.signin;
+  el=document.getElementById('nav-signup'); if(el)el.textContent=T.signup;
+  var mn=document.getElementById('intro-lang-mn');
+  var en=document.getElementById('intro-lang-en');
+  if(mn){mn.style.background=lang==='mn'?'var(--gd)':'transparent';mn.style.color=lang==='mn'?'var(--green)':'var(--muted)';}
+  if(en){en.style.background=lang==='en'?'var(--gd)':'transparent';en.style.color=lang==='en'?'var(--green)':'var(--muted)';}
+}
+
+// Apply on load
+window.addEventListener('DOMContentLoaded', function(){
+  setIntroLang(_introLang);
+  try{
+    var sess = JSON.parse(localStorage.getItem('weace_session')||'null');
+    if(sess && sess.name && sess.email){
+      /* Nav: show Continue, hide Sign in/up */
+      var cont = document.getElementById('nav-continue');
+      var signIn = document.getElementById('nav-signin');
+      var signUp = document.getElementById('nav-signup');
+      if(cont) cont.style.display = 'inline-flex';
+      if(signIn) signIn.style.display = 'none';
+      if(signUp) signUp.style.display = 'none';
+      /* Hero: show user CTAs, hide guest CTAs */
+      var guestCtas = document.getElementById('hero-ctas-guest');
+      var userCtas = document.getElementById('hero-ctas-user');
+      if(guestCtas) guestCtas.style.display = 'none';
+      if(userCtas) userCtas.style.display = 'flex';
+      /* Hero sub: personalize */
+      var heroSub = document.getElementById('hero-sub');
+      if(heroSub){
+        var firstName = sess.name.split(' ')[0];
+        heroSub.textContent = 'Welcome back, ' + firstName + '! Continue your SAT prep.';
+      }
+      /* Update all signup-related buttons to go to dashboard */
+      document.querySelectorAll('button').forEach(function(b){
+        if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('signup') !== -1 && b.id !== 'nav-signup'){
+          b.textContent = 'Continue to Dashboard →';
+          b.setAttribute('onclick', "window.location.href='choose.html'");
+        }
+      });
+    }
+  }catch(e){ console.error('Session check error:', e); }
+});
+
+
+function openAuth(mode, plan) {
+  wantPro = plan === 'pro';
+  document.getElementById('auth-overlay').classList.add('open');
+  switchTab(mode);
+  showError(''); showSuccess('');
+  document.getElementById('pro-badge').style.display = wantPro ? 'block' : 'none';
+}
+function closeAuth() { document.getElementById('auth-overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('auth-overlay')) closeAuth(); }
+
+function switchTab(t) {
+  document.getElementById('tab-signup').classList.toggle('on', t==='signup');
+  document.getElementById('tab-login').classList.toggle('on', t==='login');
+  document.getElementById('form-signup').style.display = t==='signup' ? 'block' : 'none';
+  document.getElementById('form-login').style.display = t==='login' ? 'block' : 'none';
+  showError(''); showSuccess('');
+}
+
+function showError(msg) { var e=document.getElementById('auth-error'); e.textContent=msg; e.classList.toggle('show', !!msg); }
+function showSuccess(msg) { var e=document.getElementById('auth-success'); e.innerHTML=msg; e.classList.toggle('show', !!msg); }
+
+function doSignup() {
+  var name = document.getElementById('su-name').value.trim();
+  var email = document.getElementById('su-email').value.trim().toLowerCase();
+  var pass = document.getElementById('su-pass').value;
+  showError(''); showSuccess('');
+
+  if (!name) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+  if (pass.length < 8) { showError('Password must be at least 8 characters.'); return; }
+
+  var users = getUsers();
+  if (users[email]) { showError('An account with this email already exists. Sign in instead.'); return; }
+
+  // Create account
+  var user = { name: name, email: email, password: pass, plan: wantPro ? 'pro' : 'free', createdAt: new Date().toISOString() };
+  users[email] = user;
+  saveUsers(users);
+
+  // Save session
+  var session = { email: email, name: name, plan: user.plan };
+  saveSession(session);
+
+  // Also save user context for dashboard
+  localStorage.setItem('weace_user', JSON.stringify(session));
+
+  showSuccess('&#x1F389; Account created! Redirecting to your dashboard...');
+  setTimeout(goToDashboard, 1200);
+}
+
+function doLogin() {
+  var email = document.getElementById('li-email').value.trim().toLowerCase();
+  var pass = document.getElementById('li-pass').value;
+  showError(''); showSuccess('');
+
+  if (!email) { showError('Please enter your email address.'); return; }
+  if (!pass) { showError('Please enter your password.'); return; }
+
+  var users = getUsers();
+  var user = users[email];
+
+  if (!user) { showError('No account found with this email. Create one for free!'); return; }
+  if (user.password !== pass) { showError('Incorrect password. Please try again.'); return; }
+
+  var session = { email: email, name: user.name, plan: user.plan };
+  saveSession(session);
+  localStorage.setItem('weace_user', JSON.stringify(session));
+
+  showSuccess('&#x2713; Welcome back, ' + user.name + '! Redirecting...');
+  setTimeout(goToDashboard, 1000);
+}
+
+function goToDashboard() { window.location.href = 'choose.html'; }
+
+/* Enter key support */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  var overlay = document.getElementById('auth-overlay');
+  if (!overlay.classList.contains('open')) return;
+  var tabOn = document.getElementById('tab-signup').classList.contains('on');
+  if (tabOn) doSignup(); else doLogin();
+});
+</script>
+</body>
+</html>

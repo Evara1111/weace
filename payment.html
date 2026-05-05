@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>WeAce — Payment</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;--bg4:#1e1e24;
+  --text:#f0f0f2;--muted:#8a8a9a;--hint:#44444f;
+  --b1:rgba(255,255,255,.05);--b2:rgba(255,255,255,.09);--b3:rgba(255,255,255,.16);
+  --green:#22c55e;--gd:rgba(34,197,94,.1);--gm:rgba(34,197,94,.22);
+  --blue:#3b82f6;--bd:rgba(59,130,246,.1);--bm:rgba(59,130,246,.22);
+  --amber:#f59e0b;--ad:rgba(245,158,11,.1);--am:rgba(245,158,11,.22);
+  --red:#ef4444;
+  --qpay:#0066CC;
+  --khan:#c00;
+}
+html,body{min-height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+body{display:flex;flex-direction:column;align-items:center;padding:2rem 1rem;min-height:100vh}
+body::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(34,197,94,.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+.wrap{width:100%;max-width:580px;position:relative;z-index:1}
+
+/* Header */
+.logo{font-family:'Sora',sans-serif;font-size:20px;font-weight:900;text-align:center;margin-bottom:1.75rem;cursor:pointer}
+.logo em{color:var(--green);font-style:normal}
+
+/* Plan Card */
+.plan-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:16px;padding:1.5rem;margin-bottom:1.25rem;position:relative}
+.plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 14px;border-radius:10px}
+.plan-badge.plus{background:var(--blue);color:#fff}
+.plan-badge.pro{background:var(--amber);color:#000}
+.plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.plan-name{font-family:'Sora',sans-serif;font-size:22px;font-weight:900}
+.plan-price{font-family:'Sora',sans-serif;font-size:32px;font-weight:900;color:var(--green)}
+.plan-price span{font-size:13px;font-family:'Inter',sans-serif;color:var(--muted);font-weight:400}
+.plan-feats{display:flex;flex-direction:column;gap:7px}
+.pf{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.pf-ic{width:18px;height:18px;border-radius:50%;background:var(--gd);border:1px solid var(--gm);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--green);flex-shrink:0}
+
+/* Payment Methods */
+.section-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--hint);margin-bottom:.875rem;display:block}
+
+.method-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.method-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;padding:1rem;cursor:pointer;transition:all .15s;text-align:center;position:relative}
+.method-card:hover{border-color:var(--b3);transform:translateY(-2px)}
+.method-card.selected{border-color:var(--green);background:var(--gd)}
+.method-card.selected::after{content:'✓';position:absolute;top:8px;right:10px;font-size:12px;color:var(--green);font-weight:700}
+.method-logo{font-size:28px;margin-bottom:6px}
+.method-name{font-size:12.5px;font-weight:700;margin-bottom:2px}
+.method-desc{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted)}
+
+/* QPay specific */
+.qpay-logo{background:#0066CC;border-radius:8px;padding:4px 10px;font-family:'Sora',sans-serif;font-size:14px;font-weight:900;color:#fff;display:inline-block;margin-bottom:4px;letter-spacing:.5px}
+.khan-logo{background:#c00;border-radius:8px;padding:4px 8px;font-family:'Sora',sans-serif;font-size:12px;font-weight:900;color:#fff;display:inline-block;margin-bottom:4px}
+
+/* Payment Steps */
+.pay-step{display:none}
+.pay-step.on{display:block}
+
+/* QR Code panel */
+.qr-panel{background:var(--bg2);border:1.5px solid var(--b2);border-radius:16px;padding:1.75rem;text-align:center;margin-bottom:1.25rem}
+.qr-box{width:200px;height:200px;background:#fff;border-radius:12px;margin:0 auto 1.25rem;display:flex;align-items:center;justify-content:center;padding:12px;position:relative}
+.qr-box svg{width:100%;height:100%}
+.qr-timer{font-family:'DM Mono',monospace;font-size:12px;color:var(--amber);margin-bottom:.625rem}
+.qr-hint{font-size:12px;color:var(--muted);line-height:1.6}
+.qr-apps{display:flex;justify-content:center;gap:10px;margin-top:1rem}
+.qr-app{background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:5px 14px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);cursor:pointer}
+
+/* Bank transfer */
+.bank-info{background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1)}
+.bank-row:last-child{border-bottom:none}
+.bank-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+.bank-val{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.copy-btn{font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:5px;border:1px solid var(--b2);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s}
+.copy-btn:hover{border-color:var(--green);color:var(--green)}
+.copy-btn.copied{background:var(--gd);border-color:var(--gm);color:var(--green)}
+
+/* Success */
+.success-panel{text-align:center;padding:2.5rem 1rem}
+.success-icon{font-size:64px;margin-bottom:1rem;animation:pop .4s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.success-title{font-family:'Sora',sans-serif;font-size:24px;font-weight:900;margin-bottom:.5rem;color:var(--green)}
+.success-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem;line-height:1.7}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;transition:all .12s;width:100%}
+.btn:hover{opacity:.87;transform:translateY(-1px)}
+.btn.pri{background:var(--green);color:#000}
+.btn.sec{background:var(--bg3);color:var(--text);border:1px solid var(--b2)}
+.btn.qpay-btn{background:#0066CC;color:#fff}
+.btn.khan-btn{background:#c00;color:#fff}
+.btn-row{display:flex;gap:8px;margin-top:.875rem}
+
+/* Security note */
+.security{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--hint);margin-top:1.25rem;justify-content:center}
+.security-ic{font-size:14px}
+
+/* Back link */
+.back-link{display:flex;align-items:center;gap:6px;color:var(--hint);font-size:12px;cursor:pointer;margin-bottom:1.5rem;transition:color .12s}
+.back-link:hover{color:var(--text)}
+
+/* Loading spinner */
+.spinner{width:40px;height:40px;border:3px solid var(--bg3);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Status dots */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.status-dot.checking{background:var(--amber);animation:pulse 1s ease-in-out infinite}
+.status-dot.success{background:var(--green)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+@media(max-width:768px){
+  nav{padding:0 1rem!important}
+  section{padding:4rem 1rem!important}
+  h1{font-size:clamp(48px,15vw,90px)!important;letter-spacing:-2px!important}
+  h2{font-size:28px!important}
+  .grid-3,.grid-2,[style*="grid-template-columns:repeat(3"],[style*="grid-template-columns:1fr 1fr 1fr"]{display:flex!important;flex-direction:column!important}
+  [style*="grid-template-columns:repeat(5"]{gap:0!important}
+  nav [style*="display:flex"][style*="gap:2rem"]{display:none!important}
+  footer [style*="justify-content:space-between"]{flex-direction:column!important;text-align:center!important}
+}
+@media(max-width:480px){
+  h1{font-size:clamp(40px,18vw,72px)!important}
+  [style*="gap:12px"][style*="flex-wrap:wrap"]{flex-direction:column!important}
+  button[style*="padding:14px 28px"]{width:100%!important;padding:13px!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Header -->
+  <div class="logo" onclick="goBack()">We<em>Ace</em></div>
+  <div class="back-link" onclick="goBack()">← Back to dashboard</div>
+
+  <!-- Step 1: Choose method -->
+  <div class="pay-step on" id="step-choose">
+    <!-- Plan summary -->
+    <div class="plan-card" id="plan-display">
+      <div class="plan-badge plus" id="plan-badge-el">PLUS</div>
+      <div class="plan-header">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">You are subscribing to</div>
+          <div class="plan-name" id="plan-name-el">Plus Plan</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price" id="plan-price-el">₮19,900 <span>/month</span></div>
+        </div>
+      </div>
+      <div class="plan-feats" id="plan-feats-el">
+        <div class="pf"><div class="pf-ic">✓</div>Mock exam engine (54+44 questions)</div>
+        <div class="pf"><div class="pf-ic">✓</div>Detailed score analysis</div>
+        <div class="pf"><div class="pf-ic">✓</div>Predicted SAT score</div>
+        <div class="pf"><div class="pf-ic">✓</div>All Free features</div>
+      </div>
+    </div>
+
+    <!-- Payment methods -->
+    <span class="section-title">Payment method</span>
+    <div class="method-grid">
+      <div class="method-card selected" id="method-qpay" onclick="selectMethod('qpay')">
+        <div class="qpay-logo">Q</div>
+        <div class="method-name">QPay</div>
+        <div class="method-desc">Most popular in MN</div>
+      </div>
+      <div class="method-card" id="method-socialpay" onclick="selectMethod('socialpay')">
+        <div class="khan-logo">Khan</div>
+        <div class="method-name">SocialPay</div>
+        <div class="method-desc">Khan Bank</div>
+      </div>
+      <div class="method-card" id="method-bank" onclick="selectMethod('bank')">
+        <div class="method-logo">🏦</div>
+        <div class="method-name">Bank Transfer</div>
+        <div class="method-desc">Any Mongolian bank</div>
+      </div>
+      <div class="method-card" id="method-card" onclick="selectMethod('card')">
+        <div class="method-logo">💳</div>
+        <div class="method-name">Card</div>
+        <div class="method-desc">Visa · Mastercard</div>
+      </div>
+    </div>
+
+    <button class="btn pri" onclick="proceedPayment()">Continue to payment →</button>
+
+    <div class="security">
+      <span class="security-ic">🔒</span>
+      Secure payment · SSL encrypted · No card data stored
+    </div>
+  </div>
+
+  <!-- Step 2a: QPay QR -->
+  <div class="pay-step" id="step-qpay">
+    <div class="qr-panel">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Scan with QPay</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Open QPay app → Scan QR → Confirm payment</div>
+      <div class="qr-box" id="qr-container">
+        <!-- Generated QR code via JS -->
+        <div id="qr-svg-holder"></div>
+      </div>
+      <div class="qr-timer">⏱ Expires in: <strong id="qr-countdown">10:00</strong></div>
+      <div class="qr-hint">Amount: <strong id="qr-amount">₮19,900</strong> · WeAce SAT Prep</div>
+      <div class="qr-apps">
+        <div class="qr-app">QPay</div>
+        <div class="qr-app">Khan Bank</div>
+        <div class="qr-app">Golomt</div>
+        <div class="qr-app">TDB</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change method</button>
+      <button class="btn pri" onclick="simulatePaymentSuccess()">✓ I've paid (Demo)</button>
+    </div>
+
+    <div style="margin-top:1rem;text-align:center">
+      <span class="status-dot checking"></span>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)" id="status-text">Waiting for payment...</span>
+    </div>
+  </div>
+
+  <!-- Step 2b: SocialPay -->
+  <div class="pay-step" id="step-socialpay">
+    <div class="qr-panel">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">SocialPay (Khan Bank)</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Khan Bank app-аар төлбөр хийнэ үү</div>
+      <div style="font-size:48px;margin-bottom:1rem">📱</div>
+      <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:1rem;text-align:left;margin-bottom:1rem">
+        <div class="bank-row"><span class="bank-lbl">Дансны дугаар</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000 1234 5678',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Банк</span><span class="bank-val">Khan Bank (Хаан банк)</span></div>
+        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" id="socialpay-amount">₮19,900</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="socialpay-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
+      </div>
+      <div style="font-size:11.5px;color:var(--hint);line-height:1.65">Гүйлгээний утгыг заавал оруулна уу — таны эрхийг идэвхжүүлэхэд ашиглагдана.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn khan-btn" onclick="simulatePaymentSuccess()">Төлбөр хийсэн ✓</button>
+    </div>
+  </div>
+
+  <!-- Step 2c: Bank Transfer -->
+  <div class="pay-step" id="step-bank">
+    <div class="qr-panel" style="text-align:left">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem;text-align:center">Bank Transfer</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;text-align:center">Дараах дансанд шилжүүлэг хийнэ үү</div>
+      <div class="bank-info">
+        <div class="bank-row"><span class="bank-lbl">Байгууллагын нэр</span><span class="bank-val">WeAce Education LLC</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гolomt Bank</span><span class="bank-val">1301 2345 6789 <button class="copy-btn" onclick="copyText('1301234567890',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Khan Bank</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000123456780',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">TDB</span><span class="bank-val">4921 0000 1234 <button class="copy-btn" onclick="copyText('4921000012340',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" style="color:var(--green)" id="bank-amount">₮19,900</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="bank-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
+      </div>
+      <div style="background:var(--ad);border:1px solid var(--am);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--amber);line-height:1.65">
+        ⚠️ <strong>Гүйлгээний утгыг заавал оруулна уу.</strong> Таны гүйлгээ 1–2 цагийн дотор баталгаажна. Асуулт байвал: hello@weace.mn
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn pri" onclick="simulatePaymentSuccess()">Шилжүүлэг хийсэн ✓</button>
+    </div>
+  </div>
+
+  <!-- Step 2d: Card -->
+  <div class="pay-step" id="step-card">
+    <div class="qr-panel" style="text-align:left">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:1.25rem;text-align:center">Card Payment</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem">
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Card number</label>
+          <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;letter-spacing:2px" oninput="formatCard(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Expiry</label>
+            <input type="text" placeholder="MM/YY" maxlength="5" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" oninput="formatExpiry(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">CVV</label>
+            <input type="password" placeholder="•••" maxlength="4" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Cardholder name</label>
+          <input type="text" placeholder="BATERDENE GANTULGA" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none;text-transform:uppercase" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--hint);margin-bottom:1rem">
+        🔒 Card data is processed securely. WeAce does not store your card details.
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:.5rem">
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">VISA</div>
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">Mastercard</div>
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">UnionPay</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn pri" id="card-pay-btn" onclick="processCard()">Pay <span id="card-amount-btn">₮19,900</span> →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Processing -->
+  <div class="pay-step" id="step-processing">
+    <div style="text-align:center;padding:3rem 1rem">
+      <div class="spinner"></div>
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Processing payment...</div>
+      <div style="font-size:12px;color:var(--muted)">Please wait a moment</div>
+    </div>
+  </div>
+
+  <!-- Step 4: Success -->
+  <div class="pay-step" id="step-success">
+    <div class="success-panel">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Payment Successful!</div>
+      <div class="success-sub" id="success-msg">
+        Your <strong id="success-plan">Plus</strong> plan is now active.<br>
+        All features have been unlocked for your account.
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1rem 1.25rem;text-align:left;margin-bottom:1.75rem;max-width:320px;margin-left:auto;margin-right:auto">
+        <div class="bank-row"><span class="bank-lbl">Plan</span><span class="bank-val" id="rec-plan">Plus</span></div>
+        <div class="bank-row"><span class="bank-lbl">Amount</span><span class="bank-val" id="rec-amount">₮19,900/month</span></div>
+        <div class="bank-row"><span class="bank-lbl">Date</span><span class="bank-val" id="rec-date"></span></div>
+        <div class="bank-row"><span class="bank-lbl">Ref</span><span class="bank-val" style="font-family:'DM Mono',monospace;font-size:10px" id="rec-ref"></span></div>
+      </div>
+      <button class="btn pri" style="max-width:280px;margin:0 auto" onclick="goToDashboard()">Go to Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── SESSION CHECK ── */
+var _sess=null;try{_sess=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
+if(!_sess){window.location.href='intro.html';}
+
+/* ── URL PARAMS ── */
+var urlParams=new URLSearchParams(window.location.search);
+var _targetPlan=urlParams.get('plan')||localStorage.getItem('weace_pending_plan')||'plus';
+var _selectedMethod='qpay';
+var _payRef='WEACE-'+Math.random().toString(36).substr(2,8).toUpperCase();
+var _qrTimer=null;
+
+/* Plan data */
+var PLANS={
+  plus:{name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',
+    feats:['Mock exam engine (54+44 Qs)','Detailed score analysis','Predicted SAT score','All Free features']},
+  pro:{name:'Pro Plan',price:'₮29,900',badge:'PRO',badgeClass:'pro',
+    feats:['Everything in Plus','Human Tutor 1:1','6 Video Courses','Personal study plan','Priority support']}
+};
+
+/* Init */
+window.addEventListener('DOMContentLoaded',function(){
+  var plan=PLANS[_targetPlan]||PLANS.plus;
+  document.getElementById('plan-name-el').textContent=plan.name;
+  document.getElementById('plan-price-el').innerHTML=plan.price+' <span>/month</span>';
+  var badge=document.getElementById('plan-badge-el');
+  badge.textContent=plan.badge;badge.className='plan-badge '+plan.badgeClass;
+  var feats=document.getElementById('plan-feats-el');
+  feats.innerHTML=plan.feats.map(function(f){return'<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>';}).join('');
+  /* Set amounts in all steps */
+  var p=plan.price;
+  var els=['qr-amount','socialpay-amount','bank-amount'];
+  els.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=p;});
+  document.getElementById('card-amount-btn').textContent=p;
+  /* Set refs */
+  document.querySelectorAll('[id$="-ref"]').forEach(function(e){e.textContent=_payRef;});
+  document.getElementById('socialpay-ref').textContent=_payRef;
+  document.getElementById('bank-ref').textContent=_payRef;
+  /* Receipt */
+  document.getElementById('rec-plan').textContent=plan.name;
+  document.getElementById('rec-amount').textContent=plan.price+'/month';
+  document.getElementById('rec-date').textContent=new Date().toLocaleDateString();
+  document.getElementById('rec-ref').textContent=_payRef;
+  document.getElementById('success-plan').textContent=plan.name;
+  /* Generate QR */
+  generateQR();
+});
+
+function selectMethod(m){
+  _selectedMethod=m;
+  document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected');});
+  document.getElementById('method-'+m).classList.add('selected');
+}
+
+function proceedPayment(){
+  if(_selectedMethod==='qpay'){goToStep('qpay');startQrTimer();}
+  else if(_selectedMethod==='socialpay')goToStep('socialpay');
+  else if(_selectedMethod==='bank')goToStep('bank');
+  else if(_selectedMethod==='card')goToStep('card');
+}
+
+function goToStep(step){
+  document.querySelectorAll('.pay-step').forEach(function(s){s.classList.remove('on');});
+  var el=document.getElementById('step-'+step);if(el)el.classList.add('on');
+}
+
+/* QR Timer */
+function startQrTimer(){
+  var secs=600;
+  clearInterval(_qrTimer);
+  _qrTimer=setInterval(function(){
+    secs--;
+    var m=Math.floor(secs/60),s=secs%60;
+    var el=document.getElementById('qr-countdown');
+    if(el)el.textContent=m+':'+(s<10?'0':'')+s;
+    if(secs<=0){clearInterval(_qrTimer);var et=document.getElementById('status-text');if(et)et.textContent='QR expired. Please refresh.';}
+  },1000);
+}
+
+/* Simple QR code generator using a path-based SVG */
+function generateQR(){
+  /* Using a public QR API for demo - in production use your QPay merchant API */
+  var holder=document.getElementById('qr-svg-holder');
+  if(!holder)return;
+  var qrText='WEACE:'+_targetPlan+':'+_payRef+':'+(PLANS[_targetPlan]&&PLANS[_targetPlan].price||'19900');
+  /* Build simple visual QR placeholder that looks authentic */
+  holder.innerHTML=buildQRPlaceholder(qrText);
+}
+
+function buildQRPlaceholder(text){
+  /* Deterministic pixel pattern from text hash */
+  var hash=0;for(var i=0;i<text.length;i++){hash=((hash<<5)-hash)+text.charCodeAt(i);hash|=0;}
+  var size=21;var cells=[];
+  for(var r=0;r<size;r++){cells[r]=[];for(var c=0;c<size;c++){
+    /* Finder patterns (corners) */
+    if((r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7)){cells[r][c]=1;}
+    /* Data modules based on hash */
+    else{cells[r][c]=(hash^(r*size+c)*1234567)&1?1:0;}
+  }}
+  /* Ensure separators */
+  for(var i=0;i<8;i++){cells[7][i]=0;cells[i][7]=0;cells[7][13+i]=0;cells[i][14]=0;cells[14][i]=0;cells[13+i][7]=0;}
+  var cell=8;var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(size*cell)+' '+(size*cell)+'"><rect width="100%" height="100%" fill="white"/>';
+  for(var r2=0;r2<size;r2++)for(var c2=0;c2<size;c2++)if(cells[r2][c2])svg+='<rect x="'+(c2*cell)+'" y="'+(r2*cell)+'" width="'+cell+'" height="'+cell+'" fill="#000"/>';
+  svg+='</svg>';
+  return svg;
+}
+
+/* Card formatting */
+function formatCard(input){var v=input.value.replace(/\D/g,'').substr(0,16);input.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function formatExpiry(input){var v=input.value.replace(/\D/g,'').substr(0,4);if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2);input.value=v;}
+
+function processCard(){
+  var btn=document.getElementById('card-pay-btn');
+  if(btn){btn.textContent='Processing...';btn.disabled=true;}
+  goToStep('processing');
+  setTimeout(simulatePaymentSuccess,2000);
+}
+
+function copyText(text,btn){
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  btn.textContent='Copied!';btn.classList.add('copied');
+  setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2000);
+}
+function copyRef(btn){copyText(_payRef,btn);}
+
+function simulatePaymentSuccess(){
+  clearInterval(_qrTimer);
+  goToStep('processing');
+  setTimeout(function(){
+    /* Activate plan in localStorage */
+    try{
+      var sess=JSON.parse(localStorage.getItem('weace_session')||'{}');
+      sess.plan=_targetPlan;
+      localStorage.setItem('weace_session',JSON.stringify(sess));
+      /* Also update WeAce state */
+      var stateKey='weace_v9';
+      var state=JSON.parse(localStorage.getItem(stateKey)||'{}');
+      state.plan=_targetPlan;
+      localStorage.setItem(stateKey,JSON.stringify(state));
+      localStorage.removeItem('weace_pending_plan');
+    }catch(e){}
+    goToStep('success');
+  },1500);
+}
+
+function goBack(){window.location.href='dashboard.html';}
+function goToDashboard(){window.location.href='dashboard.html';}
+</script>
+</body>
+</html>

@@ -1,1 +1,270 @@
-<!DOCTYPE html><html><head><title>test</title></head><body>hello</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>WeAce — Choose Your Exam</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;
+  --text:#f0f0f2;--muted:#8a8a9a;--hint:#44444f;
+  --b1:rgba(255,255,255,.05);--b2:rgba(255,255,255,.09);--b3:rgba(255,255,255,.16);
+  --green:#22c55e;--gd:rgba(34,197,94,.1);--gm:rgba(34,197,94,.22);
+  --blue:#3b82f6;--bd:rgba(59,130,246,.1);--bm:rgba(59,130,246,.22);
+  --amber:#f59e0b;--ad:rgba(245,158,11,.1);--am:rgba(245,158,11,.22);
+  --purple:#a855f7;--pd:rgba(168,85,247,.1);--pm:rgba(168,85,247,.22);
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+
+/* Background glow */
+body::before{content:'';position:fixed;top:20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(34,197,94,.06) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+.wrap{width:100%;max-width:820px;position:relative;z-index:1}
+
+/* Header */
+.logo{font-family:'Sora',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;text-align:center;margin-bottom:.5rem;cursor:pointer}
+.logo em{color:var(--green);font-style:normal}
+.subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:3rem}
+.subtitle strong{color:var(--text)}
+
+/* User greeting */
+.user-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:2.5rem;background:var(--bg2);border:1px solid var(--b2);border-radius:40px;padding:.5rem 1.25rem;width:fit-content;margin-left:auto;margin-right:auto}
+.user-ava{width:28px;height:28px;border-radius:50%;background:var(--gd);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--green);font-family:'Sora',sans-serif}
+.user-name{font-size:13px;font-weight:500}
+.user-plan{font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:8px;background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+
+/* Section label */
+.section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--hint);text-align:center;margin-bottom:1.25rem}
+
+/* Exam cards grid */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:2.5rem}
+
+.exam-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:20px;padding:2rem 1.5rem;cursor:pointer;transition:all .2s;text-align:center;position:relative;overflow:hidden}
+.exam-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s;pointer-events:none}
+.exam-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
+
+.exam-card.sat{border-color:rgba(34,197,94,.25)}
+.exam-card.sat::before{background:radial-gradient(ellipse at 50% 0%,rgba(34,197,94,.08),transparent 70%)}
+.exam-card.sat:hover{border-color:rgba(34,197,94,.6);box-shadow:0 20px 60px rgba(34,197,94,.1)}
+.exam-card.sat::before{opacity:1}
+
+.exam-card.ielts{border-color:rgba(59,130,246,.25)}
+.exam-card.ielts::before{background:radial-gradient(ellipse at 50% 0%,rgba(59,130,246,.08),transparent 70%);opacity:1}
+.exam-card.ielts:hover{border-color:rgba(59,130,246,.6);box-shadow:0 20px 60px rgba(59,130,246,.1)}
+
+.exam-card.topik{border-color:rgba(168,85,247,.25)}
+.exam-card.topik::before{background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.08),transparent 70%);opacity:1}
+.exam-card.topik:hover{border-color:rgba(168,85,247,.6);box-shadow:0 20px 60px rgba(168,85,247,.1)}
+
+.exam-card.coming-soon{opacity:.5;cursor:not-allowed}
+.exam-card.coming-soon:hover{transform:none;box-shadow:none}
+
+.exam-flag{font-size:42px;margin-bottom:1rem;display:block}
+.exam-name{font-family:'Sora',sans-serif;font-size:26px;font-weight:900;letter-spacing:-.5px;margin-bottom:.5rem}
+.exam-name.sat-color{color:var(--green)}
+.exam-name.ielts-color{color:#60a5fa}
+.exam-name.topik-color{color:var(--purple)}
+.exam-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:1.25rem}
+.exam-tags{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.tag{font-family:'DM Mono',monospace;font-size:8px;padding:3px 9px;border-radius:6px}
+.tag.g{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tag.b{background:var(--bd);color:#60a5fa;border:1px solid var(--bm)}
+.tag.p{background:var(--pd);color:var(--purple);border:1px solid var(--pm)}
+.tag.dim{background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
+
+.exam-cta{width:100%;padding:11px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:opacity .12s}
+.exam-cta:hover{opacity:.87}
+.exam-cta.sat-btn{background:var(--green);color:#000}
+.exam-cta.ielts-btn{background:#3b82f6;color:#fff;opacity:.6;cursor:not-allowed}
+.exam-cta.topik-btn{background:var(--purple);color:#fff;opacity:.6;cursor:not-allowed}
+
+.coming-badge{position:absolute;top:14px;right:14px;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;padding:3px 9px;border-radius:8px;background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
+
+/* Bottom */
+.bottom-row{display:flex;align-items:center;justify-content:space-between}
+.logout-link{font-family:'DM Mono',monospace;font-size:10px;color:var(--hint);cursor:pointer;transition:color .12s}
+.logout-link:hover{color:var(--text)}
+.lang-toggle{display:flex;gap:6px}
+.lang-btn{font-family:'DM Mono',monospace;font-size:9px;padding:5px 12px;border-radius:8px;border:1px solid var(--b2);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s}
+.lang-btn.on{background:var(--gd);color:var(--green);border-color:var(--gm)}
+.lang-btn:hover:not(.on){border-color:var(--b3);color:var(--text)}
+
+@media(max-width:768px){
+  nav{padding:0 1rem!important}
+  section{padding:4rem 1rem!important}
+  h1{font-size:clamp(48px,15vw,90px)!important;letter-spacing:-2px!important}
+  h2{font-size:28px!important}
+  .grid-3,.grid-2,[style*="grid-template-columns:repeat(3"],[style*="grid-template-columns:1fr 1fr 1fr"]{display:flex!important;flex-direction:column!important}
+  [style*="grid-template-columns:repeat(5"]{gap:0!important}
+  nav [style*="display:flex"][style*="gap:2rem"]{display:none!important}
+  footer [style*="justify-content:space-between"]{flex-direction:column!important;text-align:center!important}
+}
+@media(max-width:480px){
+  h1{font-size:clamp(40px,18vw,72px)!important}
+  [style*="gap:12px"][style*="flex-wrap:wrap"]{flex-direction:column!important}
+  button[style*="padding:14px 28px"]{width:100%!important;padding:13px!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo" onclick="window.location.href='intro.html'">We<em>Ace</em></div>
+  <div class="subtitle"><strong id="choose-greeting">Choose your exam</strong> — <span id="choose-sub">we'll tailor everything for you</span></div>
+
+  <div class="user-bar">
+    <div class="user-ava" id="ch-ava">W</div>
+    <div class="user-name" id="ch-name">Student</div>
+    <div class="user-plan" id="ch-plan">Free</div>
+  </div>
+
+  <div class="section-label" id="choose-label">Select your target exam</div>
+
+  <div class="cards">
+    <!-- SAT -->
+    <div class="exam-card sat" onclick="chooseExam('sat')">
+      <span class="exam-flag">🎓</span>
+      <div class="exam-name sat-color">SAT</div>
+      <div class="exam-desc" id="sat-desc">US college admissions test. Math + Reading & Writing. Score 400–1600.</div>
+      <div class="exam-tags">
+        <span class="tag g">200+ Questions</span>
+        <span class="tag g">383 Vocab</span>
+        <span class="tag g">Mock Exams</span>
+        <span class="tag g">AI Tutor</span>
+      </div>
+      <button class="exam-cta sat-btn" id="sat-cta" onclick="chooseExam('sat')">Start SAT Prep →</button>
+    </div>
+
+    <!-- IELTS -->
+    <div class="exam-card ielts coming-soon">
+      <div class="coming-badge" id="coming-soon-label">COMING SOON</div>
+      <span class="exam-flag">🇬🇧</span>
+      <div class="exam-name ielts-color">IELTS</div>
+      <div class="exam-desc" id="ielts-desc">International English proficiency. Listening, Reading, Writing, Speaking. Band 0–9.</div>
+      <div class="exam-tags">
+        <span class="tag dim" id="ielts-tag1">Coming soon</span>
+      </div>
+      <button class="exam-cta ielts-btn" id="ielts-cta" onclick="alert('IELTS is coming soon! Join our waitlist: hello@weace.mn')">Coming Soon</button>
+    </div>
+
+    <!-- TOPIK -->
+    <div class="exam-card topik" onclick="window.location.href='topik.html'" style="cursor:pointer;border-color:rgba(239,68,68,.3)">
+      <span class="exam-flag">🇰🇷</span>
+      <div class="exam-name topik-color">TOPIK</div>
+      <div class="exam-desc">Korean language proficiency. Vocabulary, Grammar, Reading, Writing. Level 1–6.</div>
+      <div class="exam-tags">
+        <span class="tag" style="background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)">✓ LIVE</span>
+        <span class="tag dim">TOPIK I + II</span>
+        <span class="tag dim">Level 1–6</span>
+      </div>
+      <button class="exam-btn" style="background:#ef4444;border-color:#ef4444;color:#fff">Study TOPIK →</button>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+    <span class="logout-link" id="logout-link" onclick="logout()">← Log out</span>
+    <div class="lang-toggle">
+      <button class="lang-btn on" id="ch-lang-mn" onclick="setLang('mn')">🇲🇳 Монгол</button>
+      <button class="lang-btn" id="ch-lang-en" onclick="setLang('en')">🇺🇸 English</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var _sess=null;try{_sess=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
+var _lang=localStorage.getItem('weace_lang')||'mn';
+
+// If no session, redirect to intro
+if(!_sess){window.location.href='intro.html';}
+
+// Fill user info
+if(_sess){
+  var p=(_sess.name||'').trim().split(' ');
+  var ini=(p[0]?p[0][0]:'')+(p[1]?p[1][0]:'');
+  var ava=document.getElementById('ch-ava');if(ava)ava.textContent=ini.toUpperCase()||'W';
+  var nm=document.getElementById('ch-name');if(nm)nm.textContent=_sess.name||'Student';
+  var pl=document.getElementById('ch-plan');
+  if(pl)pl.textContent={free:'Free',plus:'Plus',pro:'Pro'}[_sess.plan||'free']||'Free';
+}
+
+var TXT={
+  mn:{
+    greeting:'Шалгалт сонгох',
+    sub:'бид таны бэлтгэлийг тааруулна',
+    label:'Зорьж буй шалгалтаа сонгоно уу',
+    satDesc:'АНУ-ын их сургуульд элсэх шалгалт. Math + Reading & Writing. Оноо 400–1600.',
+    satCta:'SAT Бэлтгэл эхлэх →',
+    ieltsDesc:'Олон улсын англи хэлний шалгалт. Listening, Reading, Writing, Speaking. Band 0–9.',
+    ieltsCta:'Тун удахгүй',
+    topikDesc:'Солонгос хэлний шалгалт. Үгийн сан, Грамматик, Уншлага, Бичлэг. Түвшин 1–6.',
+    topikCta:'Тун удахгүй',
+    comingSoon:'УДАХГҮЙ',
+    logout:'← Гарах'
+  },
+  en:{
+    greeting:'Choose your exam',
+    sub:'we\'ll tailor everything for you',
+    label:'Select your target exam',
+    satDesc:'US college admissions test. Math + Reading & Writing. Score 400–1600.',
+    satCta:'Start SAT Prep →',
+    ieltsDesc:'International English proficiency. Listening, Reading, Writing, Speaking. Band 0–9.',
+    ieltsCta:'Coming Soon',
+    topikDesc:'Korean language proficiency. Vocabulary, Grammar, Reading, Writing. Level 1–6.',
+    topikCta:'Coming Soon',
+    comingSoon:'COMING SOON',
+    logout:'← Log out'
+  }
+};
+
+function applyLang(lang){
+  _lang=lang;
+  try{localStorage.setItem('weace_lang',lang);}catch(e){}
+  var T=TXT[lang]||TXT.en;
+  var el;
+  el=document.getElementById('choose-greeting');if(el)el.textContent=T.greeting;
+  el=document.getElementById('choose-sub');if(el)el.textContent=T.sub;
+  el=document.getElementById('choose-label');if(el)el.textContent=T.label;
+  el=document.getElementById('sat-desc');if(el)el.textContent=T.satDesc;
+  el=document.getElementById('sat-cta');if(el)el.textContent=T.satCta;
+  el=document.getElementById('ielts-desc');if(el)el.textContent=T.ieltsDesc;
+  el=document.getElementById('ielts-cta');if(el)el.textContent=T.ieltsCta;
+  el=document.getElementById('topik-desc');if(el)el.textContent=T.topikDesc;
+  el=document.getElementById('topik-cta');if(el)el.textContent=T.topikCta;
+  el=document.getElementById('logout-link');if(el)el.textContent=T.logout;
+  // coming soon badges
+  document.querySelectorAll('.coming-badge').forEach(function(b){b.textContent=T.comingSoon;});
+  // lang buttons
+  var mn=document.getElementById('ch-lang-mn');var en=document.getElementById('ch-lang-en');
+  if(mn)mn.className='lang-btn'+(lang==='mn'?' on':'');
+  if(en)en.className='lang-btn'+(lang==='en'?' on':'');
+}
+
+function setLang(lang){applyLang(lang);}
+
+function chooseExam(exam){
+  if(exam==='sat'){
+    // Save choice and go to dashboard
+    try{
+      if(_sess){_sess.exam=exam;localStorage.setItem('weace_session',JSON.stringify(_sess));}
+      localStorage.setItem('weace_exam',exam);
+    }catch(e){}
+    window.location.href='dashboard.html';
+  }
+  // IELTS/TOPIK coming soon - do nothing
+}
+
+function logout(){
+  localStorage.removeItem('weace_session');
+  localStorage.removeItem('weace_user');
+  localStorage.removeItem('weace_exam');
+  window.location.href='intro.html';
+}
+
+// Apply saved language on load
+applyLang(_lang);
+</script>
+</body>
+</html>

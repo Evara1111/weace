@@ -861,7 +861,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 </div></div>
 <!-- PRACTICE SCREEN -->
 <div class="ps" id="pscreen">
-  <div class="ps-bar"><span class="ps-lbl math" id="ps-lbl">SAT Math</span><span class="ps-num" id="ps-num">1/5</span><div class="t-box" style="margin-left:auto"><div style="width:34px;height:34px;flex-shrink:0"><svg width="34" height="34" viewBox="0 0 36 36"><circle class="t-bg" cx="18" cy="18" r="15" stroke-dasharray="94.25"/><circle class="t-fg" id="t-fg" cx="18" cy="18" r="15" stroke-dasharray="94.25" stroke-dashoffset="0" stroke="var(--green)"/></svg></div><span class="t-num" id="ps-timer">1:30</span><button class="ps-exit" onclick="closePS()">✕ Гарах</button></div></div>
+  <div class="ps-bar"><span class="ps-lbl math" id="ps-lbl">SAT Math</span><span class="ps-num" id="ps-num">1/5</span><div id="ps-dots" style="display:flex;gap:3px;align-items:center;margin-left:8px;flex-wrap:wrap;max-width:200px"></div><div class="t-box" style="margin-left:auto"><div style="width:34px;height:34px;flex-shrink:0"><svg width="34" height="34" viewBox="0 0 36 36"><circle class="t-bg" cx="18" cy="18" r="15" stroke-dasharray="94.25"/><circle class="t-fg" id="t-fg" cx="18" cy="18" r="15" stroke-dasharray="94.25" stroke-dashoffset="0" stroke="var(--green)"/></svg></div><span class="t-num" id="ps-timer">1:30</span><button class="ps-exit" onclick="closePS()">✕ Гарах</button></div></div>
   <!-- Question number navigator for practice screen -->
   <div id="ps-nav-bar" style="background:var(--bg2);border-bottom:1px solid var(--b1);padding:.5rem 1.5rem;flex-shrink:0;display:flex;align-items:center;gap:10px">
     <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--hint);flex-shrink:0">Questions:</span>
@@ -3354,8 +3354,8 @@ function goSingleQ(m,tf,qid){
 function closePS(){document.getElementById('pscreen').classList.remove('on');stopTimer();}
 
 function renderDots(){
-  document.getElementById('ps-dots').innerHTML=qs.map(function(_,i){return'<div class="psd'+(i===qidx?' cur':'')+'" id="pd'+i+'"></div>';}).join('');
-  document.getElementById('ps-num').textContent=(qidx+1)+'/'+qs.length;
+  var dotsEl=document.getElementById('ps-dots');if(dotsEl)dotsEl.innerHTML=qs.map(function(_,i){return'<div class="psd'+(i===qidx?' cur':'')+'" id="pd'+i+'"></div>';}).join('');
+  var numEl=document.getElementById('ps-num');if(numEl)numEl.textContent=(qidx+1)+'/'+qs.length;
   /* Also build numbered nav */
   var navEl=document.getElementById('ps-nav-dots');
   if(!navEl)return;

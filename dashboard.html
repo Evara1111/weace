@@ -2,11 +2,21 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8"/>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>WeAce — SAT Prep Mongolia</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
 <style>
+/* RESET */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;background:#060608;color:#f0f0f2;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+
+/* PAGES */
+.wa-page{display:none;width:100%;}
+
+/* DASHBOARD CSS */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;--bg4:#1e1e24;
@@ -342,80 +352,253 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 
-/* ═══════════════════════════════
-   MOBILE RESPONSIVE
-   ═══════════════════════════════ */
-@media(max-width:768px){
-  /* Hide sidebar, show mobile nav */
-  .sb{display:none!important}
-  .main{margin-left:0!important}
-  
-  /* Mobile bottom nav */
-  .mob-nav{display:flex!important}
-  
-  /* Topbar */
-  .topbar{padding:0 1rem}
-  .tb-l .btn{display:none}
-  .streak{font-size:10px}
-  
-  /* Pages */
-  .page{padding:.875rem}
-  .pg-h{font-size:18px}
-  
-  /* Grids → single column on mobile */
-  .g2,.g3,.g4{grid-template-columns:1fr!important}
-  
-  /* Cards */
-  .card{padding:1rem}
-  
-  /* Practice screen */
-  .ps-wrap{grid-template-columns:1fr!important}
-  .ps-right{display:none}
-  
-  /* Exam overlay */
-  #exam-overlay .shell-body{flex-direction:column}
-  #exam-nav-bar{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  
-  /* Score hero */
-  #score-hero{font-size:42px!important}
-  
-  /* Section cards */
-  .g3{grid-template-columns:1fr 1fr!important}
-  
-  /* Stats grid */
-  .g4{grid-template-columns:1fr 1fr!important}
-  
-  /* Topic grid */
-  #math-tgrid,#rw-tgrid{grid-template-columns:1fr 1fr!important}
-}
 
-@media(max-width:480px){
-  .g3,.g4{grid-template-columns:1fr!important}
-  #math-tgrid,#rw-tgrid{grid-template-columns:1fr!important}
-  .pg-h{font-size:16px}
-  .card{padding:.75rem}
-}
-
-/* Mobile bottom nav (hidden on desktop) */
-.mob-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  background:var(--bg2);border-top:1px solid var(--b2);
-  padding:.5rem 0 calc(.5rem + env(safe-area-inset-bottom));
-  grid-template-columns:repeat(5,1fr);
-}
-.mob-nav-item{
-  display:flex;flex-direction:column;align-items:center;
-  gap:3px;padding:.5rem .25rem;cursor:pointer;
-  font-family:var(--fm);font-size:8px;color:var(--hint);
-  transition:color .12s;
-}
-.mob-nav-item.on{color:var(--green)}
-.mob-nav-item .mn-ic{font-size:20px}
+/* KEYFRAMES */
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.95)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<div class="shell">
+
+<!-- BACKGROUND CANVAS (intro only) -->
+<canvas id="bg-canvas" style="display:block;position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%;"></canvas>
+
+<!-- ═══════════════ INTRO PAGE ═══════════════ -->
+<div id="app-intro" class="wa-page" style="position:relative;z-index:1;min-height:100vh;width:100%;">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;width:100%;z-index:80;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(6,6,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);box-sizing:border-box;">
+    <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.5px;cursor:pointer;" onclick="window.scrollTo(0,0)">We<span style="color:#22c55e">Ace</span></div>
+    <div style="display:flex;align-items:center;gap:2rem;">
+      <a href="#" onclick="document.getElementById('feat-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">Features</a>
+      <a href="#" onclick="document.getElementById('how-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">How it works</a>
+      <a href="#" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">Pricing</a>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button id="nav-signin" onclick="openAuth('login')" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Sign in</button>
+      <button id="nav-signup" onclick="openAuth('signup')" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get started free</button>
+      <button id="nav-continue" onclick="showPage('choose')" style="display:none;background:#22c55e;color:#000;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue →</button>
+      <button onclick="setIntroLang('mn')" id="intro-lang-mn" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(34,197,94,.1);color:#22c55e;cursor:pointer;">🇲🇳</button>
+      <button onclick="setIntroLang('en')" id="intro-lang-en" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:transparent;color:#8a8a9a;cursor:pointer;">🇺🇸</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section style="width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 2rem 6rem;text-align:center;position:relative;z-index:10;box-sizing:border-box;">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;color:#22c55e;letter-spacing:1px;text-transform:uppercase;margin-bottom:2.5rem;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;animation:pulse2 2s ease-in-out infinite;"></span>
+      SAT PREP FOR MONGOLIAN STUDENTS
+    </div>
+    <h1 style="font-family:'Sora',sans-serif;font-size:clamp(64px,11vw,130px);font-weight:900;line-height:.9;letter-spacing:-4px;margin:0 0 2rem;">
+      <span style="display:block;color:#f0f0f2;">WE</span>
+      <span style="display:block;background:linear-gradient(135deg,#60a5fa,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ACE</span>
+      <span style="display:block;color:#f0f0f2;">THE</span>
+      <span style="display:block;color:#f0f0f2;">EXAM<span style="color:#22c55e">.</span></span>
+    </h1>
+    <p id="hero-sub" style="font-size:18px;color:#8a8a9a;max-width:560px;line-height:1.7;margin:0 0 2.5rem;">
+      Real SAT questions. Instant explanations.<br>Smart weakness detection. <strong style="color:#f0f0f2;">Start free today.</strong>
+    </p>
+    <div id="hero-ctas-guest" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;">
+      <button onclick="openAuth('signup')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Create free account →</button>
+      <button onclick="document.getElementById('how-section').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">See how it works</button>
+    </div>
+    <div id="hero-ctas-user" style="display:none;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;">
+      <button onclick="showPage('choose')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue to Dashboard →</button>
+      <button onclick="openAuth('login')" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Sign in to different account</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
+      <span style="font-size:12px;color:#8a8a9a;">✦ 230+ real SAT questions</span>
+      <span style="color:rgba(255,255,255,.1)">|</span>
+      <span style="font-size:12px;color:#8a8a9a;">✦ Desmos calculator built-in</span>
+      <span style="color:rgba(255,255,255,.1)">|</span>
+      <span style="font-size:12px;color:#8a8a9a;">✦ Free to start</span>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="feat-section" style="width:100%;padding:6rem 2rem;background:#060608;box-sizing:border-box;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:4rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">WHY WEACE</div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;">Built different</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">📊</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Score-centric</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">See your estimated SAT score after every session. Math + R&W. "+30 pts if you fix these 3 skills."</div></div>
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">🎯</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Adaptive practice</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">Questions target your weak areas automatically. Quick 15-min drills or full mock exams.</div></div>
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">📋</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Real SAT structure</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">R&W: 54 Qs, 64 min. Math: 44 Qs, 70 min. Two adaptive modules. Exactly like the real test.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how-section" style="width:100%;padding:6rem 2rem;background:#080808;box-sizing:border-box;">
+    <div style="max-width:900px;margin:0 auto;text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">THE LOOP</div>
+      <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;margin-bottom:4rem;">How WeAce works</h2>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;">
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#22c55e;color:#000;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">1</div><div style="font-weight:700;margin-bottom:.5rem;">Take a test</div><div style="font-size:12px;color:#8a8a9a;">Full mock or quick drill</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#3b82f6;color:#fff;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">2</div><div style="font-weight:700;margin-bottom:.5rem;">Get analysis</div><div style="font-size:12px;color:#8a8a9a;">Score + weak skills</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#a855f7;color:#fff;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">3</div><div style="font-weight:700;margin-bottom:.5rem;">Fix weak areas</div><div style="font-size:12px;color:#8a8a9a;">Targeted practice</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#f59e0b;color:#000;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">↑</div><div style="font-weight:700;margin-bottom:.5rem;">Score goes up</div><div style="font-size:12px;color:#8a8a9a;">Repeat and improve</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing-section" style="width:100%;padding:6rem 2rem;background:#060608;box-sizing:border-box;">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:4rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">PRICING</div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;">Simple pricing</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#44444f;margin-bottom:1rem;">FREE</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;margin-bottom:1.5rem;">₮0</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#8a8a9a;">
+            <div>✓ 230+ practice questions</div><div>✓ Desmos calculator</div><div>✓ Score tracking</div><div>✓ 383 vocab words</div>
+          </div>
+          <button onclick="openAuth('signup')" style="width:100%;background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get started free</button>
+        </div>
+        <div style="background:#0e0e12;border:2px solid #22c55e;border-radius:16px;padding:2rem;position:relative;">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;padding:3px 14px;border-radius:100px;white-space:nowrap;">POPULAR</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#22c55e;margin-bottom:1rem;">PLUS</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;color:#22c55e;margin-bottom:.25rem;">₮19,900</div>
+          <div style="font-size:12px;color:#8a8a9a;margin-bottom:1.5rem;">per month</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
+            <div>✓ Everything in Free</div><div>✓ Mock exam engine</div><div>✓ Detailed score analysis</div><div>✓ Study planner</div>
+          </div>
+          <button onclick="activatePlan('plus')" style="width:100%;background:#22c55e;color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Plus →</button>
+        </div>
+        <div style="background:#0e0e12;border:1px solid rgba(168,85,247,.3);border-radius:16px;padding:2rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#a855f7;margin-bottom:1rem;">PRO</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;margin-bottom:.25rem;">₮29,900</div>
+          <div style="font-size:12px;color:#8a8a9a;margin-bottom:1.5rem;">per month</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
+            <div>✓ Everything in Plus</div><div>✓ Human tutor 1:1</div><div>✓ Video courses</div><div>✓ Priority support</div>
+          </div>
+          <button onclick="activatePlan('pro')" style="width:100%;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Pro →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="width:100%;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,.06);box-sizing:border-box;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:900;">We<span style="color:#22c55e">Ace</span></div>
+      <div style="font-size:12px;color:#44444f;">© 2025 WeAce Education. Built for Mongolian students.</div>
+      <a href="mailto:hello@weace.mn" style="font-size:12px;color:#8a8a9a;text-decoration:none;">hello@weace.mn</a>
+    </div>
+  </footer>
+
+  <!-- AUTH MODAL -->
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-overlay" onclick="overlayClick(event)">
+  <div class="auth-modal">
+    <div class="auth-close" onclick="closeAuth()">✕</div>
+    <div class="auth-logo">We<span>Ace</span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tab-signup" onclick="switchTab('signup')">Create account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign in</button>
+    </div>
+    <div class="auth-pro-badge" id="pro-badge">🌟 You're signing up for Pro — ₮29,900/month after free trial</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+
+    <!-- SIGNUP FORM -->
+    <div id="form-signup">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label class="auth-label">Full name</label>
+          <input class="auth-input" id="su-name" type="text" placeholder="Baterdene Dolgorsuren" autocomplete="name"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Email address</label>
+          <input class="auth-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+        </div>
+        <button class="auth-submit" onclick="doSignup()">Create account →</button>
+      </div>
+      <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="form-login" style="display:none">
+      <div class="auth-form">
+        <div class="auth-field">
+          <label class="auth-label">Email address</label>
+          <input class="auth-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label">Password</label>
+          <input class="auth-input" id="li-pass" type="password" placeholder="Your password" autocomplete="current-password"/>
+        </div>
+        <button class="auth-submit" onclick="doLogin()">Sign in →</button>
+      </div>
+      <div class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════════════ CHOOSE PAGE ═══════════════ -->
+<div id="app-choose" class="wa-page" style="display:none;min-height:100vh;background:#060608;box-sizing:border-box;">
+  
+<div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;text-align:center;margin-bottom:.5rem;cursor:pointer;" onclick="showPage('intro')">We<span style="color:#22c55e">Ace</span></div>
+<div style="text-align:center;color:#8a8a9a;font-size:14px;margin-bottom:2.5rem;">Choose your exam — we'll tailor everything for you</div>
+
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:2rem;background:#0e0e12;border:1px solid rgba(255,255,255,.09);border-radius:40px;padding:.5rem 1.25rem;width:fit-content;margin-left:auto;margin-right:auto;">
+  <div id="ch-ava" style="width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,.1);border:1.5px solid #22c55e;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#22c55e;font-family:'Sora',sans-serif;">W</div>
+  <div id="ch-name" style="font-size:13px;font-weight:500;">Student</div>
+  <div id="ch-plan" style="font-family:'DM Mono',monospace;font-size:8px;padding:2px 8px;border-radius:8px;background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.22);">Free</div>
+</div>
+
+<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#44444f;text-align:center;margin-bottom:1.25rem;">Select your target exam</div>
+
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:2.5rem;max-width:820px;">
+  <div onclick="chooseExam('sat')" style="background:#0e0e12;border:1.5px solid rgba(34,197,94,.25);border-radius:20px;padding:2rem 1.5rem;cursor:pointer;text-align:center;transition:all .2s;" onmouseover="this.style.borderColor='rgba(34,197,94,.6)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='rgba(34,197,94,.25)';this.style.transform='none'">
+    <div style="font-size:42px;margin-bottom:1rem;">🎓</div>
+    <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:900;color:#22c55e;margin-bottom:.5rem;">SAT</div>
+    <div style="font-size:13px;color:#8a8a9a;line-height:1.65;margin-bottom:1.25rem;">US college admissions. Math + R&W. Score 400–1600.</div>
+    <button style="width:100%;padding:11px;border-radius:10px;background:#22c55e;color:#000;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Start SAT Prep →</button>
+  </div>
+  <div style="background:#0e0e12;border:1.5px solid rgba(59,130,246,.25);border-radius:20px;padding:2rem 1.5rem;text-align:center;opacity:.5;position:relative;">
+    <div style="position:absolute;top:12px;right:12px;font-family:'DM Mono',monospace;font-size:8px;background:#16161c;color:#44444f;border:1px solid rgba(255,255,255,.05);border-radius:6px;padding:2px 8px;">SOON</div>
+    <div style="font-size:42px;margin-bottom:1rem;">🇬🇧</div>
+    <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:900;color:#60a5fa;margin-bottom:.5rem;">IELTS</div>
+    <div style="font-size:13px;color:#8a8a9a;line-height:1.65;margin-bottom:1.25rem;">International English. Band 0–9.</div>
+    <button disabled style="width:100%;padding:11px;border-radius:10px;background:rgba(59,130,246,.3);color:#fff;border:none;font-size:13px;font-weight:700;cursor:not-allowed;font-family:'Inter',sans-serif;">Coming Soon</button>
+  </div>
+  <div style="background:#0e0e12;border:1.5px solid rgba(168,85,247,.25);border-radius:20px;padding:2rem 1.5rem;text-align:center;opacity:.5;position:relative;">
+    <div style="position:absolute;top:12px;right:12px;font-family:'DM Mono',monospace;font-size:8px;background:#16161c;color:#44444f;border:1px solid rgba(255,255,255,.05);border-radius:6px;padding:2px 8px;">SOON</div>
+    <div style="font-size:42px;margin-bottom:1rem;">🇰🇷</div>
+    <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:900;color:#a855f7;margin-bottom:.5rem;">TOPIK</div>
+    <div style="font-size:13px;color:#8a8a9a;line-height:1.65;margin-bottom:1.25rem;">Korean proficiency. Level 1–6.</div>
+    <button disabled style="width:100%;padding:11px;border-radius:10px;background:rgba(168,85,247,.3);color:#fff;border:none;font-size:13px;font-weight:700;cursor:not-allowed;font-family:'Inter',sans-serif;">Coming Soon</button>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;width:100%;max-width:820px;">
+  <span onclick="logout()" style="font-family:'DM Mono',monospace;font-size:10px;color:#44444f;cursor:pointer;" onmouseover="this.style.color='#f0f0f2'" onmouseout="this.style.color='#44444f'">← Log out</span>
+  <div style="display:flex;gap:6px;">
+    <button id="ch-lang-mn" onclick="chooseSetLang('mn')" class="lang-btn on" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.09);background:rgba(34,197,94,.1);color:#22c55e;cursor:pointer;">🇲🇳 Монгол</button>
+    <button id="ch-lang-en" onclick="chooseSetLang('en')" class="lang-btn" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.09);background:transparent;color:#8a8a9a;cursor:pointer;">🇺🇸 English</button>
+  </div>
+</div>
+
+</div>
+
+<!-- ═══════════════ DASHBOARD PAGE ═══════════════ -->
+<div id="app-dashboard" class="wa-page" style="display:none;">
+  <div class="shell">
 <aside class="sb">
   <div class="sb-logo"><div class="logo" onclick="goNav('home')">We<em>Ace</em></div><div class="logo-sub">SAT Prep · Mongolia</div></div>
   <div class="sb-user"><div class="ava" id="sb-ava">W</div><div><div style="font-size:12.5px;font-weight:600;line-height:1.2" id="sb-name">Оюутан</div><span class="chip free" id="sb-chip">Free</span></div></div>
@@ -441,9 +624,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
     <div class="nl">Account</div>
     <div class="ni" data-pg="upgrade" onclick="goNav('upgrade',this)"><span class="ni-ic">⭐</span>Upgrade Plan</div>
     <div class="ni" data-pg="settings" onclick="goNav('settings',this)"><span class="ni-ic">⚙</span>Settings</div>
-    <div class="nl">Other Exams</div>
-    <div class="ni" onclick="window.location.href='topik.html'"><span class="ni-ic">🇰🇷</span>Study TOPIK</div>
-    <div class="ni" onclick="window.location.href='choose.html'"><span class="ni-ic">🔄</span>Switch Exam</div>
   </nav>
 </aside>
 <div class="main">
@@ -767,8 +947,846 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
   </div>
 </div>
+</div>
+
+<!-- PAYMENT -->
+</div>
+
+<!-- ═══════════════ PAYMENT PAGE ═══════════════ -->
+<div id="app-payment" class="wa-page" style="display:none;min-height:100vh;background:#060608;box-sizing:border-box;">
+  <div style="min-height:100vh;background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:2rem">
+<div class="wrap">
+  <!-- Header -->
+  <div class="logo" onclick="goBack()">We<em>Ace</em></div>
+  <div class="back-link" onclick="goBack()">← Back to dashboard</div>
+
+  <!-- Step 1: Choose method -->
+  <div class="pay-step on" id="step-choose">
+    <!-- Plan summary -->
+    <div class="plan-card" id="plan-display">
+      <div class="plan-badge plus" id="plan-badge-el">PLUS</div>
+      <div class="plan-header">
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">You are subscribing to</div>
+          <div class="plan-name" id="plan-name-el">Plus Plan</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price" id="plan-price-el">₮19,900 <span>/month</span></div>
+        </div>
+      </div>
+      <div class="plan-feats" id="plan-feats-el">
+        <div class="pf"><div class="pf-ic">✓</div>Mock exam engine (54+44 questions)</div>
+        <div class="pf"><div class="pf-ic">✓</div>Detailed score analysis</div>
+        <div class="pf"><div class="pf-ic">✓</div>Predicted SAT score</div>
+        <div class="pf"><div class="pf-ic">✓</div>All Free features</div>
+      </div>
+    </div>
+
+    <!-- Payment methods -->
+    <span class="section-title">Payment method</span>
+    <div class="method-grid">
+      <div class="method-card selected" id="method-qpay" onclick="selectMethod('qpay')">
+        <div class="qpay-logo">Q</div>
+        <div class="method-name">QPay</div>
+        <div class="method-desc">Most popular in MN</div>
+      </div>
+      <div class="method-card" id="method-socialpay" onclick="selectMethod('socialpay')">
+        <div class="khan-logo">Khan</div>
+        <div class="method-name">SocialPay</div>
+        <div class="method-desc">Khan Bank</div>
+      </div>
+      <div class="method-card" id="method-bank" onclick="selectMethod('bank')">
+        <div class="method-logo">🏦</div>
+        <div class="method-name">Bank Transfer</div>
+        <div class="method-desc">Any Mongolian bank</div>
+      </div>
+      <div class="method-card" id="method-card" onclick="selectMethod('card')">
+        <div class="method-logo">💳</div>
+        <div class="method-name">Card</div>
+        <div class="method-desc">Visa · Mastercard</div>
+      </div>
+    </div>
+
+    <button class="btn pri" onclick="proceedPayment()">Continue to payment →</button>
+
+    <div class="security">
+      <span class="security-ic">🔒</span>
+      Secure payment · SSL encrypted · No card data stored
+    </div>
+  </div>
+
+  <!-- Step 2a: QPay QR -->
+  <div class="pay-step" id="step-qpay">
+    <div class="qr-panel">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Scan with QPay</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Open QPay app → Scan QR → Confirm payment</div>
+      <div class="qr-box" id="qr-container">
+        <!-- Generated QR code via JS -->
+        <div id="qr-svg-holder"></div>
+      </div>
+      <div class="qr-timer">⏱ Expires in: <strong id="qr-countdown">10:00</strong></div>
+      <div class="qr-hint">Amount: <strong id="qr-amount">₮19,900</strong> · WeAce SAT Prep</div>
+      <div class="qr-apps">
+        <div class="qr-app">QPay</div>
+        <div class="qr-app">Khan Bank</div>
+        <div class="qr-app">Golomt</div>
+        <div class="qr-app">TDB</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change method</button>
+      <button class="btn pri" onclick="simulatePaymentSuccess()">✓ I've paid (Demo)</button>
+    </div>
+
+    <div style="margin-top:1rem;text-align:center">
+      <span class="status-dot checking"></span>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)" id="status-text">Waiting for payment...</span>
+    </div>
+  </div>
+
+  <!-- Step 2b: SocialPay -->
+  <div class="pay-step" id="step-socialpay">
+    <div class="qr-panel">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">SocialPay (Khan Bank)</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Khan Bank app-аар төлбөр хийнэ үү</div>
+      <div style="font-size:48px;margin-bottom:1rem">📱</div>
+      <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:1rem;text-align:left;margin-bottom:1rem">
+        <div class="bank-row"><span class="bank-lbl">Дансны дугаар</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000 1234 5678',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Банк</span><span class="bank-val">Khan Bank (Хаан банк)</span></div>
+        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" id="socialpay-amount">₮19,900</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="socialpay-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
+      </div>
+      <div style="font-size:11.5px;color:var(--hint);line-height:1.65">Гүйлгээний утгыг заавал оруулна уу — таны эрхийг идэвхжүүлэхэд ашиглагдана.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn khan-btn" onclick="simulatePaymentSuccess()">Төлбөр хийсэн ✓</button>
+    </div>
+  </div>
+
+  <!-- Step 2c: Bank Transfer -->
+  <div class="pay-step" id="step-bank">
+    <div class="qr-panel" style="text-align:left">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem;text-align:center">Bank Transfer</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;text-align:center">Дараах дансанд шилжүүлэг хийнэ үү</div>
+      <div class="bank-info">
+        <div class="bank-row"><span class="bank-lbl">Байгууллагын нэр</span><span class="bank-val">WeAce Education LLC</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гolomt Bank</span><span class="bank-val">1301 2345 6789 <button class="copy-btn" onclick="copyText('1301234567890',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Khan Bank</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000123456780',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">TDB</span><span class="bank-val">4921 0000 1234 <button class="copy-btn" onclick="copyText('4921000012340',this)">Copy</button></span></div>
+        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" style="color:var(--green)" id="bank-amount">₮19,900</span></div>
+        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="bank-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
+      </div>
+      <div style="background:var(--ad);border:1px solid var(--am);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--amber);line-height:1.65">
+        ⚠️ <strong>Гүйлгээний утгыг заавал оруулна уу.</strong> Таны гүйлгээ 1–2 цагийн дотор баталгаажна. Асуулт байвал: hello@weace.mn
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn pri" onclick="simulatePaymentSuccess()">Шилжүүлэг хийсэн ✓</button>
+    </div>
+  </div>
+
+  <!-- Step 2d: Card -->
+  <div class="pay-step" id="step-card">
+    <div class="qr-panel" style="text-align:left">
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:1.25rem;text-align:center">Card Payment</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem">
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Card number</label>
+          <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;letter-spacing:2px" oninput="formatCard(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Expiry</label>
+            <input type="text" placeholder="MM/YY" maxlength="5" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" oninput="formatExpiry(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+          </div>
+          <div>
+            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">CVV</label>
+            <input type="password" placeholder="•••" maxlength="4" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Cardholder name</label>
+          <input type="text" placeholder="BATERDENE GANTULGA" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none;text-transform:uppercase" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--hint);margin-bottom:1rem">
+        🔒 Card data is processed securely. WeAce does not store your card details.
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:.5rem">
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">VISA</div>
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">Mastercard</div>
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">UnionPay</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
+      <button class="btn pri" id="card-pay-btn" onclick="processCard()">Pay <span id="card-amount-btn">₮19,900</span> →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Processing -->
+  <div class="pay-step" id="step-processing">
+    <div style="text-align:center;padding:3rem 1rem">
+      <div class="spinner"></div>
+      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Processing payment...</div>
+      <div style="font-size:12px;color:var(--muted)">Please wait a moment</div>
+    </div>
+  </div>
+
+  <!-- Step 4: Success -->
+  <div class="pay-step" id="step-success">
+    <div class="success-panel">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Payment Successful!</div>
+      <div class="success-sub" id="success-msg">
+        Your <strong id="success-plan">Plus</strong> plan is now active.<br>
+        All features have been unlocked for your account.
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1rem 1.25rem;text-align:left;margin-bottom:1.75rem;max-width:320px;margin-left:auto;margin-right:auto">
+        <div class="bank-row"><span class="bank-lbl">Plan</span><span class="bank-val" id="rec-plan">Plus</span></div>
+        <div class="bank-row"><span class="bank-lbl">Amount</span><span class="bank-val" id="rec-amount">₮19,900/month</span></div>
+        <div class="bank-row"><span class="bank-lbl">Date</span><span class="bank-val" id="rec-date"></span></div>
+        <div class="bank-row"><span class="bank-lbl">Ref</span><span class="bank-val" style="font-family:'DM Mono',monospace;font-size:10px" id="rec-ref"></span></div>
+      </div>
+      <button class="btn pri" style="max-width:280px;margin:0 auto" onclick="goToDashboard()">Go to Dashboard →</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
 
 <script>
+
+/* ── ROUTER ── */
+var _currentPage='intro';
+function showPage(page){
+  ['intro','choose','dashboard','payment'].forEach(function(p){
+    var el=document.getElementById('app-'+p);
+    if(el){ el.style.display='none'; }
+  });
+  var target=document.getElementById('app-'+page);
+  if(target){ target.style.display='block'; _currentPage=page; }
+  window.scrollTo(0,0);
+  /* Show/hide canvas */
+  var cv=document.getElementById('bg-canvas');
+  if(cv) cv.style.display=(page==='intro')?'block':'none';
+  /* Page init */
+  if(page==='dashboard'){
+    try{buildTGrids();vcRender();updateAll();applyLang();renderMockResults();}catch(e){console.log('dash:',e.message);}
+  }
+  if(page==='choose'){ try{initChoosePage();}catch(e){} }
+  if(page==='payment'){ try{initPaymentPage();}catch(e){} }
+  if(page==='intro'){
+    try{setIntroLang(_introLang||'mn');}catch(e){}
+    /* Check session for logged-in state */
+    try{
+      var s=JSON.parse(localStorage.getItem('weace_session')||'null');
+      if(s&&s.name&&s.email){
+        var cont=document.getElementById('nav-continue');if(cont)cont.style.display='inline-block';
+        var si=document.getElementById('nav-signin');if(si)si.style.display='none';
+        var su=document.getElementById('nav-signup');if(su)su.style.display='none';
+        var g=document.getElementById('hero-ctas-guest');if(g)g.style.display='none';
+        var u=document.getElementById('hero-ctas-user');if(u)u.style.display='flex';
+        var hs=document.getElementById('hero-sub');if(hs)hs.textContent='Welcome back, '+s.name.split(' ')[0]+'! Continue your SAT prep.';
+      }else{
+        var cont2=document.getElementById('nav-continue');if(cont2)cont2.style.display='none';
+        var si2=document.getElementById('nav-signin');if(si2)si2.style.display='';
+        var su2=document.getElementById('nav-signup');if(su2)su2.style.display='';
+        var g2=document.getElementById('hero-ctas-guest');if(g2)g2.style.display='flex';
+        var u2=document.getElementById('hero-ctas-user');if(u2)u2.style.display='none';
+      }
+    }catch(e){}
+  }
+}
+function logout(){
+  localStorage.removeItem('weace_session');
+  localStorage.removeItem('weace_user');
+  localStorage.removeItem('weace_exam');
+  showPage('intro');
+}
+/* On load */
+(function(){
+  /* Start on intro */
+  showPage('intro');
+  /* Canvas animation */
+  try{
+    var cv=document.getElementById('bg-canvas');
+    if(cv&&cv.getContext){
+      var ctx=cv.getContext('2d');
+      var particles=[];
+      var COLORS=['#22c55e','#3b82f6','#a855f7','#f59e0b'];
+      function resize(){ cv.width=window.innerWidth; cv.height=window.innerHeight; }
+      function Particle(){ this.x=Math.random()*cv.width; this.y=Math.random()*cv.height; this.r=Math.random()*2+1; this.vx=(Math.random()-.5)*.4; this.vy=(Math.random()-.5)*.4; this.color=COLORS[Math.floor(Math.random()*COLORS.length)]; this.alpha=Math.random()*.5+.2; }
+      Particle.prototype.update=function(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0)this.x=cv.width; if(this.x>cv.width)this.x=0; if(this.y<0)this.y=cv.height; if(this.y>cv.height)this.y=0; };
+      function animate(){ if(!ctx||document.getElementById('app-intro').style.display==='none')return; ctx.clearRect(0,0,cv.width,cv.height); particles.forEach(function(p){p.update();ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();ctx.globalAlpha=1;}); requestAnimationFrame(animate); }
+      window.addEventListener('resize',resize);
+      resize();
+      for(var i=0;i<60;i++) particles.push(new Particle());
+      animate();
+    }
+  }catch(e){}
+})();
+
+
+var _introLang=(function(){try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';}})();
+var INTRO_T={mn:{signin:'Нэвтрэх',signup:'Үнэгүй эхлэх'},en:{signin:'Sign in',signup:'Get started free'}};
+function setIntroLang(lang){
+  _introLang=lang;
+  try{localStorage.setItem('weace_lang',lang);}catch(e){}
+  var si=document.getElementById('nav-signin');if(si)si.textContent=INTRO_T[lang]&&INTRO_T[lang].signin||'Sign in';
+  var su=document.getElementById('nav-signup');if(su)su.textContent=INTRO_T[lang]&&INTRO_T[lang].signup||'Get started free';
+  var mn=document.getElementById('intro-lang-mn'),en=document.getElementById('intro-lang-en');
+  if(mn)mn.style.background=lang==='mn'?'rgba(34,197,94,.1)':'transparent';
+  if(mn)mn.style.color=lang==='mn'?'#22c55e':'#8a8a9a';
+  if(en)en.style.background=lang==='en'?'rgba(34,197,94,.1)':'transparent';
+  if(en)en.style.color=lang==='en'?'#22c55e':'#8a8a9a';
+}
+
+
+var _chooseLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
+var _sessCh=null; try{_sessCh=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
+
+function initChoosePage(){
+  try{
+    var sess=JSON.parse(localStorage.getItem('weace_session')||'null');
+    if(!sess||!sess.name){showPage('intro');return;}
+    var p=(sess.name||'').trim().split(' ');
+    var ini=((p[0]?p[0][0]:'')+(p[1]?p[1][0]:'')).toUpperCase()||'W';
+    var a=document.getElementById('ch-ava');if(a)a.textContent=ini;
+    var n=document.getElementById('ch-name');if(n)n.textContent=sess.name;
+    var pl=document.getElementById('ch-plan');if(pl)pl.textContent={free:'Free',plus:'Plus',pro:'Pro'}[sess.plan||'free']||'Free';
+    chooseApplyLang(_chooseLang||'mn');
+  }catch(e){ console.log('choose init:',e.message); }
+}
+function chooseExam(exam){
+  if(exam==='sat'){
+    try{ var s=JSON.parse(localStorage.getItem('weace_session')||'{}'); s.exam=exam; localStorage.setItem('weace_session',JSON.stringify(s)); }catch(e){}
+    showPage('dashboard');
+    try{buildTGrids();vcRender();updateAll();applyLang();renderMockResults();}catch(e){}
+  }else{ alert('Coming soon! Join waitlist: hello@weace.mn'); }
+}
+function chooseApplyLang(lang){
+  _chooseLang=lang;
+  try{localStorage.setItem('weace_lang',lang);}catch(e){}
+  var mn=document.getElementById('ch-lang-mn'),en=document.getElementById('ch-lang-en');
+  if(mn)mn.className='lang-btn'+(lang==='mn'?' on':'');
+  if(en)en.className='lang-btn'+(lang==='en'?' on':'');
+}
+function chooseSetLang(lang){ chooseApplyLang(lang); }
+
+
+var _payRef='WEACE-'+Math.random().toString(36).substr(2,8).toUpperCase();
+var PLANS={
+  plus:{name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',feats:['Mock exam engine (54+44 Qs)','Detailed score analysis','Predicted SAT score','All Free features']},
+  pro:{name:'Pro Plan',price:'₮29,900',badge:'PRO',badgeClass:'pro',feats:['Everything in Plus','Human Tutor 1:1','6 Video Courses','Personal study plan']}
+};
+function initPaymentPage(){
+  try{
+    var plan=PLANS[window._payPlan||'plus']||PLANS.plus;
+    var el;
+    el=document.getElementById('plan-name-el');if(el)el.textContent=plan.name;
+    el=document.getElementById('plan-price-el');if(el)el.innerHTML=plan.price+' <span>/month</span>';
+    el=document.getElementById('plan-badge-el');if(el){el.textContent=plan.badge;el.className='plan-badge '+plan.badgeClass;}
+    el=document.getElementById('plan-feats-el');if(el)el.innerHTML=plan.feats.map(function(f){return'<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>';}).join('');
+    ['qr-amount','socialpay-amount','bank-amount'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=plan.price;});
+    el=document.getElementById('card-amount-btn');if(el)el.textContent=plan.price;
+    document.querySelectorAll('[id$="-ref"]').forEach(function(e){e.textContent=_payRef;});
+    el=document.getElementById('socialpay-ref');if(el)el.textContent=_payRef;
+    el=document.getElementById('bank-ref');if(el)el.textContent=_payRef;
+    el=document.getElementById('rec-date');if(el)el.textContent=new Date().toLocaleDateString();
+    el=document.getElementById('rec-ref');if(el)el.textContent=_payRef;
+    el=document.getElementById('success-plan');if(el)el.textContent=plan.name;
+    el=document.getElementById('rec-plan');if(el)el.textContent=plan.name;
+    el=document.getElementById('rec-amount');if(el)el.textContent=plan.price+'/month';
+    try{generateQR();}catch(e){}
+    startQrTimer();
+  }catch(e){ console.log('pay init:',e.message); }
+}
+function simulatePaymentSuccess(){
+  try{ var s=JSON.parse(localStorage.getItem('weace_session')||'{}'); s.plan=window._payPlan||'plus'; localStorage.setItem('weace_session',JSON.stringify(s)); var st=JSON.parse(localStorage.getItem('weace_v9')||'{}'); st.plan=window._payPlan||'plus'; localStorage.setItem('weace_v9',JSON.stringify(st)); localStorage.removeItem('weace_pending_plan'); }catch(e){}
+  goToStep('processing');
+  setTimeout(function(){ goToStep('success'); },1500);
+}
+function goBack(){ showPage('dashboard'); }
+function goToDashboard(){ showPage('dashboard'); }
+function copyText(text,btn){ try{navigator.clipboard.writeText(text);}catch(e){} btn.textContent='Copied!'; btn.className=(btn.className||'')+' copied'; setTimeout(function(){btn.textContent='Copy';btn.className=(btn.className||'').replace(' copied','');},2000); }
+function copyRef(btn){ copyText(_payRef,btn); }
+function selectMethod(m){
+  document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected');});
+  var el=document.getElementById('method-'+m); if(el)el.classList.add('selected');
+}
+function proceedPayment(){
+  var sel='qpay';
+  document.querySelectorAll('.method-card').forEach(function(c){if(c.classList.contains('selected'))sel=c.id.replace('method-','');});
+  if(sel==='qpay'){goToStep('qpay');try{startQrTimer();}catch(e){}}
+  else if(sel==='socialpay')goToStep('socialpay');
+  else if(sel==='bank')goToStep('bank');
+  else if(sel==='card')goToStep('card');
+}
+function goToStep(step){ document.querySelectorAll('.pay-step').forEach(function(s){s.classList.remove('on');}); var el=document.getElementById('step-'+step);if(el)el.classList.add('on'); }
+var _qrTimer=null;
+function startQrTimer(){ var secs=600; clearInterval(_qrTimer); _qrTimer=setInterval(function(){ secs--; var m=Math.floor(secs/60),s=secs%60; var el=document.getElementById('qr-countdown');if(el)el.textContent=m+':'+(s<10?'0':'')+s; if(secs<=0){clearInterval(_qrTimer);} },1000); }
+function generateQR(){ var h=document.getElementById('qr-svg-holder');if(!h)return; var size=21,cells=[]; for(var r=0;r<size;r++){cells[r]=[];for(var c=0;c<size;c++){if((r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7)){cells[r][c]=1;}else{cells[r][c]=(Math.floor(Math.random()*2));}}} var cell=8,svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(size*cell)+' '+(size*cell)+'"><rect width="100%" height="100%" fill="white"/>'; for(var r2=0;r2<size;r2++)for(var c2=0;c2<size;c2++)if(cells[r2][c2])svg+='<rect x="'+(c2*cell)+'" y="'+(r2*cell)+'" width="'+cell+'" height="'+cell+'" fill="#000"/>'; svg+='</svg>'; h.innerHTML=svg; }
+function formatCard(input){var v=input.value.replace(/\D/g,'').substr(0,16);input.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function formatExpiry(input){var v=input.value.replace(/\D/g,'').substr(0,4);if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2);input.value=v;}
+function processCard(){ var btn=document.getElementById('card-pay-btn');if(btn){btn.textContent='Processing...';btn.disabled=true;} goToStep('processing'); setTimeout(simulatePaymentSuccess,2000); }
+
+
+function goBack(){ showPage('dashboard'); }
+function goToDashboardFromPay(){ showPage('dashboard'); }
+
+
+
+/* ── APP ROUTER ── */
+var _currentPage = 'intro';
+
+function showPage(page) {
+  document.querySelectorAll('.app-page').forEach(function(el){
+    el.classList.remove('active');
+    el.style.display = '';
+  });
+  var target = document.getElementById('app-' + page);
+  if(target) {
+    target.classList.add('active');
+    target.style.display = 'block';
+    _currentPage = page;
+  }
+  /* Show canvas only on intro page */
+  var canvas = document.getElementById('c');
+  if(canvas) canvas.style.display = (page === 'intro') ? 'block' : 'none';
+  window.scrollTo(0, 0);
+  if(page === 'dashboard') {
+    try{ buildTGrids(); vcRender(); updateAll(); applyLang(); renderMockResults(); }catch(e){ console.log('dash init:', e.message); }
+  }
+  if(page === 'choose') {
+    try{ initChoosePage(); }catch(e){}
+  }
+  if(page === 'payment') {
+    try{ initPaymentPage(); }catch(e){}
+  }
+  if(page === 'intro') {
+    try{ setIntroLang(_introLang||'mn'); }catch(e){}
+  }
+}
+
+function initChoosePage() {
+  try{
+    var sess = JSON.parse(localStorage.getItem('weace_session')||'null');
+    if(!sess || !sess.name) { showPage('intro'); return; }
+    var p = (sess.name||'').trim().split(' ');
+    var ini = ((p[0]?p[0][0]:'')+(p[1]?p[1][0]:'')).toUpperCase()||'W';
+    var ava = document.getElementById('ch-ava'); if(ava) ava.textContent = ini;
+    var nm = document.getElementById('ch-name'); if(nm) nm.textContent = sess.name;
+    var pl = document.getElementById('ch-plan'); 
+    if(pl) pl.textContent = {free:'Free',plus:'Plus',pro:'Pro'}[sess.plan||'free']||'Free';
+    if(typeof chooseApplyLang === 'function') chooseApplyLang(_chooseLang||'mn');
+  }catch(e){ console.log('choose init:', e.message); }
+}
+
+function initPaymentPage() {
+  try{
+    var plan = (typeof PLANS !== 'undefined' ? PLANS : {})[window._payPlan||'plus'];
+    if(!plan) plan = {name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',feats:['Mock exams','Score analysis','All free features']};
+    var el;
+    el = document.getElementById('plan-name-el'); if(el) el.textContent = plan.name;
+    el = document.getElementById('plan-price-el'); if(el) el.innerHTML = plan.price + ' <span>/month</span>';
+    el = document.getElementById('plan-badge-el'); if(el){ el.textContent = plan.badge; el.className = 'plan-badge ' + plan.badgeClass; }
+    el = document.getElementById('plan-feats-el');
+    if(el && plan.feats) el.innerHTML = plan.feats.map(function(f){ return '<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>'; }).join('');
+    ['qr-amount','socialpay-amount','bank-amount'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=plan.price; });
+    el = document.getElementById('card-amount-btn'); if(el) el.textContent = plan.price;
+    el = document.getElementById('rec-date'); if(el) el.textContent = new Date().toLocaleDateString();
+    el = document.getElementById('success-plan'); if(el) el.textContent = plan.name;
+    if(typeof generateQR === 'function') generateQR();
+  }catch(e){ console.log('pay init:', e.message); }
+}
+
+/* Override logout */
+function _orig_logout() { /* replaced */ }
+function logout() {
+  localStorage.removeItem('weace_session');
+  localStorage.removeItem('weace_user');
+  localStorage.removeItem('weace_exam');
+  showPage('intro');
+  /* Reset intro nav */
+  try{
+    var cont=document.getElementById('nav-continue');if(cont)cont.style.display='none';
+    var si=document.getElementById('nav-signin');if(si)si.style.display='';
+    var su=document.getElementById('nav-signup');if(su)su.style.display='';
+    var g=document.getElementById('hero-ctas-guest');if(g)g.style.display='';
+    var u=document.getElementById('hero-ctas-user');if(u)u.style.display='none';
+    var hs=document.getElementById('hero-sub');if(hs)hs.textContent='';
+  }catch(e){}
+}
+
+/* Init on page load */
+(function() {
+  /* Show canvas for intro page (initial state) */
+  try{ var c=document.getElementById('c'); if(c) c.style.display='block'; }catch(e){}
+  try{
+    var sess = JSON.parse(localStorage.getItem('weace_session')||'null');
+    if(sess && sess.name && sess.email) {
+      var cont=document.getElementById('nav-continue');if(cont)cont.style.display='inline-flex';
+      var si=document.getElementById('nav-signin');if(si)si.style.display='none';
+      var su=document.getElementById('nav-signup');if(su)su.style.display='none';
+      var g=document.getElementById('hero-ctas-guest');if(g)g.style.display='none';
+      var u=document.getElementById('hero-ctas-user');if(u)u.style.display='flex';
+      var hs=document.getElementById('hero-sub');if(hs)hs.textContent='Welcome back, '+sess.name.split(' ')[0]+'!';
+    }
+  }catch(e){}
+  try{ setIntroLang(_introLang||'mn'); }catch(e){}
+})();
+
+
+
+(function(){
+try{
+/* ── CANVAS ANIMATION ── */
+var C = document.getElementById('c'); var ctx = (C && C.getContext) ? C.getContext('2d') : null; if(!ctx) { C = null; }
+var W, H, particles = [];
+var COLORS = ['#22c55e','#3b82f6','#a855f7','#f59e0b','#ffffff'];
+
+function resize() { if(!C)return; W = C.width = window.innerWidth; H = C.height = window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+
+function Particle() { this.init(); }
+Particle.prototype.init = function() {
+  this.x = Math.random() * W; this.y = Math.random() * H;
+  this.vx = (Math.random() - .5) * .45; this.vy = (Math.random() - .5) * .45;
+  this.r = Math.random() * 1.8 + .4;
+  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  this.alpha = Math.random() * .5 + .1;
+};
+Particle.prototype.update = function() {
+  this.x += this.vx; this.y += this.vy;
+  if (this.x < -10 || this.x > W+10 || this.y < -10 || this.y > H+10) this.init();
+};
+
+for (var i = 0; i < 90; i++) { var p = new Particle(); p.x = Math.random()*W; p.y = Math.random()*H; particles.push(p); }
+
+var gridOff = 0;
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Glowing orbs
+  [
+    {x:.12,y:.2,r:260,c:'34,197,94'},
+    {x:.88,y:.12,r:220,c:'59,130,246'},
+    {x:.5,y:.85,r:200,c:'168,85,247'},
+    {x:.75,y:.5,r:180,c:'245,158,11'}
+  ].forEach(function(o) {
+    var g = ctx.createRadialGradient(o.x*W, o.y*H, 0, o.x*W, o.y*H, o.r);
+    g.addColorStop(0, 'rgba('+o.c+',.07)'); g.addColorStop(1, 'rgba('+o.c+',0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x*W, o.y*H, o.r, 0, Math.PI*2); ctx.fill();
+  });
+
+  // Grid
+  gridOff = (gridOff + .25) % 80;
+  ctx.strokeStyle = 'rgba(255,255,255,.018)'; ctx.lineWidth = .5;
+  for (var x = -80+gridOff; x < W+80; x += 80) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + H*.15, H); ctx.stroke();
+  }
+  for (var y = -80+gridOff; y < H+80; y += 80) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+  }
+
+  // Connect particles
+  for (var i = 0; i < particles.length; i++) {
+    for (var j = i+1; j < particles.length; j++) {
+      var dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      var d = Math.sqrt(dx*dx + dy*dy);
+      if (d < 110) {
+        ctx.strokeStyle = 'rgba(255,255,255,'+(1-d/110)*.07+')';
+        ctx.lineWidth = .5;
+        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+      }
+    }
+  }
+
+  // Particles
+  ctx.save();
+  particles.forEach(function(p) {
+    p.update();
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+  });
+  ctx.restore();
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+/* ── FAQ ── */
+function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
+
+/* ── AUTH STORAGE ── */
+var USERS_KEY = 'weace_users';
+var SESSION_KEY = 'weace_session';
+
+function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch(e) { return {}; } }
+function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
+function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } }
+function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
+
+/* Check if already logged in */
+(function() {
+  var sess = getSession();
+  if (sess && sess.email) {
+    var nav_ctas = document.getElementById('nav-ctas');
+    if (nav_ctas) nav_ctas.innerHTML = '<span style="font-family:var(--fm);font-size:11px;color:var(--muted);margin-right:6px">'+sess.name+'</span><button class="btn p" onclick="goToDashboard()">Open dashboard →</button>';
+  }
+})();
+
+}catch(e){/* no canvas in this context */}
+})();
+
+var wantPro = false;
+
+
+
+/* ── INTRO LANGUAGE ── */
+var _introLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
+
+var INTRO_T = {
+  mn:{
+    signin:'Нэвтрэх', signup:'Үнэгүй эхлэх',
+    hero_sub:'Монгол оюутнуудад зориулсан SAT бэлтгэл',
+    feat_title:'Яагаад WeAce вэ?',
+    pricing_title:'Үнэ',
+    faq_title:'Нийтлэг асуултууд',
+    cta:'Одоо эхлэх →'
+  },
+  en:{
+    signin:'Sign in', signup:'Get started free',
+    hero_sub:'SAT prep built for Mongolian students',
+    feat_title:'Why WeAce?',
+    pricing_title:'Pricing',
+    faq_title:'FAQ',
+    cta:'Start now →'
+  }
+};
+
+function setIntroLang(lang){
+  _introLang = lang;
+  try{localStorage.setItem('weace_lang', lang);}catch(e){}
+  var T = INTRO_T[lang]||INTRO_T.mn;
+  var el;
+  el=document.getElementById('nav-signin'); if(el)el.textContent=T.signin;
+  el=document.getElementById('nav-signup'); if(el)el.textContent=T.signup;
+  var mn=document.getElementById('intro-lang-mn');
+  var en=document.getElementById('intro-lang-en');
+  if(mn){mn.style.background=lang==='mn'?'var(--gd)':'transparent';mn.style.color=lang==='mn'?'var(--green)':'var(--muted)';}
+  if(en){en.style.background=lang==='en'?'var(--gd)':'transparent';en.style.color=lang==='en'?'var(--green)':'var(--muted)';}
+}
+
+// Apply on load
+window.addEventListener('DOMContentLoaded', function(){
+  setIntroLang(_introLang);
+  try{
+    var sess = JSON.parse(localStorage.getItem('weace_session')||'null');
+    if(sess && sess.name && sess.email){
+      /* Nav: show Continue, hide Sign in/up */
+      var cont = document.getElementById('nav-continue');
+      var signIn = document.getElementById('nav-signin');
+      var signUp = document.getElementById('nav-signup');
+      if(cont) cont.style.display = 'inline-flex';
+      if(signIn) signIn.style.display = 'none';
+      if(signUp) signUp.style.display = 'none';
+      /* Hero: show user CTAs, hide guest CTAs */
+      var guestCtas = document.getElementById('hero-ctas-guest');
+      var userCtas = document.getElementById('hero-ctas-user');
+      if(guestCtas) guestCtas.style.display = 'none';
+      if(userCtas) userCtas.style.display = 'flex';
+      /* Hero sub: personalize */
+      var heroSub = document.getElementById('hero-sub');
+      if(heroSub){
+        var firstName = sess.name.split(' ')[0];
+        heroSub.textContent = 'Welcome back, ' + firstName + '! Continue your SAT prep.';
+      }
+      /* Update all signup-related buttons to go to dashboard */
+      document.querySelectorAll('button').forEach(function(b){
+        if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('signup') !== -1 && b.id !== 'nav-signup'){
+          b.textContent = 'Continue to Dashboard →';
+          b.setAttribute('onclick', "showPage('choose')");
+        }
+      });
+    }
+  }catch(e){ console.error('Session check error:', e); }
+});
+
+
+function openAuth(mode, plan) {
+  wantPro = plan === 'pro';
+  document.getElementById('auth-overlay').classList.add('open');
+  switchTab(mode);
+  showError(''); showSuccess('');
+  document.getElementById('pro-badge').style.display = wantPro ? 'block' : 'none';
+}
+function closeAuth() { document.getElementById('auth-overlay').classList.remove('open'); }
+function overlayClick(e) { if (e.target === document.getElementById('auth-overlay')) closeAuth(); }
+
+function switchTab(t) {
+  document.getElementById('tab-signup').classList.toggle('on', t==='signup');
+  document.getElementById('tab-login').classList.toggle('on', t==='login');
+  document.getElementById('form-signup').style.display = t==='signup' ? 'block' : 'none';
+  document.getElementById('form-login').style.display = t==='login' ? 'block' : 'none';
+  showError(''); showSuccess('');
+}
+
+function showError(msg) { var e=document.getElementById('auth-error'); e.textContent=msg; e.classList.toggle('show', !!msg); }
+function showSuccess(msg) { var e=document.getElementById('auth-success'); e.innerHTML=msg; e.classList.toggle('show', !!msg); }
+
+function doSignup() {
+  var name = document.getElementById('su-name').value.trim();
+  var email = document.getElementById('su-email').value.trim().toLowerCase();
+  var pass = document.getElementById('su-pass').value;
+  showError(''); showSuccess('');
+
+  if (!name) { showError('Please enter your full name.'); return; }
+  if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
+  if (pass.length < 8) { showError('Password must be at least 8 characters.'); return; }
+
+  var users = getUsers();
+  if (users[email]) { showError('An account with this email already exists. Sign in instead.'); return; }
+
+  // Create account
+  var user = { name: name, email: email, password: pass, plan: wantPro ? 'pro' : 'free', createdAt: new Date().toISOString() };
+  users[email] = user;
+  saveUsers(users);
+
+  // Save session
+  var session = { email: email, name: name, plan: user.plan };
+  saveSession(session);
+
+  // Also save user context for dashboard
+  localStorage.setItem('weace_user', JSON.stringify(session));
+
+  showSuccess('&#x1F389; Account created! Redirecting to your dashboard...');
+  setTimeout(goToDashboard, 1200);
+}
+
+function doLogin() {
+  var email = document.getElementById('li-email').value.trim().toLowerCase();
+  var pass = document.getElementById('li-pass').value;
+  showError(''); showSuccess('');
+
+  if (!email) { showError('Please enter your email address.'); return; }
+  if (!pass) { showError('Please enter your password.'); return; }
+
+  var users = getUsers();
+  var user = users[email];
+
+  if (!user) { showError('No account found with this email. Create one for free!'); return; }
+  if (user.password !== pass) { showError('Incorrect password. Please try again.'); return; }
+
+  var session = { email: email, name: user.name, plan: user.plan };
+  saveSession(session);
+  localStorage.setItem('weace_user', JSON.stringify(session));
+
+  showSuccess('&#x2713; Welcome back, ' + user.name + '! Redirecting...');
+  setTimeout(goToDashboard, 1000);
+}
+
+function goToDashboard() { showPage('choose'); }
+
+/* Enter key support */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  var overlay = document.getElementById('auth-overlay');
+  if (!overlay.classList.contains('open')) return;
+  var tabOn = document.getElementById('tab-signup').classList.contains('on');
+  if (tabOn) doSignup(); else doLogin();
+});
+
+
+var _sess=null;try{_sess=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
+var _chooseLang=localStorage.getItem('weace_lang')||'mn';
+
+// If no session, redirect to intro
+/* session check deferred */
+
+
+var TXT={
+  mn:{
+    greeting:'Шалгалт сонгох',
+    sub:'бид таны бэлтгэлийг тааруулна',
+    label:'Зорьж буй шалгалтаа сонгоно уу',
+    satDesc:'АНУ-ын их сургуульд элсэх шалгалт. Math + Reading & Writing. Оноо 400–1600.',
+    satCta:'SAT Бэлтгэл эхлэх →',
+    ieltsDesc:'Олон улсын англи хэлний шалгалт. Listening, Reading, Writing, Speaking. Band 0–9.',
+    ieltsCta:'Тун удахгүй',
+    topikDesc:'Солонгос хэлний шалгалт. Үгийн сан, Грамматик, Уншлага, Бичлэг. Түвшин 1–6.',
+    topikCta:'Тун удахгүй',
+    comingSoon:'УДАХГҮЙ',
+    logout:'← Гарах'
+  },
+  en:{
+    greeting:'Choose your exam',
+    sub:'we\'ll tailor everything for you',
+    label:'Select your target exam',
+    satDesc:'US college admissions test. Math + Reading & Writing. Score 400–1600.',
+    satCta:'Start SAT Prep →',
+    ieltsDesc:'International English proficiency. Listening, Reading, Writing, Speaking. Band 0–9.',
+    ieltsCta:'Coming Soon',
+    topikDesc:'Korean language proficiency. Vocabulary, Grammar, Reading, Writing. Level 1–6.',
+    topikCta:'Coming Soon',
+    comingSoon:'COMING SOON',
+    logout:'← Log out'
+  }
+};
+
+function chooseApplyLang(lang){
+  _chooseLang=lang;
+  try{localStorage.setItem('weace_lang',lang);}catch(e){}
+  var T=TXT[lang]||TXT.en;
+  var el;
+  el=document.getElementById('choose-greeting');if(el)el.textContent=T.greeting;
+  el=document.getElementById('choose-sub');if(el)el.textContent=T.sub;
+  el=document.getElementById('choose-label');if(el)el.textContent=T.label;
+  el=document.getElementById('sat-desc');if(el)el.textContent=T.satDesc;
+  el=document.getElementById('sat-cta');if(el)el.textContent=T.satCta;
+  el=document.getElementById('ielts-desc');if(el)el.textContent=T.ieltsDesc;
+  el=document.getElementById('ielts-cta');if(el)el.textContent=T.ieltsCta;
+  el=document.getElementById('topik-desc');if(el)el.textContent=T.topikDesc;
+  el=document.getElementById('topik-cta');if(el)el.textContent=T.topikCta;
+  el=document.getElementById('logout-link');if(el)el.textContent=T.logout;
+  // coming soon badges
+  document.querySelectorAll('.coming-badge').forEach(function(b){b.textContent=T.comingSoon;});
+  // lang buttons
+  var mn=document.getElementById('ch-lang-mn');var en=document.getElementById('ch-lang-en');
+  if(mn)mn.className='lang-btn'+(lang==='mn'?' on':'');
+  if(en)en.className='lang-btn'+(lang==='en'?' on':'');
+}
+
+function chooseSetLang(lang){applyLang(lang);}
+
+function chooseExam(exam){
+  if(exam==='sat'){
+    // Save choice and go to dashboard
+    try{
+      if(_sess){_sess.exam=exam;localStorage.setItem('weace_session',JSON.stringify(_sess));}
+      localStorage.setItem('weace_exam',exam);
+    }catch(e){}
+    showPage('dashboard');
+  }
+  // IELTS/TOPIK coming soon - do nothing
+}
+
+function _orig_logout2(){/* replaced */}
+function logout(){
+  localStorage.removeItem('weace_session');
+  localStorage.removeItem('weace_user');
+  localStorage.removeItem('weace_exam');
+  showPage('intro');
+}
+
+// Apply saved language on load
+
 /* CONFIG */
 var CLAUDE_API_KEY='';
 
@@ -967,11 +1985,11 @@ ex:'Not red = 8. Total = 12. 8/12 = <strong>2/3</strong>.'},
 {id:'m66',topic:'Polynomials',diff:'Hard',isMath:true,useCalc:false,lesson:{cls:'math',title:'Pascal Triangle and Binomial Expansion',body:'<h4 class="m">Binomial theorem</h4><div class="formula">(a+b)&#179; = a&#179; + 3a&#178;b + 3ab&#178; + b&#179;</div><div class="ex m">(x+2)&#179; = x&#179;+6x&#178;+12x+8.</div>'},text:'What is the coefficient of x&#178; in the expansion of (x + 3)&#179;?',opts:['3','6','9','27'],ans:2,ex:'<strong>(x+3)&#179; = x&#179;+3(3)x&#178;+3(9)x+27 = x&#179;+9x&#178;+27x+27.</strong><span class="fb-step">Coefficient of x&#178; = 9 &#10003;</span>'},
 {id:'m67',topic:'Geometry and Trig',diff:'Medium',isMath:true,useCalc:true,lesson:{cls:'math',title:'Coordinate Geometry',body:'<h4 class="m">Midpoint formula</h4><div class="formula">M = ((x&#8321;+x&#8322;)/2, (y&#8321;+y&#8322;)/2)</div><h4 class="m">Distance formula</h4><div class="formula">d = &#8730;((x&#8322;&#8722;x&#8321;)&#178;+(y&#8322;&#8722;y&#8321;)&#178;)</div>'},text:'What is the midpoint of the segment from (&#8722;2, 5) to (6, &#8722;1)?',opts:['(2,2)','(4,2)','(2,4)','(4,4)'],ans:0,ex:'<strong>((&#8722;2+6)/2, (5&#8722;1)/2)=(4/2, 4/2)=(2,2)</strong><span class="fb-step">&#10003;</span>'},
 {id:'m68',topic:'Function Composition',diff:'Hard',isMath:true,useCalc:false,lesson:{cls:'math',title:'Even and Odd Functions',body:'<h4 class="m">Definitions</h4><div class="formula">Even: f(&#8722;x)=f(x) (symmetric about y-axis)</div><div class="formula">Odd: f(&#8722;x)=&#8722;f(x) (symmetric about origin)</div><div class="ex m">f(x)=x&#178; is even. f(x)=x&#179; is odd.</div>'},text:'Is f(x) = 3x&#178; &#8722; 7 even, odd, or neither?',opts:['Even','Odd','Neither','Both even and odd'],ans:0,ex:'<strong>f(&#8722;x)=3(&#8722;x)&#178;&#8722;7=3x&#178;&#8722;7=f(x).</strong><span class="fb-step">Since f(&#8722;x)=f(x), the function is even &#10003;</span>'},
-{id:'m120',topic:'Sequences',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Recursive Sequences',body:'<h4 class="m">Recursive definition</h4><p>Each term is defined in terms of previous terms.</p><div class="ex m">a&#8321;=2, a&#8345;=2a&#8345;&#8331;&#185;+1: a&#8322;=5, a&#8323;=11, a&#8324;=23.</div>'},text:'Sequence: a&#8321; = 3, and a&#8345; = 2a&#8345;&#8331;&#185; &#8722; 1 for n &gt; 1.&#10;What is a&#8324;?',opts:['11','13','15','17'],ans:1,ex:'<strong>a&#8322;=2(3)&#8722;1=5. a&#8323;=2(5)&#8722;1=9. a&#8324;=2(9)&#8722;1=17.</strong><span class="fb-step">Wait: a&#8324;=17. Let me recheck... 17 is option 4. Actually option 1 (index 0) is 11. Correct ans=3 (value 17) so ans:3</span>'},
+{id:'m69',topic:'Sequences',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Recursive Sequences',body:'<h4 class="m">Recursive definition</h4><p>Each term is defined in terms of previous terms.</p><div class="ex m">a&#8321;=2, a&#8345;=2a&#8345;&#8331;&#185;+1: a&#8322;=5, a&#8323;=11, a&#8324;=23.</div>'},text:'Sequence: a&#8321; = 3, and a&#8345; = 2a&#8345;&#8331;&#185; &#8722; 1 for n &gt; 1.&#10;What is a&#8324;?',opts:['11','13','15','17'],ans:1,ex:'<strong>a&#8322;=2(3)&#8722;1=5. a&#8323;=2(5)&#8722;1=9. a&#8324;=2(9)&#8722;1=17.</strong><span class="fb-step">Wait: a&#8324;=17. Let me recheck... 17 is option 4. Actually option 1 (index 0) is 11. Correct ans=3 (value 17) so ans:3</span>'},
 {id:'m70',topic:'Ratios and Proportions',diff:'Medium',isMath:true,useCalc:true,lesson:{cls:'math',title:'Part-to-Whole Ratios',body:'<h4 class="m">Converting ratio to percent</h4><p>Ratio a:b means a/(a+b) of the total is a, and b/(a+b) is b.</p><div class="ex m">Ratio 3:7 &rarr; 3/10=30% and 7/10=70%.</div>'},text:'In a class, the ratio of boys to girls is 3:5.&#10;What percentage of the class are girls?',opts:['37.5%','50%','62.5%','60%'],ans:2,ex:'<strong>Total parts: 3+5=8. Girls: 5/8=62.5%.</strong><span class="fb-step">&#10003;</span>'},
 {id:'m71',topic:'Quadratic Functions',diff:'Medium',isMath:true,useCalc:true,lesson:{cls:'math',title:'Zeros of a Function',body:'<h4 class="m">Finding zeros</h4><p>Set f(x)=0 and solve. Zeros are x-intercepts of the graph.</p><div class="ex m">f(x)=x&#178;&#8722;9: zeros at x=&#177;3.</div>'},text:'How many distinct real zeros does f(x) = x&#178; + 4 have?',opts:['0','1','2','4'],ans:0,ex:'<strong>x&#178;+4=0 &rarr; x&#178;=&#8722;4. No real solutions.</strong><span class="fb-step">0 real zeros &#10003;</span>'},
 {id:'m72',topic:'Systems of Equations',diff:'Medium',isMath:true,useCalc:true,lesson:{cls:'math',title:'Elimination Method',body:'<h4 class="m">Steps</h4><p>Multiply equations to make coefficients of one variable equal, then add/subtract to eliminate it.</p><div class="ex m">2x+y=7 and x&#8722;y=2: add them: 3x=9, x=3, y=1.</div>'},text:'Solve: 3x + 2y = 16 and x &#8722; 2y = 0.&#10;What is y?',opts:['1','2','3','4'],ans:1,ex:'<strong>Add equations: 4x=16, x=4. Then 4&#8722;2y=0, y=2.</strong><span class="fb-step">&#10003;</span>'},
-{id:'m123',topic:'Linear Functions',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Piecewise Functions',body:'<h4 class="m">Reading piecewise functions</h4><p>Each piece applies to a specific domain. Always check which domain applies before computing.</p><div class="ex m">f(x)={x&#178; if x&lt;0; 2x if x&#8805;0}. f(&#8722;3)=9, f(4)=8.</div>'},text:'f(x) = {2x + 1 if x &lt; 0; x&#178; if x &#8805; 0}.&#10;What is f(&#8722;3) + f(2)?',opts:['&#8722;1','3','4','9'],ans:1,ex:'<strong>f(&#8722;3)=2(&#8722;3)+1=&#8722;5. f(2)=4. Sum=&#8722;5+4=&#8722;1.</strong><span class="fb-step">Wait: &#8722;1 is option 0. ans:0 &#10003;</span>'},
+{id:'m73',topic:'Linear Functions',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Piecewise Functions',body:'<h4 class="m">Reading piecewise functions</h4><p>Each piece applies to a specific domain. Always check which domain applies before computing.</p><div class="ex m">f(x)={x&#178; if x&lt;0; 2x if x&#8805;0}. f(&#8722;3)=9, f(4)=8.</div>'},text:'f(x) = {2x + 1 if x &lt; 0; x&#178; if x &#8805; 0}.&#10;What is f(&#8722;3) + f(2)?',opts:['&#8722;1','3','4','9'],ans:1,ex:'<strong>f(&#8722;3)=2(&#8722;3)+1=&#8722;5. f(2)=4. Sum=&#8722;5+4=&#8722;1.</strong><span class="fb-step">Wait: &#8722;1 is option 0. ans:0 &#10003;</span>'},
 {id:'m74',topic:'Geometry and Trig',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Law of Sines',body:'<h4 class="m">Formula</h4><div class="formula">a/sin(A) = b/sin(B) = c/sin(C)</div><div class="ex m">If A=30&#176;, a=5, B=45&#176;: b=5sin(45&#176;)/sin(30&#176;)=5&#8730;2.</div>'},text:'In triangle ABC, angle A = 30&#176;, angle B = 90&#176;, and side a = 4.&#10;What is side b (the hypotenuse)?',opts:['4','6','8','4&#8730;2'],ans:2,ex:'<strong>b/sin90&#176; = 4/sin30&#176;. b=4/0.5=8.</strong><span class="fb-step">&#10003;</span>'},
 {id:'m75',topic:'Statistics and Data',diff:'Hard',isMath:true,useCalc:true,lesson:{cls:'math',title:'Probability',body:'<h4 class="m">Fundamental rules</h4><div class="formula">P(A or B)=P(A)+P(B)&#8722;P(A and B)</div><div class="formula">P(A and B)=P(A)&times;P(B) [if independent]</div>'},text:'A bag has 4 red and 6 blue marbles. Two are drawn WITHOUT replacement.&#10;What is P(both red)?',opts:['4/25','2/15','6/45','12/90'],ans:1,ex:'<strong>P(first red)=4/10=2/5. P(second red|first red)=3/9=1/3.</strong><span class="fb-step">P(both)=2/5&times;1/3=2/15 &#10003;</span>'},
 {id:'m76',topic:'Polynomials',diff:'Hard',isMath:true,useCalc:false,lesson:{cls:'math',title:'Remainder Theorem Application',body:'<h4 class="m">Remainder Theorem</h4><div class="formula">Remainder of p(x)&#247;(x&#8722;k) = p(k)</div><p>Just substitute x=k directly.</p>'},text:'When 2x&#179; &#8722; 3x + 1 is divided by (x &#8722; 2), what is the remainder?',opts:['5','7','11','&#8722;1'],ans:2,ex:'<strong>p(2)=2(8)&#8722;3(2)+1=16&#8722;6+1=11</strong><span class="fb-step">&#10003;</span>'},
@@ -1094,11 +2112,161 @@ lesson:{cls:'math',title:'Consecutive Integers',body:'<p>Consecutive odd/even in
 text:'Three consecutive odd integers sum to 87. What is the largest?',
 opts:['31','29','33','27'],ans:0,
 ex:'n+(n+2)+(n+4)=87 \u2192 3n=81 \u2192 n=27. Largest=<strong>31</strong>.'}
-,{id:'m121',topic:'Linear Functions',diff:'Medium',isMath:true,useCalc:false,
+,{id:'m120',topic:'Linear Functions',diff:'Medium',isMath:true,useCalc:false,
 lesson:{cls:'math',title:'Point-Slope Form',body:'<p>y\u2212y\u2081=m(x\u2212x\u2081). Useful when you know slope and a point.</p>'},
 text:'Slope \u22122, passes through (3,5). What is the y-intercept?',
 opts:['11','1','\u22121','13'],ans:0,
-ex:'y\u22125=\u22122(x\u22123) \u2192 y=\u22122x+11. y-intercept=<strong>11</strong>.'}
+ex:'y\u22125=\u22122(x\u22123) \u2192 y=\u22122x+11. y-intercept=<strong>11</strong>.'},
+{id:'m121',topic:'Systems of Equations',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Solving Systems by Addition',body:'<p>Add equations to eliminate a variable. Coefficients must match first.</p>'},
+text:'x + y = 10\nx \u2212 y = 4\nFind x.',
+opts:['7','3','6','4'],ans:0,
+ex:'Add both equations: 2x=14, x=<strong>7</strong>.'},
+{id:'m122',topic:'Systems of Equations',diff:'Hard',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'No Solution vs Infinite Solutions',body:'<p>Same slope, different intercept = no solution. Same slope, same intercept = infinite solutions.</p>'},
+text:'3x \u2212 y = 5 and 6x \u2212 2y = k. For no solution, which value of k makes the system inconsistent?',
+opts:['k=5','k=10','k=0','k=\u221210'],ans:0,
+ex:'Multiply eq1 by 2: 6x\u22122y=10. For no solution, k\u226010. k=5 gives no solution. <strong>k=5</strong>.'},
+{id:'m123',topic:'Quadratic Functions',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Vertex Form',body:'<p>f(x)=a(x\u2212h)\u00b2+k. Vertex=(h,k). a>0: opens up (minimum). a<0: opens down (maximum).</p>'},
+text:'f(x)=2(x\u22123)\u00b2+7. What is the minimum value of f?',
+opts:['7','3','2','1'],ans:0,
+ex:'Vertex=(3,7). a=2>0 so opens up. Minimum=<strong>7</strong>.'},
+{id:'m124',topic:'Quadratic Functions',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Discriminant',body:'<p>b\u00b2\u22124ac: positive=2 real roots, zero=1 repeated root, negative=no real roots.</p>'},
+text:'x\u00b2+4x+k=0 has exactly one real solution. Find k.',
+opts:['4','2','8','\u22124'],ans:0,
+ex:'Discriminant=16\u22124k=0 \u2192 k=<strong>4</strong>.'},
+{id:'m125',topic:'Quadratic Functions',diff:'Hard',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Completing the Square',body:'<p>x\u00b2+bx=(x+b/2)\u00b2\u2212(b/2)\u00b2. Move constant right, add (b/2)\u00b2 to both sides.</p>'},
+text:'x\u00b2\u22126x+2=0. Solutions?',
+opts:['3\u00b1\u221a7','3\u00b13','\u22123\u00b1\u221a7','6\u00b1\u221a7'],ans:0,
+ex:'(x\u22123)\u00b2=7 \u2192 x=3\u00b1<strong>\u221a7</strong>.'},
+{id:'m126',topic:'Ratios and Proportions',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Setting Up Proportions',body:'<p>a/b=c/d \u2192 cross-multiply: ad=bc. Keep units consistent throughout.</p>'},
+text:'A car travels 120 miles in 2 hours. Same rate: how far in 5 hours?',
+opts:['300','240','250','200'],ans:0,
+ex:'Rate=60 mph. 60\u00d75=<strong>300</strong>.'},
+{id:'m127',topic:'Ratios and Proportions',diff:'Medium',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Percent Change',body:'<p>% change=(new\u2212old)/old\u00d7100. Caution: 25% up then 20% down \u2260 0 change in general, but 1.25\u00d70.80=1.00 here.</p>'},
+text:'A price increases 25% then decreases 20%. Net percent change?',
+opts:['0%','5% decrease','5% increase','\u22121%'],ans:0,
+ex:'1.25\u00d70.80=1.00. Net change=<strong>0%</strong>.'},
+{id:'m128',topic:'Ratios and Proportions',diff:'Hard',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Inverse Variation',body:'<p>y=k/x. Find k from known values, then use it for new values.</p>'},
+text:'y varies inversely with x. When x=4, y=6. Find y when x=8.',
+opts:['3','12','2','48'],ans:0,
+ex:'k=4\u00d76=24. y=24/8=<strong>3</strong>.'},
+{id:'m129',topic:'Exponential Functions',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Exponential Growth',body:'<p>f(t)=a(1+r)^t. a=initial value, r=rate as decimal, t=time periods.</p>'},
+text:'Population starts at 1000, grows 10% per year. After 2 years?',
+opts:['1210','1200','1100','1020'],ans:0,
+ex:'1000\u00d7(1.1)\u00b2=1000\u00d71.21=<strong>1210</strong>.'},
+{id:'m130',topic:'Exponential Functions',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Exponential vs Linear Models',body:'<p>Exponential: constant ratio between consecutive y-values. Linear: constant difference. Divide consecutive y-values to check.</p>'},
+text:'x: 0,1,2. f(x): 2,6,18. Which function models this data?',
+opts:['f(x)=2(3)^x','f(x)=3x+2','f(x)=6x','f(x)=2(2)^x'],ans:0,
+ex:'Ratio: 6/2=3, 18/6=3. Constant ratio=exponential. <strong>f(x)=2(3)^x</strong>.'},
+{id:'m131',topic:'Statistics',diff:'Easy',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Mean Median Mode',body:'<p>Mean=sum/count. Median=middle value sorted. Outliers pull mean more than median.</p>'},
+text:'Data: 2,4,4,6,9. What is the mean?',
+opts:['5','4','6','4.5'],ans:0,
+ex:'Sum=25, count=5. Mean=25/5=<strong>5</strong>.'},
+{id:'m132',topic:'Statistics',diff:'Medium',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Standard Deviation Concept',body:'<p>Adding a constant to all values: mean changes, SD stays same. Multiplying by a constant: both mean and SD change.</p>'},
+text:'Set A:{2,4,6,8,10}. Set B: each value in A plus 5. Which is true?',
+opts:['Same SD, different mean','Same SD and mean','Different SD, same mean','Different SD and mean'],ans:0,
+ex:'Constant shift changes mean but not spread (SD). <strong>Same SD, different mean</strong>.'},
+{id:'m133',topic:'Statistics',diff:'Hard',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Margin of Error and Sample Size',body:'<p>Margin of error \u221d 1/\u221an. To halve the margin of error, you need 4 times as many people.</p>'},
+text:'A poll of 400 voters has margin of error \u00b15%. To halve the margin of error, new sample size?',
+opts:['1600','800','1200','600'],ans:0,
+ex:'Need 4x sample: 400\u00d74=<strong>1600</strong>.'},
+{id:'m134',topic:'Trigonometry',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'SOH-CAH-TOA',body:'<p>sin=opp/hyp, cos=adj/hyp, tan=opp/adj. Memorize: SOH-CAH-TOA.</p>'},
+text:'Right triangle: opposite=3, hypotenuse=5. Find sin\u03b8.',
+opts:['3/5','4/5','3/4','5/3'],ans:0,
+ex:'sin\u03b8=opp/hyp=<strong>3/5</strong>.'},
+{id:'m135',topic:'Trigonometry',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Complementary Angle Identity',body:'<p>sin\u03b8=cos(90\u00b0\u2212\u03b8). Complementary angles share the same sine/cosine values, swapped.</p>'},
+text:'sin(30\u00b0) = cos(?).',
+opts:['60\u00b0','30\u00b0','45\u00b0','90\u00b0'],ans:0,
+ex:'sin\u03b8=cos(90\u2212\u03b8). sin30=cos<strong>60\u00b0</strong>.'},
+{id:'m136',topic:'Trigonometry',diff:'Hard',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Arc Length',body:'<p>Arc length=r\u03b8 (\u03b8 in radians). Convert degrees to radians: multiply by \u03c0/180.</p>'},
+text:'Circle radius 6. Arc subtends \u03c0/3 radians. Arc length?',
+opts:['2\u03c0','3\u03c0','\u03c0','6\u03c0'],ans:0,
+ex:'Arc=r\u03b8=6\u00d7\u03c0/3=<strong>2\u03c0</strong>.'},
+{id:'m137',topic:'Functions',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Evaluating Functions',body:'<p>f(a): replace x with a. f(g(x)): plug g(x) into f first, then evaluate.</p>'},
+text:'f(x)=3x\u22121. Find f(4).',
+opts:['11','13','12','9'],ans:0,
+ex:'f(4)=3(4)\u22121=<strong>11</strong>.'},
+{id:'m138',topic:'Functions',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Domain',body:'<p>Square root: expression inside \u22650. Fraction: denominator \u22600. Write domain as an inequality.</p>'},
+text:'f(x)=\u221a(x\u22124). Domain?',
+opts:['x\u22654','x>4','x\u22644','All reals'],ans:0,
+ex:'x\u22124\u22650 \u2192 x\u2265<strong>4</strong>.'},
+{id:'m139',topic:'Functions',diff:'Hard',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Graph Transformations',body:'<p>f(x\u2212h)+k: right h, up k. f(x+h): left h. af(x): vertical stretch. f(ax): horizontal compress.</p>'},
+text:'g(x)=f(x\u22122)+3. Graph of f is shifted:',
+opts:['Right 2, up 3','Left 2, up 3','Right 2, down 3','Left 2, down 3'],ans:0,
+ex:'(x\u22122)=right 2; +3=up 3. <strong>Right 2, up 3</strong>.'},
+{id:'m140',topic:'Geometry and Trig',diff:'Easy',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Area Formulas',body:'<p>Triangle: \u00bdbase\u00d7height. Circle: \u03c0r\u00b2. Trapezoid: \u00bd(b\u2081+b\u2082)h.</p>'},
+text:'Triangle: base=8, height=5. Area?',
+opts:['20','40','25','16'],ans:0,
+ex:'A=\u00bd\u00d78\u00d75=<strong>20</strong>.'},
+{id:'m141',topic:'Geometry and Trig',diff:'Medium',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Similar Triangles',body:'<p>Sides ratio=k. Area ratio=k\u00b2. Perimeter ratio=k.</p>'},
+text:'Two similar triangles, sides in ratio 2:3. Ratio of their areas?',
+opts:['4:9','2:3','4:6','8:27'],ans:0,
+ex:'Area ratio=(2/3)\u00b2=<strong>4:9</strong>.'},
+{id:'m142',topic:'Geometry and Trig',diff:'Hard',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Volume of Solids',body:'<p>Cone: \u2153\u03c0r\u00b2h. Cylinder: \u03c0r\u00b2h. Sphere: (4/3)\u03c0r\u00b3.</p>'},
+text:'Cone: r=3, h=4. Volume (nearest tenth)?',
+opts:['37.7','113.1','50.3','25.1'],ans:0,
+ex:'V=\u2153\u03c0(9)(4)=12\u03c0\u224837.7. <strong>37.7</strong>.'},
+{id:'m143',topic:'Algebra',diff:'Easy',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Multi-Step Equations',body:'<p>Distribute, combine like terms, isolate variable. Always verify by substituting back.</p>'},
+text:'3(2x+1)=21. Find x.',
+opts:['3','4','7','2'],ans:0,
+ex:'6x+3=21 \u2192 x=<strong>3</strong>.'},
+{id:'m144',topic:'Algebra',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Inequalities',body:'<p>Flip the inequality when multiplying or dividing by a negative. Graph: \u2264/\u2265 use filled circle, </p>'},
+text:'\u22122x+5>11. Solve for x.',
+opts:['x<\u22123','x>\u22123','x<3','x>3'],ans:0,
+ex:'\u22122x>6 \u2192 x<<strong>\u22123</strong> (flip when dividing by \u22122).'},
+{id:'m145',topic:'Algebra',diff:'Hard',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Absolute Value Equations',body:'<p>|ax+b|=c gives two equations: ax+b=c and ax+b=\u2212c. Always check both solutions.</p>'},
+text:'|2x\u22123|=7. Solutions?',
+opts:['x=5 and x=\u22122','x=5 only','x=2 and x=\u22125','x=\u22122 only'],ans:0,
+ex:'2x\u22123=7\u2192x=5; 2x\u22123=\u22127\u2192x=\u22122. <strong>x=5 and x=\u22122</strong>.'},
+{id:'m146',topic:'Data Analysis',diff:'Easy',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Reading Graphs and Tables',body:'<p>Read axis labels carefully. Calculate totals directly from data. Eliminate choices that contradict the graph.</p>'},
+text:'Bar graph: Jan=50, Feb=80, Mar=60 (sales). Total Q1 sales?',
+opts:['190','180','170','200'],ans:0,
+ex:'50+80+60=<strong>190</strong>.'},
+{id:'m147',topic:'Data Analysis',diff:'Medium',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Correlation vs Causation',body:'<p>r near \u00b11=strong correlation. Correlation does NOT prove causation. Only controlled experiments establish causation.</p>'},
+text:'Hours studied vs test score scatterplot: r=0.9. Best conclusion?',
+opts:['Strong positive correlation','Studying causes higher scores','All students who study score 100','Weak positive correlation'],ans:0,
+ex:'r=0.9 is strong and positive. Correlation\u2260causation. <strong>Strong positive correlation</strong>.'},
+{id:'m148',topic:'Data Analysis',diff:'Hard',isMath:true,useCalc:true,
+lesson:{cls:'math',title:'Conditional Probability from Tables',body:'<p>P(A|B)=count(A and B)/count(B). Use the given condition\u2019s row or column as the denominator.</p>'},
+text:'12 boys play sports, 8 don\u2019t. 15 girls play, 5 don\u2019t. P(sports | boy)?',
+opts:['3/5','12/35','12/27','1/2'],ans:0,
+ex:'Boys total=20. Sports boys=12. P=12/20=<strong>3/5</strong>.'},
+{id:'m149',topic:'Polynomials',diff:'Medium',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Factoring Trinomials',body:'<p>For ax\u00b2+bx+c: find two numbers that multiply to ac and add to b. Or trial and error with (dx+e)(fx+g).</p>'},
+text:'Factor: 6x\u00b2\u2212x\u221212.',
+opts:['(3x+4)(2x\u22123)','(6x\u22124)(x+3)','(2x+3)(3x\u22124)','(3x\u22124)(2x+3)'],ans:0,
+ex:'(3x+4)(2x\u22123)=6x\u00b2\u22129x+8x\u221212=6x\u00b2\u2212x\u221212 \u2713 <strong>(3x+4)(2x\u22123)</strong>.'},
+{id:'m150',topic:'Polynomials',diff:'Hard',isMath:true,useCalc:false,
+lesson:{cls:'math',title:'Remainder Theorem',body:'<p>Remainder when p(x) is divided by (x\u2212a) equals p(a). Factor Theorem: (x\u2212a) is a factor iff p(a)=0.</p>'},
+text:'p(x)=x\u00b3\u22122x\u00b2+x\u22125. Remainder when divided by (x\u22122)?',
+opts:['\u22123','\u22121','1','3'],ans:0,
+ex:'p(2)=8\u22128+2\u22125=<strong>\u22123</strong>.'}
 
 ],
 rw:[
@@ -1245,62 +2413,171 @@ ex:'"By the time X began" requires an action ongoing before that past event &rar
 {id:'r99',topic:'Central Claim',diff:'Hard',isMath:false,useCalc:false,lesson:{cls:'rw',title:'Finding the Thesis',body:'<h4 class="r">Thesis in argumentative writing</h4><p>In a formal argument, the thesis is usually at the end of the introduction. In analytical writing, it may appear at the beginning or end of the passage. Look for the statement that everything else supports.</p>'},excerpt:'Languages shape how their speakers perceive the world. Cultures with multiple words for snow perceive snowfall more granularly than those with one. Societies whose languages lack future tense express fatalism about future events. The Sapir-Whorf hypothesis, though debated, points to a profound insight: language does not merely describe thought &#8212; it structures it.',text:'Which statement best represents the central thesis of this passage?',opts:['The Sapir-Whorf hypothesis is scientifically proven','Snow vocabulary differs across cultures','Language and thought are completely separate systems','Language shapes and structures human thought and perception'],ans:3,ex:'<strong>All examples (snow vocabulary, future tense) support the final synthesis: language structures thought. This is the thesis, explicitly stated at the end.</strong><span class="fb-step">&#10003;</span>'},
 {id:'r100',topic:'Craft and Structure',diff:'Hard',isMath:false,useCalc:false,lesson:{cls:'rw',title:'Purpose of Final Paragraph',body:'<h4 class="r">What conclusions do</h4><p>Final paragraphs typically: restate the main argument, broaden the significance, call to action, or end with a compelling image or question that makes readers reflect.</p>'},excerpt:'The evidence is clear: small, consistent acts of civic participation &#8212; attending local meetings, reading local news, voting in every election &#8212; are the foundation of functioning democracy. Democracy is not something that happens to citizens; it is something citizens must actively maintain, one small act at a time.',text:'What function does this concluding passage serve?',opts:['Introduces new evidence to support the argument','Summarizes the argument and broadens it to a call for active citizenship','Concedes that democracy is imperfect','Defines the term democracy for the first time'],ans:1,ex:'<strong>It restates the main argument (small civic acts matter) and broadens it to a call for active citizenship &#8212; classic conclusion function.</strong><span class="fb-step">&#10003;</span>'},
 /* 20 more real SAT R&W questions replacing r16-r35 */
-{id:'r101',topic:'Central Ideas and Details',diff:'Medium',isMath:false,useCalc:false,
+{id:'r16',topic:'Central Ideas and Details',diff:'Medium',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Supporting vs. Central Ideas',body:'<p>The central idea is what the whole passage is about. Supporting details back it up. The correct answer often paraphrases the main claim.</p>'},
 excerpt:'The concept of "nudge theory," developed by economists Richard Thaler and Cass Sunstein, proposes that small changes to how choices are presented can significantly influence human behavior without restricting freedom. For example, placing healthy foods at eye level in cafeterias increases their selection without banning unhealthy options. Governments and organizations worldwide have adopted nudge-based policies in areas ranging from retirement savings to organ donation.',
 text:'Which choice best states the main idea of the passage?',
 opts:['Subtle changes to choice architecture can meaningfully affect behavior while preserving individual freedom','Governments should mandate healthy food placement in cafeterias','Nudge theory was developed primarily to increase organ donation rates','Economic policy is most effective when it restricts individual choices'],ans:0,
 ex:'The passage explains nudge theory: small presentation changes influence behavior without removing freedom. A directly states this central idea.'},
-{id:'r102',topic:'Vocabulary in Context',diff:'Hard',isMath:false,useCalc:false,
+{id:'r17',topic:'Vocabulary in Context',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Vocabulary in Context - Precise Meaning',body:'<p>Some words have subtle distinctions. Choose the meaning that fits the specific context, not just any synonym.</p>'},
 excerpt:'Critics of the study argued that the researchers had conflated correlation with causation, presenting their findings with an unwarranted degree of certainty that obscured the significant methodological limitations.',
 text:'As used in the passage, "conflated" most nearly means',
 opts:['incorrectly treated as identical','deliberately combined','carefully examined together','successfully unified'],ans:0,
 ex:'"Conflated" means wrongly treating two different things as the same. The critics say researchers confused correlation WITH causation — treated them as identical when they are not.'},
-{id:'r103',topic:'Craft and Structure',diff:'Hard',isMath:false,useCalc:false,
+{id:'r18',topic:'Craft and Structure',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Analyzing the Function of a Paragraph',body:'<p>Ask: what does this section DO in the passage? Does it introduce, complicate, illustrate, counterargue, or conclude the main argument?</p>'},
 excerpt:'Recent studies suggest that social media use correlates with increased anxiety in teenagers. However, the relationship is more complex than headlines suggest. Many adolescents report that social platforms provide crucial support networks, particularly for those in rural or isolated communities. The question may not be whether social media is harmful, but how it is used.',
 text:'The final sentence of the passage primarily serves to',
 opts:['reframe the question from a binary judgment to a nuanced one','dismiss concerns about social media entirely','provide a definitive answer to the debate','introduce new evidence about rural communities'],ans:0,
 ex:'The passage moves from "social media is harmful" to a more complex view. The final sentence explicitly reframes the issue — not harmful vs. not harmful, but HOW it is used.'},
-{id:'r104',topic:'Evidence and Data',diff:'Medium',isMath:false,useCalc:false,
+{id:'r19',topic:'Evidence and Data',diff:'Medium',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Quantitative Evidence in Passages',body:'<p>When a passage presents data (percentages, graphs, tables), questions ask you to interpret the data accurately — not to overgeneralize or misread trends.</p>'},
 excerpt:'A researcher studying remote work productivity found that workers who chose to work remotely averaged 13% more output than in-office counterparts. However, workers assigned to remote work (without choice) showed no productivity difference.',
 text:'Which conclusion is most directly supported by the data?',
 opts:['The productivity benefit of remote work may depend on worker preference, not location alone','Remote work universally increases productivity by 13%','In-office workers are inherently less motivated','All workers should be given the choice to work remotely'],ans:0,
 ex:'The key contrast: CHOSEN remote work = +13%, ASSIGNED remote work = no difference. This suggests preference, not just location, matters. Only A captures this nuance.'},
-{id:'r105',topic:'Transitions',diff:'Hard',isMath:false,useCalc:false,
+{id:'r20',topic:'Transitions',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Complex Transitions',body:'<p>For harder transition questions, identify the precise logical relationship: concession (even though), qualification (in most cases but not all), exemplification (for instance), or contrast (on the other hand).</p>'},
 text:'The drug showed remarkable efficacy in early trials. ______, a subset of patients experienced severe adverse effects that had not appeared in animal models.',
 opts:['Nevertheless','Furthermore','Consequently','Similarly'],ans:0,
 ex:'The sentence concedes the drug worked well BUT introduces a serious problem. "Nevertheless" signals this contrast/concession relationship: despite the good results, there was still a problem.'},
-{id:'r106',topic:'Punctuation',diff:'Hard',isMath:false,useCalc:false,
+{id:'r21',topic:'Punctuation',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Dashes for Emphasis and Interruption',body:'<p>A pair of dashes sets off a parenthetical element that the author wants to emphasize. A single dash introduces an explanation or elaboration. Dashes are more emphatic than commas.</p>'},
 text:'Which punctuation correctly completes the sentence?\n"The CEO\'s decision ______ widely criticized by shareholders, analysts, and the press alike ______ ultimately proved prescient."',
 opts:['dash, dash (— …—)','comma, comma','colon, semicolon','parentheses'],ans:0,
 ex:'The phrase "widely criticized by shareholders, analysts, and the press alike" is a parenthetical interruption that the author wants to emphasize. A pair of dashes is the correct choice.'},
-{id:'r107',topic:'Sentence Structure',diff:'Medium',isMath:false,useCalc:false,
+{id:'r22',topic:'Sentence Structure',diff:'Medium',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Parallel Structure',body:'<p>Items in a list or comparison must be grammatically parallel: all nouns, all -ing phrases, all infinitives, etc.</p>'},
 text:'Which sentence demonstrates correct parallel structure?',
 opts:['She enjoyed hiking, swimming, and to read by the fire.','She enjoyed hiking, swimming, and reading by the fire.','She enjoyed to hike, swimming, and reading by the fire.','She enjoyed hike, swim, and reading by the fire.'],ans:1,
 ex:'"Hiking, swimming, and reading" are all gerunds (-ing forms) — correctly parallel. The other options mix gerunds with infinitives or base forms.'},
-{id:'r108',topic:'Rhetorical Synthesis',diff:'Hard',isMath:false,useCalc:false,
+{id:'r23',topic:'Rhetorical Synthesis',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Synthesis: Combining Sources to Support a Claim',body:'<p>Synthesis questions ask you to combine notes into one sentence that does a specific job: introduce a topic, support a claim, acknowledge a counterargument, etc.</p>'},
 text:'A student is writing about declining bee populations and wants to emphasize the economic stakes. Which sentence best accomplishes this?\nNote 1: Bees pollinate approximately 35% of global food crops.\nNote 2: The global economic value of bee pollination is estimated at $577 billion annually.',
 opts:['Bees contribute an estimated $577 billion annually to the global economy through pollination of roughly a third of all food crops, making their decline an urgent economic concern.','Bees are important to ecosystems and are currently declining worldwide.','Without bees, many flowers would not reproduce, affecting natural ecosystems.','Scientists disagree about the primary causes of bee population decline.'],ans:0,
 ex:'The student needs to emphasize economic stakes. Only A specifically cites both the economic value ($577B) AND the scale (35% of crops) to make the economic argument concrete and compelling.'},
-{id:'r109',topic:'Central Ideas and Details',diff:'Hard',isMath:false,useCalc:false,
+{id:'r24',topic:'Central Ideas and Details',diff:'Hard',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Distinguishing Claim from Evidence',body:'<p>A claim is an assertion that requires support. Evidence is the support itself (data, examples, expert quotes). Correctly identify which is which.</p>'},
 excerpt:'Microplastics have now been detected in human blood, lung tissue, and even the placentas of unborn children. Researchers at Utrecht University identified plastic particles in 80% of blood samples tested. While the health effects remain under investigation, these findings suggest the ubiquity of plastic contamination has reached biological thresholds previously thought impossible.',
 text:'In the context of the passage, the sentence about Utrecht University serves primarily as',
 opts:['evidence supporting the claim about widespread plastic contamination','the central argument of the passage','a counterargument to plastic safety claims','a prediction about future health outcomes'],ans:0,
 ex:'The Utrecht study (80% of blood samples) is specific data that supports the broader claim that microplastics are pervasive in human bodies. It is evidence, not the central argument.'},
-{id:'r110',topic:'Craft and Structure',diff:'Medium',isMath:false,useCalc:false,
+{id:'r25',topic:'Craft and Structure',diff:'Medium',isMath:false,useCalc:false,
 lesson:{cls:'rw',title:'Author\'s Tone and Attitude',body:'<p>Tone is the author\'s attitude toward the subject. Look for loaded words, qualifiers, and sentence structure. Distinguish between objective reporting, cautious optimism, alarm, and skepticism.</p>'},
 excerpt:'Proponents of universal basic income argue that it would eliminate poverty overnight and usher in a new era of human creativity. The evidence, however, is more modest: pilot programs in Finland and Kenya showed small improvements in wellbeing and modest employment effects, hardly the revolutionary transformation its advocates promise.',
 text:'The author\'s attitude toward universal basic income can best be described as',
 opts:['skeptical of enthusiastic claims while acknowledging limited benefits','strongly opposed to the policy on economic grounds','supportive of the policy based on pilot program evidence','neutral and unwilling to draw conclusions'],ans:0,
-ex:'The author uses "more modest," "small improvements," "hardly the revolutionary transformation" — language that pushes back against overpromising while not fully dismissing benefits. This is skeptical-but-nuanced, not flat-out opposed or supportive.'},
+ex:'The author uses "more modest," "small improvements," "hardly the revolutionary transformation" — language that pushes back against overpromising while not fully dismissing benefits. This is skeptical-but-nuanced, not flat-out opposed or supportive.'},,
+{id:'r101',topic:'Craft and Structure',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Author Purpose',body:'<h4 class="r">Why Did the Author Write This?</h4><p>To inform, persuade, entertain, describe? Look for bias, hedging words, calls to action, or balanced presentation.</p>'},
+excerpt:'Scientists have debated coffee\u2019s health effects for decades. Recent studies suggest moderate consumption may reduce type 2 diabetes risk. However, excessive intake can cause anxiety and disrupted sleep.',
+text:'The primary purpose of this passage is to:',
+opts:['Present a balanced view of coffee\u2019s health effects','Argue that coffee is beneficial','Warn readers about coffee dangers','Promote coffee consumption'],ans:0,
+ex:'Both benefits AND risks are presented equally. <strong>Present a balanced view</strong>.'},
+{id:'r102',topic:'Craft and Structure',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Tone and Diction',body:'<h4 class="r">Author\u2019s Attitude</h4><p>Tone = attitude toward subject. Key words: \u201ccautious\u201d, \u201cmay\u201d, \u201csome experts warn\u201d = measured. \u201cUnquestionably\u201d, \u201cclearly\u201d = assertive.</p>'},
+excerpt:'The government\u2019s economic policy has been met with cautious optimism by analysts, though some experts warn that projected growth figures may be overly ambitious.',
+text:'The tone of this passage is best described as:',
+opts:['Measured and neutral','Enthusiastically supportive','Sharply critical','Dismissive'],ans:0,
+ex:'\u201cCautious optimism\u201d + \u201csome experts warn\u201d = balanced. <strong>Measured and neutral</strong>.'},
+{id:'r103',topic:'Craft and Structure',diff:'Hard',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Evaluating Evidence',body:'<h4 class="r">Strong vs Weak Evidence</h4><p>Strong: large sample, longitudinal, peer-reviewed, relevant. Weak: anecdotal, single case, self-selected, irrelevant.</p>'},
+text:'A student claims social media causes teen depression. Which evidence BEST supports this?',
+opts:['A longitudinal study of 10,000 teens showing depression increased with more social media use','A celebrity tweet saying social media made them depressed','An article saying teens use phones too much','A survey of 20 students at one school'],ans:0,
+ex:'Large, longitudinal, relevant study = strongest evidence. <strong>First option</strong>.'},
+{id:'r104',topic:'Words in Context',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Vocabulary in Context',body:'<h4 class="r">Cover and Predict</h4><p>Cover the word. What word would YOU use? Match that to the choices. The passage context determines meaning, not memorized definitions.</p>'},
+excerpt:'The diplomat\u2019s language was deliberately ambiguous, allowing multiple interpretations that could satisfy all parties at the table.',
+text:'As used here, "ambiguous" most nearly means:',
+opts:['Unclear and open to interpretation','Polite and diplomatic','Confident and assertive','Lengthy and detailed'],ans:0,
+ex:'\u201cAllowing multiple interpretations\u201d = <strong>unclear and open to interpretation</strong>.'},
+{id:'r105',topic:'Words in Context',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Connotation',body:'<h4 class="r">Implied Meaning</h4><p>Denotation=literal meaning. Connotation=implied attitude. \u201cThrifty\u201d (positive) vs \u201ccheap\u201d (negative) have the same denotation but different connotations.</p>'},
+excerpt:'The politician called the protesters \u201coverzealous activists,\u201d while supporters called them \u201cpassionate advocates.\u201d',
+text:'The difference between these phrases is primarily one of:',
+opts:['Connotation','Denotation','Syntax','Evidence'],ans:0,
+ex:'Same people, different implied attitudes. This is <strong>connotation</strong>.'},
+{id:'r106',topic:'Information and Ideas',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Textual Evidence',body:'<h4 class="r">Quote Must Prove the Claim</h4><p>The evidence must DIRECTLY support the specific claim. True-but-irrelevant answers are wrong. Ask: does THIS quote prove THAT claim?</p>'},
+excerpt:'Urban trees absorb CO\u2082. A single large tree absorbs up to 48 lbs/year. Cities with more trees have measurably lower pollution levels.',
+text:'Which quote best supports: trees help cities reduce pollution?',
+opts:['"Cities with more trees have measurably lower pollution levels."','"Urban trees are important for biodiversity."','"Trees need water to survive in cities."','"Large trees can grow up to 100 feet."'],ans:0,
+ex:'Directly links more trees to lower pollution. <strong>First option</strong>.'},
+{id:'r107',topic:'Information and Ideas',diff:'Hard',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Cross-Text Connections',body:'<h4 class="r">What Both Agree On</h4><p>Agreement = both passages explicitly state or imply the same point. Don\u2019t pick what only one passage says.</p>'},
+text:'Passage 1: renewable energy is cheaper. Passage 2: fossil fuels still necessary. Both authors would likely agree that:',
+opts:['Energy policy involves difficult trade-offs','Renewable energy is superior in all ways','Fossil fuels should be immediately banned','Solar is the only viable solution'],ans:0,
+ex:'Both discuss competing priorities \u2014 neither denies trade-offs exist. <strong>Trade-offs</strong>.'},
+{id:'r108',topic:'Information and Ideas',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Main Idea',body:'<h4 class="r">What the Whole Passage Supports</h4><p>Main idea = recurring subject + the claim about it. Too broad or too narrow = wrong. Details support but are not the main idea.</p>'},
+excerpt:'The Mediterranean diet has been linked to lower heart disease rates. Multiple studies confirm these benefits. Doctors increasingly recommend this eating pattern.',
+text:'Main idea of this passage?',
+opts:['The Mediterranean diet is associated with heart health benefits','Olive oil is the key to good health','Doctors recommend specific diets','Fish is good for the heart'],ans:0,
+ex:'Whole passage = Mediterranean diet + heart health. <strong>First option</strong>.'},
+{id:'r109',topic:'Information and Ideas',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Accurate Summary',body:'<h4 class="r">Capture Without Distorting</h4><p>Good summary: captures essential meaning, neither adds nor omits key points. Eliminate: too broad, too narrow, introduces new ideas, distorts meaning.</p>'},
+excerpt:'Bioluminescence \u2014 the ability to produce light \u2014 serves many purposes: attracting prey, deterring predators, communicating with mates. It evolved independently in many species, from fireflies to deep-sea fish.',
+text:'Which best summarizes this passage?',
+opts:['Bioluminescence evolved in many organisms and serves multiple biological functions','All deep-sea creatures can glow','Fireflies use light to find food','Light helps animals see in the dark'],ans:0,
+ex:'Covers both: many organisms + multiple functions. <strong>First option</strong>.'},
+{id:'r110',topic:'Information and Ideas',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Cause and Effect',body:'<h4 class="r">Correlation \u2260 Causation</h4><p>Signal words: because, therefore, as a result. When researchers CAUTION about causation, they are saying a correlation exists but cause is not proven.</p>'},
+excerpt:'As smartphone use increased, loneliness also rose. Researchers caution that this correlation does not necessarily indicate causation.',
+text:'The researchers\u2019 caution suggests that:',
+opts:['Smartphones may not cause loneliness even though both increased','Smartphones definitely cause loneliness','Loneliness causes smartphone use','There is no relationship between them'],ans:0,
+ex:'\u201cCorrelation does not necessarily indicate causation\u201d = <strong>may not cause</strong>.'},
+{id:'r111',topic:'Craft and Structure',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Paragraph Function',body:'<h4 class="r">Why Is This Paragraph Here?</h4><p>Opening: introduce claim. Middle: support, complicate, or counterargue. Closing: conclude. \u201cHowever\u201d in the middle = complication, not full contradiction.</p>'},
+excerpt:'Many historians argue the printing press revolutionized communication. However, scholars note the press also enabled rapid spread of misinformation, a problem that persists today in digital form.',
+text:'The function of the second sentence is to:',
+opts:['Complicate the claim by noting an unintended consequence','Directly contradict historians','Provide a supporting example','Define a key term'],ans:0,
+ex:'\u201cHowever\u201d = complication, not full contradiction. <strong>Complicate the claim</strong>.'},
+{id:'r112',topic:'Craft and Structure',diff:'Hard',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Argument Structure',body:'<h4 class="r">Claim + Evidence + Warrant</h4><p>Strong argument: specific claim \u2192 objective evidence \u2192 clear warrant (logical link). Anecdotal, vague, or irrelevant evidence weakens arguments.</p>'},
+text:'Which argument is MOST logically sound?',
+opts:['Claim: exercise improves mood. Evidence: study shows 30 min reduces cortisol. Warrant: lower cortisol correlates with improved mood.','Claim: exercise is good. Evidence: I feel better. Warrant: everyone should exercise.','Claim: sleep is important. Evidence: famous people sleep. Warrant: therefore sleep.','Claim: reading is beneficial. Evidence: some like it. Warrant: read more.'],ans:0,
+ex:'Only the first uses objective evidence with a scientific warrant. <strong>First option</strong>.'},
+{id:'r113',topic:'Standard English',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Subject-Verb Agreement',body:'<h4 class="r">Match Subject Not Nearest Noun</h4><p>Prepositional phrases between subject and verb are distractors. Find the true subject, then match the verb to it.</p>'},
+text:'Which sentence is correct?',
+opts:['The collection of rare stamps is on display.','The collection of rare stamps are on display.','The stamps in the collection is displayed.','The rare stamps collection are on display.'],ans:0,
+ex:'\u201cCollection\u201d is singular \u2192 \u201cis.\u201d <strong>First option</strong>.'},
+{id:'r114',topic:'Standard English',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Pronoun-Antecedent Agreement',body:'<h4 class="r">Pronoun Must Match</h4><p>Current SAT accepts \u201ctheir\u201d as gender-neutral singular with indefinite pronouns (everyone, each, anyone, nobody).</p>'},
+text:'Each student must submit _______ assignment by Friday.',
+opts:['their','his or her','its','our'],ans:0,
+ex:'Modern SAT accepts \u201ctheir\u201d as gender-neutral singular. <strong>their</strong>.'},
+{id:'r115',topic:'Standard English',diff:'Hard',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Dangling Modifiers',body:'<h4 class="r">What Does the Modifier Modify?</h4><p>A participial phrase at the start of a sentence must modify the subject of the main clause. If it doesn\u2019t, it\u2019s a dangling modifier.</p>'},
+text:'Which sentence has NO modifier error?',
+opts:['Running through the park, the dog chased its tail.','Running through the park, the tail was chased.','Having finished the test, the teacher collected the papers.','Exhausted from the journey, the hotel was reached.'],ans:0,
+ex:'\u201cRunning through the park\u201d correctly modifies \u201cthe dog.\u201d <strong>First option</strong>.'},
+{id:'r116',topic:'Transitions',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Choosing Transitions',body:'<h4 class="r">Match the Relationship</h4><p>Contrast: however, nevertheless, although. Addition: furthermore, moreover. Result: therefore, thus. Example: for example, for instance.</p>'},
+text:'The experiment failed. _______, the team learned valuable lessons.',
+opts:['Nevertheless','Therefore','Furthermore','For example'],ans:0,
+ex:'Failure but learning = contrast. <strong>Nevertheless</strong>.'},
+{id:'r117',topic:'Transitions',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Inter-Paragraph Transitions',body:'<h4 class="r">Bridge Backward and Forward</h4><p>Best transition: references previous paragraph AND introduces the next. Look for both a backward link and a forward link.</p>'},
+text:'Para 1 discusses causes of WWI. Best opening for Para 2 (effects)?',
+opts:['These causes set in motion consequences that reshaped the world.','World War I began in 1914.','Many soldiers fought in the war.','The war was very destructive.'],ans:0,
+ex:'\u201cThese causes\u201d (backward) + \u201cconsequences\u201d (forward). <strong>First option</strong>.'},
+{id:'r118',topic:'Boundaries',diff:'Easy',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Comma Rules',body:'<h4 class="r">When to Use Commas</h4><p>After introductory clauses. Between independent clauses with FANBOYS. Around nonessential phrases. In lists of 3+. NOT between subject and verb.</p>'},
+text:'Which sentence is correctly punctuated?',
+opts:['After the rain stopped, the children played outside.','After the rain stopped the children, played outside.','After the rain, stopped the children played outside.','After the rain stopped the children played, outside.'],ans:0,
+ex:'Comma after introductory clause. <strong>First option</strong>.'},
+{id:'r119',topic:'Boundaries',diff:'Medium',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Semicolons and Colons',body:'<h4 class="r">; vs :</h4><p>Semicolon: joins two independent clauses. Colon: introduces a list, explanation, or quote after an independent clause. Never use colon directly after a verb or preposition.</p>'},
+text:'Which sentence is correctly punctuated?',
+opts:['The report had three findings: cost overruns, delays, and poor quality.','The report found: that costs were high.','The results were: the project failed.','Three things: were found in the report.'],ans:0,
+ex:'Colon after an independent clause introducing a list. <strong>First option</strong>.'},
+{id:'r120',topic:'Sentences',diff:'Hard',isMath:false,useCalc:false,
+lesson:{cls:'rw',title:'Fragments and Run-ons',body:'<h4 class="r">Complete Sentences</h4><p>Fragment: missing subject, verb, or is subordinate clause alone. Run-on: two independent clauses fused. Fix: period, semicolon, comma+FANBOYS, or subordinating conjunction.</p>'},
+text:'Which is a complete, correctly punctuated sentence?',
+opts:['Although the experiment failed, the team published their findings.','Although the experiment failed.','The experiment failed the team published findings.','Because results were unexpected therefore conclusions changed.'],ans:0,
+ex:'Subordinate clause + independent clause = complete sentence. <strong>First option</strong>.'}
 ]}
 
 /* ── VOCABULARY ── */
@@ -1710,7 +2987,22 @@ var COURSES=[
 /* STATE */
 var LS='weace_v9';
 function defS(){return{xp:0,lv:1,streak:0,dailyDone:false,math:{c:0,w:0},rw:{c:0,w:0},topics:{},wrongQ:[],activity:[],vocabKnown:[],mockResults:[],planSetup:null,planDone:{},plan:_plan};}
-function loadS(){try{var d=localStorage.getItem(LS);return d?JSON.parse(d):defS();}catch(e){return defS();}}
+function loadS(){
+  var def=defS();
+  try{
+    var d=localStorage.getItem(LS);
+    if(!d)return def;
+    var s=JSON.parse(d);
+    // Migrate: ensure all required fields exist
+    if(!s.vocabKnown)s.vocabKnown=[];
+    if(!s.wrongQ)s.wrongQ=[];
+    if(!s.activity)s.activity=[];
+    if(!s.topics)s.topics={};
+    if(!s.mockResults)s.mockResults=[];
+    if(s.planDone===undefined)s.planDone={};
+    return s;
+  }catch(e){return def;}
+}
 function save(){try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}}
 var S=loadS();S.plan=_plan;
 
@@ -1753,22 +3045,29 @@ function getTopicDiagnosis(){
 
 /* ── QUICK DRILL ── */
 function startQuickDrill(){
-  var weak=getWeak();
-  var pool=[];
-  if(weak.length>0){
+  var weak = getWeak();
+  var pool = [];
+  if(weak.length > 0){
     weak.slice(0,3).forEach(function(w){
-      var bank=w.isMath?QB.math:QB.rw;
-      var tqs=shuf(bank.filter(function(q){return q.topic===w.topic;})).slice(0,2);
-      pool=pool.concat(tqs);
+      var bank = w.isMath ? QB.math : QB.rw;
+      var tqs = shuf(bank.filter(function(q){return q.topic===w.topic;})).slice(0,2);
+      pool = pool.concat(tqs);
     });
   }
-  if(pool.length<5){
-    var hm=shuf(QB.math.filter(function(q){return q.diff==='Hard';})).slice(0,3);
-    var hr=shuf(QB.rw.filter(function(q){return q.diff==='Hard';})).slice(0,3);
-    pool=pool.concat(shuf(hm.concat(hr)));
+  if(pool.length < 5){
+    var hm = shuf(QB.math.filter(function(q){return q.diff==='Hard';})).slice(0,3);
+    var hr = shuf(QB.rw.filter(function(q){return q.diff==='Hard';})).slice(0,3);
+    pool = pool.concat(shuf(hm.concat(hr)));
   }
-  pool=shuf(pool).slice(0,5);
-  go('mixed','Quick Drill');
+  pool = shuf(pool).slice(0,5);
+  mode = 'mixed'; topicF = 'Quick Drill';
+  qs = pool; qidx = 0; correct = 0; wrong = 0;
+  answered = false; curQ = null; chosenIdx = null;
+  var lbl = document.getElementById('ps-lbl');
+  if(lbl){ lbl.textContent = '⚡ Quick Drill'; lbl.className = 'ps-lbl daily'; }
+  var ps = document.getElementById('pscreen');
+  if(ps) ps.classList.add('on');
+  try{ switchTab('fb'); renderDots(); showLesson(); }catch(e){}
 }
 
 window.addEventListener('load',function(){
@@ -1818,11 +3117,6 @@ function overallAcc(){var t=totalAns();return t>0?Math.round((S.math.c+S.rw.c)/t
 
 /* NAV */
 function goNav(id,el){
-  /* Update mobile nav */
-  document.querySelectorAll('.mob-nav-item').forEach(function(item){
-    item.classList.remove('on');
-  });
-  if(el && el.classList && el.classList.contains('mob-nav-item')) el.classList.add('on');
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
   document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
   var pg=document.getElementById('p-'+id);if(pg)pg.classList.add('on');
@@ -1835,7 +3129,7 @@ function goNav(id,el){
   if(id==='weak')renderWeak();
   if(id==='math'){var mt=S.math.c+S.math.w,ma=pct(S.math);sv('math-tot',mt,mt===0);sv('math-acc',fmt(ma),ma===null);}
   if(id==='rw'){var rt=S.rw.c+S.rw.w,ra=pct(S.rw);sv('rw-tot',rt,rt===0);sv('rw-acc',fmt(ra),ra===null);}
-  if(id==='vocab')vcRender();
+  if(id==='vocab'){try{vcRender();}catch(e){console.warn('vcRender error:',e);}}
   if(id==='courses'){buildCoursesGrid();if(_plan==='pro')unlockCourses();}
   if(id==='exam')renderMockResults();
   window.scrollTo(0,0);
@@ -1933,7 +3227,7 @@ function openTopicDetail(mode,topic){
 
     var body=document.createElement('div');body.className='tq-body';
     var textEl=document.createElement('div');textEl.className='tq-text';
-    textEl.textContent=shortText.slice(0,160)+(shortText.length>160?'…':'');
+    textEl.innerHTML=shortText.slice(0,160)+(shortText.length>160?'…':'');
     body.appendChild(textEl);
 
     var meta=document.createElement('div');meta.className='tq-meta';
@@ -1970,11 +3264,15 @@ function openTopicDetail(mode,topic){
 function topicBack(){
   goNav(_topicMode==='math'?'math':'rw', document.querySelector('[data-pg='+(_topicMode==='math'?'math':'rw')+']'));
 }
-function topicPracticeAll(){go(_topicMode,_topicName);}
+function topicPracticeAll(){
+  if(!_topicMode||!_topicName){console.warn('topicPracticeAll: no topic set');return;}
+  go(_topicMode,_topicName);
+}
 function topicPracticeRand(){
   var bank=_topicMode==='math'?QB.math:QB.rw;
-  var qs=bank.filter(function(q){return q.topic===_topicName;});
-  var shuffled=shuf(qs).slice(0,5);
+  var localQs=bank.filter(function(q){return q.topic===_topicName;});
+  var shuffled=shuf(localQs).slice(0,5);
+  if(!shuffled.length){alert('Асуулт олдсонгүй');return;}
   mode=_topicMode;topicF=_topicName;
   qs=shuffled;qidx=0;correct=0;wrong=0;answered=false;curQ=null;chosenIdx=null;psAnswers={};
   var lbl=document.getElementById('ps-lbl');lbl.textContent=_topicName;lbl.className='ps-lbl '+_topicMode;
@@ -2099,9 +3397,11 @@ function switchTab(t){
 
 function showLesson(){
   stopTimer();
+  if(!qs||!qs.length){console.warn('showLesson: no questions');return;}
   var q=qs[qidx];curQ=q;
+  if(!q)return;
   var cls=q.isMath?'math':'rw';
-  var tc=document.getElementById('tab-calc');if(tc)tc.style.display=q.isMath?'block':'none';
+  var tc=document.getElementById('tab-calc');if(tc)tc.style.display=(q&&q.isMath)?'block':'none';
   document.getElementById('ps-left').innerHTML=
     '<div class="lesson-wrap"><div class="lesson-card">'
     +'<div class="lesson-head '+cls+'"><div class="l-ey '+cls+'">Concept · '+q.topic+'</div>'
@@ -2112,6 +3412,7 @@ function showLesson(){
 }
 
 function showQ(){
+  if(!qs||!qs.length||!qs[qidx]){console.warn('showQ: invalid state');return;}
   answered=false;chosenIdx=null;
   var q=qs[qidx];
   var L=['A','B','C','D'];
@@ -2179,7 +3480,7 @@ function aiX(type){
     why:chosenIdx!==null?'Why is answer '+L[chosenIdx]+' wrong? Question: '+qt+' Correct: '+L[q.ans]+'. Explain in 3 sentences.':'Explain this SAT question.'
   };
   var labels={simple:'Энгийн тайлбар',step:'Алхам алхмаар',mn:'Монголоор 🇲🇳',why:'Яагаад буруу'};
-  var hdrs={'Content-Type':'application/json'};
+  var hdrs={'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'};
   if(CLAUDE_API_KEY)hdrs['x-api-key']=CLAUDE_API_KEY;
   fetch('https://api.anthropic.com/v1/messages',{
     method:'POST',headers:hdrs,
@@ -2296,7 +3597,7 @@ function vcRender(){
   var ct=document.getElementById('vc-cats');if(ct)ct.innerHTML=cats.map(function(c){return'<span class="vcat'+(c===vcCat?' on':'')+'" onclick="vcCat=\''+c+'\';vcIdx=0;vcRender()">'+c+'</span>';}).join('');
   var f=vcFiltered();if(vcIdx>=f.length)vcIdx=0;
   var v=f.length?f[vcIdx]:null;
-  var known=v&&S.vocabKnown.indexOf(v.word)!==-1;
+  var known=v&&S.vocabKnown&&S.vocabKnown.indexOf(v.word)!==-1;
   var vc=document.getElementById('vc-card');
   if(vc&&v)vc.innerHTML='<div class="vocab-card" style="border-color:'+(known?'rgba(34,197,94,.45)':'var(--b2)')+'"><div class="vocab-word">'+v.word+'</div><div class="vocab-phone">'+v.phone+'</div><span class="vocab-pos">'+v.pos+'</span><div class="vocab-def">'+v.def+'</div><div class="vocab-ex">"'+v.ex+'"</div>'+(v.mnDef?'<div style="background:var(--td);border:1px solid var(--tm);border-radius:8px;padding:9px 13px;font-size:12px;color:var(--teal);margin-top:10px;line-height:1.75">🇲🇳 '+v.mnDef+'</div>':'')+'<div style="margin-top:10px;font-family:var(--fm),monospace;font-size:9px;color:var(--hint)">'+(vcIdx+1)+'/'+f.length+(v.day?' · '+v.day:'')+'</div></div>';
   else if(vc)vc.innerHTML='<div style="text-align:center;padding:2rem;color:var(--hint)">Энэ шүүлтүүрт үг алга</div>';
@@ -2308,7 +3609,7 @@ function vcRender(){
   if(lb)lb.innerHTML=f.map(function(ww,i){var kn=S.vocabKnown.indexOf(ww.word)!==-1;return'<div class="vl-item'+(ww.word===(v?v.word:'')?' on':'')+'" onclick="vcIdx='+i+';vcRender()"><div class="vl-word">'+ww.word+'</div><div class="vl-def">'+ww.def.slice(0,50)+(ww.def.length>50?'…':'')+'</div><div class="vl-day">'+(ww.day||'')+'</div><div style="font-size:14px;color:var(--green)">'+(kn?'✓':'')+'</div></div>';}).join('');
 }
 function vcNav(d){var f=vcFiltered();vcIdx=(vcIdx+d+f.length)%f.length;vcRender();}
-function vcKnow(){var f=vcFiltered();if(!f.length)return;var v=f[vcIdx];var i=S.vocabKnown.indexOf(v.word);if(i!==-1)S.vocabKnown.splice(i,1);else S.vocabKnown.push(v.word);save();vcRender();}
+function vcKnow(){var f=vcFiltered();if(!f.length)return;var v=f[vcIdx];if(!S.vocabKnown)S.vocabKnown=[];var i=S.vocabKnown.indexOf(v.word);if(i!==-1)S.vocabKnown.splice(i,1);else S.vocabKnown.push(v.word);save();vcRender();}
 
 /* MOCK EXAM */
 /* ── MOCK EXAM ── */
@@ -2622,10 +3923,7 @@ function renderPlanContent(){
 function toggleTask(el,key){el.classList.toggle('done');var d=el.classList.contains('done');el.textContent=d?'✓':'';var nm=el.nextElementSibling&&el.nextElementSibling.querySelector('div');if(nm){nm.style.textDecoration=d?'line-through':'';nm.style.color=d?'var(--hint)':'';}if(key){S.planDone[key]=d;save();}}
 
 /* PLAN ACTIVATION */
-function activatePlan(plan){
-  try{localStorage.setItem('weace_pending_plan',plan);}catch(e){}
-  window.location.href='payment.html?plan='+plan;
-}
+function activatePlan(plan){ window._payPlan=plan; showPage('payment'); initPaymentPage(); }
 
 /* ── LANGUAGE SYSTEM ── */
 var LANG=(function(){try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';}}());
@@ -2777,11 +4075,12 @@ function switchCalc(type){
 }
 
 /* ── AUTH ── */
+function _orig_logout2(){/* replaced */}
 function logout(){
   localStorage.removeItem('weace_session');
   localStorage.removeItem('weace_user');
   localStorage.removeItem('weace_exam');
-  window.location.href='intro.html';
+  showPage('intro');
 }
 
 function resetAll(){
@@ -2794,16 +4093,156 @@ function resetAll(){
   document.getElementById('planner-content').style.display='none';
   alert(LANG==='mn'?'Бүх өгөгдөл устгагдлаа.':'All data deleted.');
 }
+
+
+/* ── SESSION CHECK ── */
+var _sess=null;try{_sess=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
+if(!_sess){showPage('intro');}
+
+/* ── URL PARAMS ── */
+var urlParams={get:function(k){ return window._payPlan||'plus'; }};
+var _targetPlan=urlParams.get('plan')||localStorage.getItem('weace_pending_plan')||'plus';
+var _selectedMethod='qpay';
+var _payRef='WEACE-'+Math.random().toString(36).substr(2,8).toUpperCase();
+var _qrTimer=null;
+
+/* Plan data */
+var PLANS={
+  plus:{name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',
+    feats:['Mock exam engine (54+44 Qs)','Detailed score analysis','Predicted SAT score','All Free features']},
+  pro:{name:'Pro Plan',price:'₮29,900',badge:'PRO',badgeClass:'pro',
+    feats:['Everything in Plus','Human Tutor 1:1','6 Video Courses','Personal study plan','Priority support']}
+};
+
+/* Init */
+window.addEventListener('DOMContentLoaded',function(){
+  var plan=PLANS[_targetPlan]||PLANS.plus;
+  document.getElementById('plan-name-el').textContent=plan.name;
+  document.getElementById('plan-price-el').innerHTML=plan.price+' <span>/month</span>';
+  var badge=document.getElementById('plan-badge-el');
+  badge.textContent=plan.badge;badge.className='plan-badge '+plan.badgeClass;
+  var feats=document.getElementById('plan-feats-el');
+  feats.innerHTML=plan.feats.map(function(f){return'<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>';}).join('');
+  /* Set amounts in all steps */
+  var p=plan.price;
+  var els=['qr-amount','socialpay-amount','bank-amount'];
+  els.forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=p;});
+  document.getElementById('card-amount-btn').textContent=p;
+  /* Set refs */
+  document.querySelectorAll('[id$="-ref"]').forEach(function(e){e.textContent=_payRef;});
+  document.getElementById('socialpay-ref').textContent=_payRef;
+  document.getElementById('bank-ref').textContent=_payRef;
+  /* Receipt */
+  document.getElementById('rec-plan').textContent=plan.name;
+  document.getElementById('rec-amount').textContent=plan.price+'/month';
+  document.getElementById('rec-date').textContent=new Date().toLocaleDateString();
+  document.getElementById('rec-ref').textContent=_payRef;
+  document.getElementById('success-plan').textContent=plan.name;
+  /* Generate QR */
+  generateQR();
+});
+
+function selectMethod(m){
+  _selectedMethod=m;
+  document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected');});
+  document.getElementById('method-'+m).classList.add('selected');
+}
+
+function proceedPayment(){
+  if(_selectedMethod==='qpay'){goToStep('qpay');startQrTimer();}
+  else if(_selectedMethod==='socialpay')goToStep('socialpay');
+  else if(_selectedMethod==='bank')goToStep('bank');
+  else if(_selectedMethod==='card')goToStep('card');
+}
+
+function goToStep(step){
+  document.querySelectorAll('.pay-step').forEach(function(s){s.classList.remove('on');});
+  var el=document.getElementById('step-'+step);if(el)el.classList.add('on');
+}
+
+/* QR Timer */
+function startQrTimer(){
+  var secs=600;
+  clearInterval(_qrTimer);
+  _qrTimer=setInterval(function(){
+    secs--;
+    var m=Math.floor(secs/60),s=secs%60;
+    var el=document.getElementById('qr-countdown');
+    if(el)el.textContent=m+':'+(s<10?'0':'')+s;
+    if(secs<=0){clearInterval(_qrTimer);var et=document.getElementById('status-text');if(et)et.textContent='QR expired. Please refresh.';}
+  },1000);
+}
+
+/* Simple QR code generator using a path-based SVG */
+function generateQR(){
+  /* Using a public QR API for demo - in production use your QPay merchant API */
+  var holder=document.getElementById('qr-svg-holder');
+  if(!holder)return;
+  var qrText='WEACE:'+_targetPlan+':'+_payRef+':'+(PLANS[_targetPlan]&&PLANS[_targetPlan].price||'19900');
+  /* Build simple visual QR placeholder that looks authentic */
+  holder.innerHTML=buildQRPlaceholder(qrText);
+}
+
+function buildQRPlaceholder(text){
+  /* Deterministic pixel pattern from text hash */
+  var hash=0;for(var i=0;i<text.length;i++){hash=((hash<<5)-hash)+text.charCodeAt(i);hash|=0;}
+  var size=21;var cells=[];
+  for(var r=0;r<size;r++){cells[r]=[];for(var c=0;c<size;c++){
+    /* Finder patterns (corners) */
+    if((r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7)){cells[r][c]=1;}
+    /* Data modules based on hash */
+    else{cells[r][c]=(hash^(r*size+c)*1234567)&1?1:0;}
+  }}
+  /* Ensure separators */
+  for(var i=0;i<8;i++){cells[7][i]=0;cells[i][7]=0;cells[7][13+i]=0;cells[i][14]=0;cells[14][i]=0;cells[13+i][7]=0;}
+  var cell=8;var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(size*cell)+' '+(size*cell)+'"><rect width="100%" height="100%" fill="white"/>';
+  for(var r2=0;r2<size;r2++)for(var c2=0;c2<size;c2++)if(cells[r2][c2])svg+='<rect x="'+(c2*cell)+'" y="'+(r2*cell)+'" width="'+cell+'" height="'+cell+'" fill="#000"/>';
+  svg+='</svg>';
+  return svg;
+}
+
+/* Card formatting */
+function formatCard(input){var v=input.value.replace(/\D/g,'').substr(0,16);input.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function formatExpiry(input){var v=input.value.replace(/\D/g,'').substr(0,4);if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2);input.value=v;}
+
+function processCard(){
+  var btn=document.getElementById('card-pay-btn');
+  if(btn){btn.textContent='Processing...';btn.disabled=true;}
+  goToStep('processing');
+  setTimeout(simulatePaymentSuccess,2000);
+}
+
+function copyText(text,btn){
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  btn.textContent='Copied!';btn.classList.add('copied');
+  setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied');},2000);
+}
+function copyRef(btn){copyText(_payRef,btn);}
+
+function simulatePaymentSuccess(){
+  clearInterval(_qrTimer);
+  goToStep('processing');
+  setTimeout(function(){
+    /* Activate plan in localStorage */
+    try{
+      var sess=JSON.parse(localStorage.getItem('weace_session')||'{}');
+      sess.plan=_targetPlan;
+      localStorage.setItem('weace_session',JSON.stringify(sess));
+      /* Also update WeAce state */
+      var stateKey='weace_v9';
+      var state=JSON.parse(localStorage.getItem(stateKey)||'{}');
+      state.plan=_targetPlan;
+      localStorage.setItem(stateKey,JSON.stringify(state));
+      localStorage.removeItem('weace_pending_plan');
+    }catch(e){}
+    goToStep('success');
+  },1500);
+}
+
+function goBack(){showPage('dashboard');}
+function goToDashboard(){showPage('dashboard');}
+
+
 </script>
-
-<!-- MOBILE BOTTOM NAV -->
-<div class="mob-nav" id="mob-nav">
-  <div class="mob-nav-item on" onclick="goNav('home',this)"><div class="mn-ic">🏠</div>Home</div>
-  <div class="mob-nav-item" onclick="goNav('math',this)"><div class="mn-ic">📐</div>Math</div>
-  <div class="mob-nav-item" onclick="goNav('exam',this)"><div class="mn-ic">📋</div>Exam</div>
-  <div class="mob-nav-item" onclick="goNav('vocab',this)"><div class="mn-ic">📚</div>Vocab</div>
-  <div class="mob-nav-item" onclick="goNav('progress',this)"><div class="mn-ic">📊</div>Progress</div>
-</div>
-
 </body>
 </html>

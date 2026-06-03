@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
+<meta name="theme-color" content="#060608"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>WeAce — Choose Your Exam</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -107,6 +108,13 @@ body::before{content:'';position:fixed;top:20%;left:50%;transform:translateX(-50
   h1{font-size:clamp(40px,18vw,72px)!important}
   [style*="gap:12px"][style*="flex-wrap:wrap"]{flex-direction:column!important}
   button[style*="padding:14px 28px"]{width:100%!important;padding:13px!important}
+}
+
+@media (max-width: 480px) {
+  .exam-card { padding: 1.25rem !important; }
+  .exam-btn { min-height: 48px !important; font-size: 14px !important; }
+  .cards { gap: 12px !important; padding: 0 1rem !important; }
+  .header-section { padding: 1.5rem 1rem !important; }
 }
 </style>
 </head>

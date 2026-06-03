@@ -1,516 +1,607 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="mn">
 <head>
 <meta charset="UTF-8"/>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
-<meta property="og:title" content="WeAce — SAT Prep for Mongolian Students"/>
-<meta property="og:description" content="Prepare for the SAT with Mongolian-language explanations. 150+ math questions, 130+ R&amp;W questions, AI tutor."/>
-<meta property="og:type" content="website"/>
-<meta name="description" content="WeAce SAT prep platform for Mongolian students. Free practice questions, AI explanations, TOPIK Korean prep."/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>We Ace The Exam — SAT Prep</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>WeAce — SAT & TOPIK Prep for Mongolian Students</title>
+<meta name="description" content="Prepare for the SAT and TOPIK with Mongolian-language explanations. Free practice questions, AI tutor, score tracking."/>
+<meta property="og:title" content="WeAce — SAT Prep Mongolia"/>
+<meta property="og:description" content="SAT and TOPIK preparation built for Mongolian students."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+
+/* RESET */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;background:#060608;color:#f0f0f2;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
+
+/* PAGES */
+.wa-page{display:none;width:100%;}
+
+/* DASHBOARD CSS */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#060608;--bg2:#0e0e12;--bg3:#16161c;--bg4:#1e1e24;
-  --text:#f0f0f2;--muted:#888;--hint:#444;
-  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.1);--b3:rgba(255,255,255,.18);
+  --text:#f0f0f2;--muted:#8a8a9a;--hint:#44444f;
+  --b1:rgba(255,255,255,.05);--b2:rgba(255,255,255,.09);--b3:rgba(255,255,255,.16);
   --green:#22c55e;--gd:rgba(34,197,94,.1);--gm:rgba(34,197,94,.22);
   --blue:#3b82f6;--bd:rgba(59,130,246,.1);--bm:rgba(59,130,246,.22);
   --amber:#f59e0b;--ad:rgba(245,158,11,.1);--am:rgba(245,158,11,.22);
   --red:#ef4444;--rd:rgba(239,68,68,.1);--rm:rgba(239,68,68,.22);
   --purple:#a855f7;--pd:rgba(168,85,247,.1);--pm:rgba(168,85,247,.22);
   --teal:#14b8a6;--td:rgba(20,184,166,.1);--tm:rgba(20,184,166,.22);
-  --sw:238px;--f:'Inter',sans-serif;--fd:'Sora',sans-serif;--fm:'DM Mono',monospace;
+  --sw:230px;
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--f);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6;font-size:15px}
-a{text-decoration:none;color:inherit}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;overflow-x:hidden}
+.shell{display:flex;min-height:100vh}
+.sb{width:var(--sw);background:var(--bg2);border-right:1px solid var(--b1);position:fixed;top:0;left:0;bottom:0;z-index:50;display:flex;flex-direction:column;overflow-y:auto}
+.sb-logo{padding:1rem 1.125rem;border-bottom:1px solid var(--b1)}
+.logo{font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.5px;cursor:pointer}
+.logo em{color:var(--green);font-style:normal}
+.logo-sub{font-family:'DM Mono',monospace;font-size:8px;color:var(--hint);letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+.sb-user{padding:.75rem 1.125rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:9px}
+.ava{width:32px;height:32px;border-radius:50%;background:var(--gd);border:1.5px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--green);flex-shrink:0;font-family:'Sora',sans-serif}
+.chip{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:8px;margin-top:2px;display:inline-block}
+.chip.free{background:var(--b1);color:var(--muted);border:1px solid var(--b2)}
+.chip.plus{background:var(--bd);color:var(--blue);border:1px solid var(--bm)}
+.chip.pro{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.sb-xp{padding:.625rem 1.125rem;border-bottom:1px solid var(--b1)}
+.xp-row{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9px;margin-bottom:4px;color:var(--hint)}
+.xp-row span:last-child{color:var(--green)}
+.xp-t{height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.xp-f{height:100%;background:linear-gradient(90deg,var(--green),var(--teal));border-radius:2px;transition:width .5s}
+.sb-nav{flex:1;padding:.25rem 0}
+.nl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);padding:.5rem 1.125rem .2rem}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 1.125rem;font-size:12.5px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .1s;user-select:none}
+.ni:hover{color:var(--text);background:var(--bg3)}
+.ni.on{color:var(--green);background:var(--gd);border-left-color:var(--green);font-weight:600}
+.ni-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.nb{margin-left:auto;font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:8px;font-weight:700}
+.nb.g{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.nb.r{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.nb.a{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.nb.b{background:var(--bd);color:var(--blue);border:1px solid var(--bm);font-size:7px}
+.nb.p{background:var(--ad);color:var(--amber);border:1px solid var(--am);font-size:7px}
+.main{margin-left:var(--sw);flex:1;min-width:0}
+.topbar{height:52px;background:rgba(6,6,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:40}
+.tb-l{display:flex;align-items:center;gap:10px}
+.tb-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.3px}
+.streak{display:flex;align-items:center;gap:5px;background:var(--ad);border:1px solid var(--am);border-radius:20px;padding:3px 10px;font-family:'DM Mono',monospace;font-size:9px;color:var(--amber)}
+.tb-r{display:flex;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:5px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .12s}
+.btn:hover{opacity:.85}
+.btn.pri{background:var(--green);color:#000}
+.btn.sec{background:transparent;color:var(--text);border:1px solid var(--b2)}
+.btn.sec:hover{background:var(--bg3);border-color:var(--b3)}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.amber{background:var(--amber);color:#000}
+.btn.sm{padding:5px 12px;font-size:11px}
+.btn.lg{padding:13px 30px;font-size:14px;border-radius:10px}
+.page{display:none;padding:1.75rem 2.25rem;animation:fadeUp .18s ease}
+.page.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pg-h{font-family:'Sora',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:4px}
+.pg-sub{font-size:13px;color:var(--muted);margin-bottom:1.75rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.25rem}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.875rem}
+.card-title{font-size:13px;font-weight:700}
+.ey{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);display:block;margin-bottom:.75rem}
+.stat{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.125rem}
+.slbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--hint);margin-bottom:6px;display:block}
+.sval{font-family:'Sora',sans-serif;font-size:28px;font-weight:900;line-height:1;letter-spacing:-1px}
+.cg{color:var(--green)}.cb{color:#60a5fa}.ca{color:var(--amber)}.cm{color:var(--muted)}.ct{color:var(--teal)}.cr{color:var(--red)}
+.pbar{margin-bottom:12px}
+.pbar-top{display:flex;justify-content:space-between;margin-bottom:5px}
+.pbar-nm{font-size:11px;font-weight:500;display:flex;align-items:center;gap:6px}
+.pdot{width:6px;height:6px;border-radius:50%}
+.pdot.m{background:#60a5fa}.pdot.r{background:var(--green)}
+.pbar-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.pbar-track{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:3px;transition:width .7s}
+.pbar-fill.m{background:#60a5fa}.pbar-fill.r{background:var(--green)}
+/* TOPIC GRID */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem}
+.tc{background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;padding:1rem 1.125rem;cursor:pointer;transition:all .15s;position:relative;display:flex;flex-direction:column}
+.tc:hover{border-color:var(--b3);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.tc.math:hover{border-color:rgba(96,165,250,.5);background:rgba(59,130,246,.04)}
+.tc.rw:hover{border-color:rgba(34,197,94,.5);background:rgba(34,197,94,.04)}
+.tc.expanded{border-color:rgba(59,130,246,.4)}
+.tc.expanded.rw{border-color:rgba(34,197,94,.4)}
+.tc-icon{font-size:22px;margin-bottom:7px}
+.tc-name{font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.3}
+.tc-diff{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:8px}
+.tc-diff.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tc-diff.m{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.tc-diff.e{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tc-footer{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tc-cnt{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+.tc-weak{position:absolute;top:8px;right:8px;font-size:10px}
 
-/* CANVAS */
-#c{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-/* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:80;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);background:rgba(6,6,8,.75)}
-.nav-logo{font-family:var(--fd);font-size:17px;font-weight:900;letter-spacing:-.5px;cursor:pointer}
-.nav-logo span{color:var(--green)}
-.nav-links{display:flex;align-items:center;gap:2.5rem}
-.nav-links a{font-size:14px;color:var(--muted);transition:color .15s;cursor:pointer}
-.nav-links a:hover{color:var(--text)}
-.nav-ctas{display:flex;gap:10px}
-.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--f);font-size:13px;font-weight:600;padding:9px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .15s}
-.btn.p{background:var(--green);color:#000}.btn.p:hover{opacity:.88;transform:translateY(-1px)}
-.btn.gh{background:transparent;color:var(--text);border:1px solid var(--b2)}.btn.gh:hover{background:var(--bg3);border-color:var(--b3)}
-.btn.lg{padding:14px 32px;font-size:15px;border-radius:10px}
-.btn.xl{padding:16px 40px;font-size:16px;border-radius:12px;font-weight:700}
 
-/* HERO */
-.hero{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 2rem 6rem;text-align:center}
 
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:30px;padding:6px 18px;font-family:var(--fm);font-size:11px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:2.5rem}
-.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
 
-/* ANIMATED TITLE */
-.hero-title{font-family:var(--fd);font-size:clamp(64px,10vw,130px);font-weight:900;line-height:.9;letter-spacing:-5px;margin-bottom:2rem;position:relative}
-.word-we{display:block;color:var(--text);opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards .2s}
-.word-ace{display:block;position:relative;overflow:visible}
-.word-ace-text{background:linear-gradient(135deg,#22c55e,#3b82f6,#a855f7,#f59e0b,#22c55e);background-size:300% 300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gradShift 3s ease-in-out infinite,wordIn .8s ease forwards .5s;opacity:0;transform:translateY(40px);display:inline-block}
-@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.word-the{display:block;color:var(--text);opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards .8s}
-.word-exam{display:block;opacity:0;transform:translateY(40px);animation:wordIn .8s ease forwards 1.1s}
-.word-exam-inner{position:relative;display:inline-block}
-.word-exam-inner::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:4px;background:var(--green);border-radius:2px;animation:underlineIn .6s ease forwards 1.8s;transform:scaleX(0);transform-origin:left}
-@keyframes underlineIn{to{transform:scaleX(1)}}
-@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
-.word-period{color:var(--green);animation:blink-period 2s ease-in-out infinite 2s}
-@keyframes blink-period{0%,90%,100%{opacity:1}95%{opacity:.3}}
 
-.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:560px;margin:0 auto 3rem;line-height:1.8;font-weight:300;opacity:0;animation:fadeUp .8s ease forwards 1.4s}
-.hero-sub strong{color:var(--text);font-weight:600}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fadeUp .8s ease forwards 1.6s}
 
-.hero-proof{display:flex;align-items:center;gap:2.5rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s ease forwards 1.8s}
-.proof-item{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:11px;color:var(--hint);letter-spacing:.5px}
-.proof-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
-.proof-sep{width:1px;height:16px;background:var(--b2)}
 
-/* SCROLL INDICATOR */
-.scroll-indicator{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--hint);font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:0;animation:fadeIn 1s ease forwards 2.5s}
-@keyframes fadeIn{to{opacity:1}}
-.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,transparent,var(--hint));animation:scrollAnim 2s ease-in-out infinite}
-@keyframes scrollAnim{0%,100%{transform:scaleY(1);opacity:1}50%{transform:scaleY(.5);opacity:.4}}
 
-/* SECTION BASE */
-section{position:relative;z-index:10}
-.wrap{max-width:1140px;margin:0 auto;padding:0 2rem}
-.section-pad{padding:7rem 0}
-.sec-ey{font-family:var(--fm);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:1rem;display:block}
-.sec-title{font-family:var(--fd);font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-.5px;line-height:1.05;margin-bottom:1.25rem}
-.sec-sub{font-size:16px;color:var(--muted);line-height:1.8;font-weight:300}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--b2),transparent)}
 
-/* FEATURES */
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--b1);border:1px solid var(--b1);border-radius:20px;overflow:hidden;margin-top:4rem}
-.feat{background:var(--bg2);padding:2.25rem;transition:background .2s;cursor:default}
-.feat:hover{background:var(--bg3)}
-.feat-ic{font-size:30px;margin-bottom:1rem}
-.feat-title{font-size:16px;font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
-.feat-sub{font-size:13px;color:var(--muted);line-height:1.75}
 
-/* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--b1);border-radius:20px;overflow:hidden;border:1px solid var(--b1)}
-.stat-item{background:var(--bg2);padding:2.5rem;text-align:center}
-.stat-num{font-family:var(--fd);font-size:48px;font-weight:900;letter-spacing:-2px;color:var(--green);margin-bottom:5px;line-height:1}
-.stat-lbl{font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--hint)}
 
-/* HOW */
-.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;margin-top:4rem}
-.step{background:var(--bg2);border:1px solid var(--b1);border-radius:16px;padding:2rem;position:relative;overflow:hidden}
-.step-num{font-family:var(--fd);font-size:80px;font-weight:900;color:var(--b1);position:absolute;top:-10px;right:16px;line-height:1;user-select:none}
-.step-icon{font-size:26px;margin-bottom:12px;position:relative}
-.step-title{font-size:15px;font-weight:700;margin-bottom:6px;position:relative}
-.step-sub{font-size:13px;color:var(--muted);line-height:1.7;position:relative}
+.start-btn{width:100%;padding:14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .12s}
+.start-btn:hover{opacity:.87}
+.sb-math{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff}
+.sb-rw{background:linear-gradient(135deg,#15803d,#22c55e);color:#fff}
+.sb-daily{background:linear-gradient(135deg,#d97706,var(--amber));color:#000}
+.sb-mix{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff}
+.sec-card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.375rem;cursor:pointer;transition:all .15s}
+.sec-card:hover{transform:translateY(-3px);border-color:var(--b3)}
+.sc-icon{font-size:28px;margin-bottom:10px}
+.sc-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.sc-sub{font-size:11.5px;color:var(--muted);line-height:1.65}
+.daily-banner{background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(59,130,246,.04));border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:1.375rem;display:flex;align-items:center;gap:16px;margin-bottom:1.375rem;cursor:pointer;transition:border-color .15s}
+.daily-banner:hover{border-color:rgba(34,197,94,.45)}
+/* VOCAB */
+.vcat{font-family:'DM Mono',monospace;font-size:9px;padding:5px 12px;border-radius:20px;border:1px solid var(--b2);cursor:pointer;transition:all .12s;color:var(--muted);display:inline-block}
+.vcat:hover{border-color:var(--b3);color:var(--text)}
+.vcat.on{background:var(--bd);color:#60a5fa;border-color:var(--bm)}
+.vcat-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}
+.vocab-card{background:var(--bg2);border:1.5px solid var(--b2);border-radius:16px;padding:2rem;margin-bottom:1rem;transition:border-color .2s}
+.vocab-word{font-family:'Sora',sans-serif;font-size:38px;font-weight:900;letter-spacing:-1px;margin-bottom:4px}
+.vocab-phone{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:8px}
+.vocab-pos{font-family:'DM Mono',monospace;font-size:8px;background:var(--bd);color:#60a5fa;border:1px solid var(--bm);border-radius:3px;padding:2px 7px;display:inline-block;margin-bottom:12px}
+.vocab-def{font-size:15px;line-height:1.8;margin-bottom:10px}
+.vocab-ex{font-size:13px;color:var(--muted);font-style:italic;border-left:3px solid var(--blue);padding-left:12px;line-height:1.75}
+.vocab-list{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;overflow:hidden;margin-top:1.5rem}
+.vl-head{padding:.875rem 1.25rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.vl-item{padding:.875rem 1.25rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:14px;cursor:pointer;transition:background .1s}
+.vl-item:last-child{border-bottom:none}
+.vl-item:hover{background:var(--bg3)}
+.vl-item.on{background:var(--gd)}
+.vl-word{font-family:'Sora',sans-serif;font-size:15px;font-weight:800;min-width:150px}
+.vl-def{font-size:12.5px;color:var(--muted);flex:1}
+.vl-day{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+/* REVIEW */
+.rcard{background:var(--bg2);border:1px solid var(--b2);border-radius:11px;margin-bottom:8px;overflow:hidden;border-left:3px solid var(--rm)}
+.rcard-top{padding:.875rem 1.125rem;display:flex;gap:11px}
+.rtag{font-family:'DM Mono',monospace;font-size:8px;padding:2px 6px;border-radius:3px}
+.rtag.m{background:var(--bd);color:#60a5fa;border:1px solid var(--bm)}
+.rtag.r{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.rtag.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.rtag.md{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.rcard-q{font-size:12px;line-height:1.75;flex:1}
+.rcard-acts{display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.ra{font-family:'DM Mono',monospace;font-size:8px;padding:5px 10px;border-radius:6px;border:1px solid var(--b2);background:var(--bg3);color:var(--muted);cursor:pointer;white-space:nowrap}
+.ra:hover{border-color:var(--b3);color:var(--text)}
+.rcard-bot{padding:.75rem 1.125rem;border-top:1px solid var(--b1)}
+.rans{display:flex;gap:7px;margin-bottom:8px}
+.ran{font-family:'DM Mono',monospace;font-size:10px;padding:3px 11px;border-radius:6px;border:1px solid var(--b2)}
+.ran.w{background:var(--rd);border-color:var(--rm);color:var(--red)}
+.ran.c{background:var(--gd);border-color:var(--gm);color:var(--green)}
+.rexpl{background:var(--bg3);border-left:3px solid var(--green);padding:9px 13px;border-radius:0 7px 7px 0;font-size:11px;color:var(--muted);line-height:1.85}
+/* GATE / TIERS */
+.gate{background:linear-gradient(135deg,rgba(245,158,11,.07),rgba(168,85,247,.04));border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:1.375rem 1.75rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:16px}
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px}
+.tier-card{background:var(--bg2);border:1px solid var(--b2);border-radius:16px;padding:1.75rem;position:relative;overflow:hidden;transition:transform .15s}
+.tier-card:hover{transform:translateY(-4px)}
+.tier-card.plus{border-color:rgba(59,130,246,.4)}
+.tier-card.pro{border-color:rgba(245,158,11,.4);background:linear-gradient(160deg,rgba(245,158,11,.04),var(--bg2))}
+.tier-badge{position:absolute;top:1.25rem;right:1.25rem;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;border-radius:10px;padding:3px 9px}
+.tier-badge.plus{background:var(--blue);color:#fff}
+.tier-badge.pro{background:var(--amber);color:#000}
+.tier-plan{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.875rem}
+.tier-price{font-family:'Sora',sans-serif;font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:.25rem}
+.tier-per{font-size:12px;color:var(--muted);margin-bottom:1.5rem}
+.tier-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:1.5rem}
+.tf{display:flex;align-items:flex-start;gap:9px;font-size:12.5px}
+.tf-ic{width:18px;min-width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.tf-ic.y{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tf-ic.n{background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
+/* PRACTICE SCREEN */
+.ps{display:none;position:fixed;inset:0;z-index:100;background:var(--bg);flex-direction:column}
+.ps.on{display:flex;animation:fadeIn .15s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.ps-bar{height:54px;border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 1.5rem;gap:12px;flex-shrink:0;background:var(--bg2)}
+.ps-lbl{font-family:'DM Mono',monospace;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:4px}
+.ps-lbl.math{background:var(--bd);color:#60a5fa;border:1px solid var(--bm)}
+.ps-lbl.rw{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.ps-lbl.daily{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.ps-lbl.mix{background:var(--pd);color:var(--purple);border:1px solid var(--pm)}
+.ps-dots{display:flex;gap:5px;flex-wrap:wrap;max-width:320px}
+.psd{width:8px;height:8px;border-radius:50%;background:var(--bg4);border:1px solid var(--b2);transition:all .2s}
+.psd.cur{background:var(--blue);border-color:var(--blue);transform:scale(1.3)}
+.psd.ok{background:var(--green);border-color:var(--green)}
+.psd.bad{background:var(--red);border-color:var(--red)}
+.ps-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--hint);white-space:nowrap}
+.t-box{display:flex;align-items:center;gap:8px;margin-left:auto}
+.t-ring svg{transform:rotate(-90deg)}
+.t-bg{fill:none;stroke:var(--bg4);stroke-width:3}
+.t-fg{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s}
+.t-num{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;min-width:38px}
+.t-num.warn{color:var(--red)}
+.ps-exit{background:var(--bg3);border:1px solid var(--b2);border-radius:7px;padding:5px 12px;font-size:11px;color:var(--muted);cursor:pointer}
+.ps-exit:hover{color:var(--text)}
+.ps-body{flex:1;overflow:hidden;display:grid;grid-template-columns:1fr 400px;min-height:0}
+.ps-left{overflow-y:auto;display:flex;flex-direction:column}
+.ps-right{border-left:1px solid var(--b1);background:var(--bg2);display:flex;flex-direction:column}
+.ptabs{display:flex;border-bottom:1px solid var(--b1);flex-shrink:0}
+.ptab{flex:1;padding:11px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .12s}
+.ptab:hover{color:var(--text)}
+.ptab.on{color:var(--green);border-bottom-color:var(--green)}
+.panel-body{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.lesson-wrap{padding:2rem 2.25rem}
+.lesson-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;overflow:hidden}
+.lesson-head{padding:1.25rem 1.75rem;border-bottom:1px solid var(--b1)}
+.lesson-head.math{background:rgba(59,130,246,.05)}
+.lesson-head.rw{background:rgba(34,197,94,.05)}
+.l-ey{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.l-ey.math{color:#60a5fa}.l-ey.rw{color:var(--green)}
+.l-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:800}
+.lesson-body{padding:1.25rem 1.75rem}
+.lesson-body p{font-size:12.5px;line-height:1.9;margin-bottom:.75rem}
+.lesson-body h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;margin:.875rem 0 5px}
+.lesson-body h4.m{color:#60a5fa}.lesson-body h4.r{color:var(--green)}
+.formula{font-family:'DM Mono',monospace;font-size:12px;background:var(--bg3);border:1px solid var(--b2);border-radius:6px;padding:7px 14px;display:inline-block;margin:3px 0;color:var(--amber)}
+.ex-block{background:var(--bg3);border-left:3px solid var(--b3);padding:9px 13px;border-radius:0 7px 7px 0;font-size:12px;color:var(--muted);margin:6px 0;line-height:1.8}
+.ex-block.m{border-left-color:#60a5fa}.ex-block.r{border-left-color:var(--green)}
+.mn-insight{background:var(--td);border:1px solid var(--tm);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--teal);margin-top:10px;line-height:1.75}
+.lesson-go{width:100%;padding:14px;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;border:none;cursor:pointer;border-radius:0 0 13px 13px;transition:opacity .12s}
+.lesson-go.math{background:var(--blue);color:#fff}
+.lesson-go.rw{background:var(--green);color:#000}
+.lesson-go:hover{opacity:.87}
+.q-wrap{padding:2rem 2.25rem;flex:1;display:flex;flex-direction:column}
+.q-passage{background:var(--bg2);border:1px solid var(--b2);border-left:4px solid var(--green);border-radius:11px;padding:1.125rem 1.375rem;font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:1.75rem}
+.q-num{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.q-text{font-size:17px;line-height:1.8;font-weight:600;margin-bottom:1.75rem;white-space:pre-line}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.opt{display:flex;align-items:flex-start;gap:14px;padding:1rem 1.375rem;border:1.5px solid var(--b2);border-radius:12px;cursor:pointer;background:var(--bg2);font-size:14px;text-align:left;transition:all .12s;line-height:1.6;width:100%;color:var(--text)}
+.opt:hover:not(:disabled){border-color:var(--b3);background:var(--bg3)}
+.opt.correct{border-color:var(--green)!important;background:rgba(34,197,94,.08)!important}
+.opt.wrong{border-color:var(--red)!important;background:rgba(239,68,68,.08)!important}
+.opt:disabled{cursor:default}
+.ol{width:26px;min-width:26px;height:26px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--b2);font-family:'DM Mono',monospace;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.opt.correct .ol{background:var(--green)!important;color:#000!important;border-color:var(--green)!important}
+.opt.wrong .ol{background:var(--red)!important;color:#fff!important;border-color:var(--red)!important}
+.q-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:1rem}
+.q-meta{font-family:'DM Mono',monospace;font-size:9px;color:var(--hint)}
+.next-btn{background:var(--green);color:#000;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;padding:11px 28px;border-radius:9px;border:none;cursor:pointer;transition:opacity .12s}
+.next-btn:hover{opacity:.87}
+.next-btn:disabled{opacity:.3;cursor:default}
+.fb-wrap{padding:1.25rem;overflow-y:auto;flex:1}
+.fb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;text-align:center;color:var(--hint)}
+.fb-verdict{font-family:'Sora',sans-serif;font-size:20px;font-weight:900;margin-bottom:9px}
+.fb-verdict.ok{color:var(--green)}.fb-verdict.bad{color:var(--red)}
+.fb-explain{font-size:12.5px;color:var(--muted);line-height:1.9;margin-bottom:1rem}
+.fb-explain strong{color:var(--text)}
+.fb-mn{background:var(--td);border:1px solid var(--tm);border-radius:8px;padding:9px 12px;font-size:11.5px;color:var(--teal);margin-bottom:1rem;line-height:1.75}
+.fb-mn::before{content:"🇲🇳 "}
+.fb-btn{font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;padding:9px 13px;border-radius:9px;border:1px solid var(--b2);background:var(--bg3);color:var(--text);cursor:pointer;transition:all .12s;text-align:left;display:flex;align-items:center;gap:8px;width:100%;margin-bottom:7px}
+.fb-btn:hover{border-color:var(--b3);background:var(--bg4)}
+.ai-box{background:var(--bg3);border:1px solid var(--b2);border-radius:11px;padding:.875rem;margin-top:1rem}
+.ai-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:9px}
+.ai-btns{display:flex;flex-direction:column;gap:6px;margin-bottom:9px}
+.ai-btn{font-family:'DM Mono',monospace;font-size:9px;padding:6px 11px;border-radius:7px;border:1px solid var(--pm);background:var(--pd);color:var(--purple);cursor:pointer;text-align:left}
+.ai-btn:hover{background:rgba(168,85,247,.18)}
+.ai-resp{background:rgba(168,85,247,.07);border:1px solid var(--pm);border-radius:8px;padding:.875rem;margin-top:7px;font-size:11.5px;color:var(--text);line-height:1.9;display:none}
+.ai-resp.show{display:block}
+.ai-load{display:flex;align-items:center;gap:6px;color:var(--purple);font-family:'DM Mono',monospace;font-size:10px}
+.aidot{width:5px;height:5px;border-radius:50%;background:var(--purple);animation:blink 1s ease-in-out infinite}
+.aidot:nth-child(2){animation-delay:.2s}.aidot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+.sum-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.sum-card{background:var(--bg2);border:1px solid var(--b2);border-radius:16px;padding:2.25rem;text-align:center;width:100%;max-width:480px}
+.sum-pct{font-family:'Sora',sans-serif;font-size:72px;font-weight:900;line-height:1;margin-bottom:5px}
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:1.375rem}
+.sum-cell{background:var(--bg3);border-radius:9px;padding:.875rem}
+.sum-cell-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:900}
+.sum-cell-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--hint);margin-top:2px}
+.sum-btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.sbtn{padding:11px 22px;border-radius:9px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;border:none;transition:opacity .12s}
+.sbtn:hover{opacity:.87}
+.sbtn.p{background:var(--green);color:#000}
+.sbtn.s{background:var(--bg3);color:var(--text);border:1px solid var(--b2)}
+.sbtn.b{background:var(--blue);color:#fff}
+.tutor-card{background:var(--bg2);border:1px solid var(--b2);border-radius:14px;padding:1.5rem;margin-bottom:12px}
+.tutor-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;display:inline-block;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.chat-box{background:var(--bg3);border:1px solid var(--b2);border-radius:12px;padding:1.25rem;min-height:180px;max-height:300px;overflow-y:auto;margin-bottom:.875rem;display:flex;flex-direction:column;gap:10px}
+.chat-msg{max-width:76%;padding:.75rem 1rem;border-radius:12px;font-size:13px;line-height:1.7}
+.chat-msg.tutor{background:var(--bg4);border:1px solid var(--b2);border-radius:12px 12px 12px 2px;align-self:flex-start}
+.chat-msg.user{background:var(--green);color:#000;border-radius:12px 12px 2px 12px;align-self:flex-end}
+.chat-input{flex:1;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;padding:10px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);outline:none}
+.chat-input:focus{border-color:var(--green)}
+.plan-card{background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1.25rem;margin-bottom:10px}
+.plan-opts{display:flex;gap:7px;flex-wrap:wrap}
+.plan-opt{padding:7px 14px;border-radius:7px;border:1.5px solid var(--b2);background:var(--bg3);font-size:12.5px;cursor:pointer;transition:all .12s;color:var(--muted)}
+.plan-opt:hover{border-color:var(--b3);color:var(--text)}
+.plan-opt.sel{border-color:var(--green);background:var(--gd);color:var(--green)}
+.plan-opt.sm{padding:5px 10px;font-size:11.5px}
+.plan-input{width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:7px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text);outline:none}
+.plan-input:focus{border-color:var(--green)}
+.task-row{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid var(--b1)}
+.task-row:last-child{border-bottom:none}
+.task-chk{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:10px;transition:all .12s}
+.task-chk.done{background:var(--green);border-color:var(--green);color:#000}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--b1)}
+.setting-row:last-child{border-bottom:none}
+.empty{text-align:center;padding:2.5rem 1rem}
+.empty-icon{font-size:36px;margin-bottom:9px}
+.empty-h{font-size:13px;font-weight:700;margin-bottom:4px}
+.empty-s{font-size:11.5px;color:var(--muted);max-width:230px;margin:0 auto 1.125rem;line-height:1.65}
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:820px;margin:4rem auto 0}
-.price-card{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:2.75rem;position:relative;overflow:hidden;transition:transform .2s}
-.price-card:hover{transform:translateY(-4px)}
-.price-card.pro{border-color:rgba(34,197,94,.35);background:linear-gradient(160deg,rgba(34,197,94,.06),var(--bg2))}
-.price-card.pro::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 10%,rgba(34,197,94,.08),transparent 60%);pointer-events:none}
-.price-popular-badge{position:absolute;top:1.5rem;right:1.5rem;background:var(--green);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border-radius:12px;padding:4px 12px}
-.price-plan{font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
-.price-amt{font-family:var(--fd);font-size:58px;font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:.25rem}
-.price-per{font-size:13px;color:var(--muted);margin-bottom:2.25rem;font-weight:300}
-.price-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:2.25rem}
-.pf{display:flex;align-items:flex-start;gap:11px;font-size:14px;line-height:1.5}
-.pf-check{width:20px;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px}
-.pf-check.y{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
-.pf-check.n{background:var(--bg3);color:var(--hint);border:1px solid var(--b1)}
-.price-btn{width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .15s;font-family:var(--f)}
-.price-btn:hover{opacity:.88;transform:translateY(-1px)}
+/* TOPIC DETAIL */
+.tq-row{display:flex;align-items:flex-start;gap:16px;padding:1.25rem 1.5rem;background:var(--bg2);border:1.5px solid var(--b2);border-radius:12px;margin-bottom:10px;transition:all .15s;cursor:pointer}
+.tq-row:hover{border-color:var(--b3);transform:translateX(4px)}
+.tq-row.math:hover{border-color:rgba(96,165,250,.5)}
+.tq-row.rw:hover{border-color:rgba(34,197,94,.5)}
+.tq-num{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--hint);min-width:32px;padding-top:2px;flex-shrink:0}
+.tq-body{flex:1;min-width:0}
+.tq-text{font-size:14px;line-height:1.7;margin-bottom:8px;font-weight:500}
+.tq-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tq-diff{font-family:'DM Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px}
+.tq-diff.h{background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tq-diff.m{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
+.tq-diff.e{background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tq-done{font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:var(--gd);color:var(--green);border:1px solid var(--gm)}
+.tq-wrong{font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;background:var(--rd);color:var(--red);border:1px solid var(--rm)}
+.tq-btn{flex-shrink:0;padding-top:2px}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 
-/* TESTIMONIALS */
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:4rem}
-.testi{background:var(--bg2);border:1px solid var(--b1);border-radius:16px;padding:2rem;transition:border-color .2s}
-.testi:hover{border-color:var(--b2)}
-.testi-stars{color:var(--amber);font-size:15px;letter-spacing:3px;margin-bottom:1rem}
-.testi-text{font-size:14px;color:var(--muted);line-height:1.85;margin-bottom:1.25rem;font-style:italic}
-.testi-author{font-size:13px;font-weight:600}
-.testi-meta{font-family:var(--fm);font-size:10px;color:var(--hint);margin-top:3px}
 
-/* FAQ */
-.faq-wrap{max-width:700px}
-.faq-item{border-bottom:1px solid var(--b1);overflow:hidden}
-.faq-q{font-size:16px;font-weight:600;padding:1.375rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem;cursor:pointer;user-select:none;transition:color .15s}
-.faq-q:hover{color:var(--green)}
-.faq-arrow{font-size:18px;color:var(--hint);flex-shrink:0;transition:transform .3s}
-.faq-item.open .faq-arrow{transform:rotate(45deg)}
-.faq-a{font-size:14px;color:var(--muted);line-height:1.85;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .3s ease;padding-bottom:0}
-.faq-item.open .faq-a{max-height:200px;padding-bottom:1.25rem}
+/* KEYFRAMES */
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.95)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
-/* CTA BAND */
-.cta-band{background:linear-gradient(135deg,rgba(34,197,94,.1),rgba(59,130,246,.08),rgba(168,85,247,.06));border:1px solid rgba(34,197,94,.2);border-radius:24px;padding:5rem;text-align:center;max-width:800px;margin:0 auto}
-.cta-band-title{font-family:var(--fd);font-size:clamp(30px,4vw,48px);font-weight:900;letter-spacing:-.5px;margin-bottom:1rem;line-height:1.1}
-.cta-band-sub{font-size:16px;color:var(--muted);margin-bottom:2.5rem;line-height:1.7}
-
-/* FOOTER */
-.footer{border-top:1px solid var(--b1);padding:2.5rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:10}
-.footer-logo{font-family:var(--fd);font-size:16px;font-weight:900}
-.footer-logo span{color:var(--green)}
-.footer-links{display:flex;gap:2rem}
-.footer-links a{font-size:13px;color:var(--hint);cursor:pointer;transition:color .15s}
-.footer-links a:hover{color:var(--text)}
-.footer-copy{font-family:var(--fm);font-size:10px;color:var(--hint);letter-spacing:.5px}
-
-/* AUTH MODAL */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
-.overlay.open{display:flex;animation:fadeIn .2s ease}
-.auth-modal{background:var(--bg2);border:1px solid var(--b2);border-radius:20px;padding:3rem;width:100%;max-width:440px;position:relative;animation:modalIn .25s ease}
-@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
-.auth-close{position:absolute;top:1.25rem;right:1.25rem;background:var(--bg3);border:1px solid var(--b1);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;transition:color .15s}
-.auth-close:hover{color:var(--text)}
-.auth-logo{font-family:var(--fd);font-size:16px;font-weight:900;margin-bottom:2rem;text-align:center}
-.auth-logo span{color:var(--green)}
-.auth-title{font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:-.3px;margin-bottom:.5rem;text-align:center}
-.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:2rem;line-height:1.6}
-.auth-tabs{display:flex;background:var(--bg3);border-radius:10px;padding:4px;gap:4px;margin-bottom:2rem}
-.auth-tab{flex:1;padding:9px;border-radius:7px;font-family:var(--f);font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s;text-align:center}
-.auth-tab.on{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.auth-form{display:flex;flex-direction:column;gap:14px}
-.auth-field{display:flex;flex-direction:column;gap:6px}
-.auth-label{font-family:var(--fm);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--hint)}
-.auth-input{background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;padding:12px 14px;font-family:var(--f);font-size:14px;color:var(--text);outline:none;transition:border-color .15s;width:100%}
-.auth-input:focus{border-color:var(--green)}
-.auth-input::placeholder{color:var(--hint)}
-.auth-submit{width:100%;padding:13px;background:var(--green);color:#000;font-family:var(--f);font-size:15px;font-weight:700;border:none;border-radius:10px;cursor:pointer;transition:all .15s;margin-top:4px}
-.auth-submit:hover{opacity:.88;transform:translateY(-1px)}
-.auth-error{background:var(--rd,rgba(239,68,68,.1));border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:#ef4444;display:none}
-.auth-error.show{display:block}
-.auth-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--green);display:none;text-align:center}
-.auth-success.show{display:block}
-.auth-divider{display:flex;align-items:center;gap:12px;margin:4px 0}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b1)}
-.auth-divider span{font-family:var(--fm);font-size:10px;color:var(--hint);letter-spacing:1px}
-.auth-switch{text-align:center;font-size:13px;color:var(--muted);margin-top:8px}
-.auth-switch a{color:var(--green);cursor:pointer;font-weight:600}
-.auth-switch a:hover{text-decoration:underline}
-.auth-pro-badge{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--amber);margin-bottom:14px;text-align:center;display:none}
-
-@media(max-width:768px){
-  nav{padding:0 1rem!important}
-  section{padding:4rem 1rem!important}
-  h1{font-size:clamp(48px,15vw,90px)!important;letter-spacing:-2px!important}
-  h2{font-size:28px!important}
-  .grid-3,.grid-2,[style*="grid-template-columns:repeat(3"],[style*="grid-template-columns:1fr 1fr 1fr"]{display:flex!important;flex-direction:column!important}
-  [style*="grid-template-columns:repeat(5"]{gap:0!important}
-  nav [style*="display:flex"][style*="gap:2rem"]{display:none!important}
-  footer [style*="justify-content:space-between"]{flex-direction:column!important;text-align:center!important}
+/* ── MOBILE NAV ── */
+#mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 500;
+  width: 40px;
+  height: 40px;
+  background: var(--bg2);
+  border: 1.5px solid var(--b2);
+  border-radius: 9px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  transition: border-color .12s;
 }
-@media(max-width:480px){
-  h1{font-size:clamp(40px,18vw,72px)!important}
-  [style*="gap:12px"][style*="flex-wrap:wrap"]{flex-direction:column!important}
-  button[style*="padding:14px 28px"]{width:100%!important;padding:13px!important}
+#mobile-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all .2s;
+}
+#mobile-menu-btn:hover { border-color: var(--purple); }
+
+/* Mobile overlay when sidebar open */
+#sb-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 498;
+}
+
+
+
+
+/* ── BETA BANNER ── */
+#beta-banner {
+  background: linear-gradient(90deg, rgba(168,85,247,.15), rgba(59,130,246,.15));
+  border-bottom: 1px solid rgba(168,85,247,.3);
+  padding: 7px 1rem;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+#beta-banner strong { color: var(--purple); }
+#beta-banner a { color: #60a5fa; text-decoration: none; margin-left: 4px; }
+#beta-banner a:hover { text-decoration: underline; }
+.beta-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--hint);
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px;
+}
+.beta-close:hover { color: var(--text); }
+
+
+
+
+@media (max-width: 768px) {
+  .nav-wrap { padding: 0 1rem; }
+  .hero-title { font-size: clamp(24px, 7vw, 42px) !important; }
+  .hero-sub { font-size: 14px !important; }
+  .hero-cta { flex-direction: column; gap: 10px; }
+  .hero-cta a, .hero-cta button { width: 100% !important; text-align: center; }
+  .feat-grid, .pricing-grid, .faq-list { grid-template-columns: 1fr !important; }
+  .stats-row { flex-wrap: wrap; gap: 1rem; }
+  .auth-modal { width: 95vw !important; max-width: 95vw !important; margin: 2vh auto; max-height: 94vh; overflow-y: auto; }
+  #beta-banner { font-size: 10px; padding: 6px .75rem; }
+  .section-pad { padding: 3rem 1rem !important; }
+  .wrap { padding: 0 1rem !important; }
+  .nav-links { display: none; }
+  .pricing-card { padding: 1.5rem 1.25rem !important; }
+}
+@media (max-width: 480px) {
+  .hero-title { font-size: 24px !important; }
+  .auth-modal { width: 99vw !important; border-radius: 12px 12px 0 0 !important; position: fixed; bottom: 0; top: auto; margin: 0 !important; max-height: 92vh; }
+  .overlay { align-items: flex-end !important; }
 }
 </style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
+<!-- BETA BANNER -->
+<div style="background:linear-gradient(90deg,rgba(168,85,247,.12),rgba(59,130,246,.12));border-bottom:1px solid rgba(168,85,247,.25);padding:7px 1rem;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:#8a8a9a;position:sticky;top:0;z-index:300">
+  &#x1F680; <strong style="color:#a855f7">WeAce Beta</strong> &mdash; features are actively improving.
+  <a href="mailto:hello@weace.mn" style="color:#60a5fa;text-decoration:none;margin-left:4px">Send feedback</a>
+</div>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-logo" onclick="scrollTo(0,0)">We<span>Ace</span></div>
-  <div class="nav-links">
-    <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</a>
-    <a onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">How it works</a>
-    <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a>
-  </div>
-  <div class="nav-ctas" id="nav-ctas">
-    <button class="btn gh" onclick="openAuth('login')" id="nav-signin">Sign in</button>
-    <button class="btn p" onclick="openAuth('signup')" id="nav-signup">Get started free</button>
-    <button class="btn p" id="nav-continue" style="display:none" onclick="window.location.href='choose.html'">Continue →</button>
-    <div style="display:flex;gap:4px;margin-left:8px">
-      <button onclick="setIntroLang('mn')" id="intro-lang-mn" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid var(--b2);background:var(--gd);color:var(--green);cursor:pointer">🇲🇳</button>
-      <button onclick="setIntroLang('en')" id="intro-lang-en" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid var(--b2);background:transparent;color:var(--muted);cursor:pointer">🇺🇸</button>
+<!-- INTRO CONTENT -->
+<div id="app-intro" class="wa-page" style="position:relative;z-index:1;min-height:100vh;width:100%;">
+
+  <!-- NAV -->
+  <nav style="position:fixed;top:0;left:0;width:100%;z-index:80;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(6,6,8,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);box-sizing:border-box;">
+    <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:900;letter-spacing:-.5px;cursor:pointer;" onclick="window.scrollTo(0,0)">We<span style="color:#22c55e">Ace</span></div>
+    <div style="display:flex;align-items:center;gap:2rem;">
+      <a href="#" onclick="document.getElementById('feat-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">Features</a>
+      <a href="#" onclick="document.getElementById('how-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">How it works</a>
+      <a href="#" onclick="document.getElementById('pricing-section').scrollIntoView({behavior:'smooth'});return false;" style="font-size:13px;color:#8a8a9a;text-decoration:none;cursor:pointer;">Pricing</a>
     </div>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge">
-    <span class="hero-badge-dot"></span>
-    SAT prep for Mongolian students
-  </div>
-
-  <h1 class="hero-title">
-    <span class="word-we">WE</span>
-    <span class="word-ace"><span class="word-ace-text">ACE</span></span>
-    <span class="word-the">THE</span>
-    <span class="word-exam"><span class="word-exam-inner">EXAM<span class="word-period">.</span></span></span>
-  </h1>
-
-  <p class="hero-sub" id="hero-sub">
-    Real SAT questions. Instant explanations.<br>
-    Smart weakness detection. <strong>Start free today.</strong>
-  </p>
-
-  <div class="hero-ctas" id="hero-ctas-guest">
-    <button class="btn p xl" onclick="openAuth('signup')">Create free account →</button>
-    <button class="btn gh lg" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See how it works</button>
-  </div>
-  <div class="hero-ctas" id="hero-ctas-user" style="display:none">
-    <button class="btn p xl" onclick="window.location.href='choose.html'">Continue →</button>
-    <button class="btn gh lg" onclick="openAuth('login')">Sign in to different account</button>
-  </div>
-
-  <div class="hero-proof">
-    <div class="proof-item"><span class="proof-dot"></span>21 hard SAT questions</div>
-    <div class="proof-sep"></div>
-    <div class="proof-item"><span class="proof-dot"></span>Desmos calculator built-in</div>
-    <div class="proof-sep"></div>
-    <div class="proof-item"><span class="proof-dot"></span>383 vocabulary words</div>
-    <div class="proof-sep"></div>
-    <div class="proof-item"><span class="proof-dot"></span>100% free to start</div>
-  </div>
-
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span>scroll</span>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- STATS -->
-<section>
-  <div class="wrap" style="padding:5rem 2rem">
-    <div class="stats-row">
-      <div class="stat-item"><div class="stat-num">200+</div><div class="stat-lbl">SAT questions</div></div>
-      <div class="stat-item"><div class="stat-num">383</div><div class="stat-lbl">Vocab words</div></div>
-      <div class="stat-item"><div class="stat-num">6</div><div class="stat-lbl">Pro courses</div></div>
-      <div class="stat-item"><div class="stat-num">Free</div><div class="stat-lbl">To start</div></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button id="nav-signin" onclick="openAuth('login')" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Sign in</button>
+      <button id="nav-signup" onclick="openAuth('signup')" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get started free</button>
+      <button id="nav-continue" onclick="showPage('choose')" style="display:none;background:#22c55e;color:#000;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue →</button>
+      <button onclick="setIntroLang('mn')" id="intro-lang-mn" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:rgba(34,197,94,.1);color:#22c55e;cursor:pointer;">🇲🇳</button>
+      <button onclick="setIntroLang('en')" id="intro-lang-en" style="font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;border-radius:7px;border:1px solid rgba(255,255,255,.09);background:transparent;color:#8a8a9a;cursor:pointer;">🇺🇸</button>
     </div>
-  </div>
-</section>
+  </nav>
 
-<div class="divider"></div>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="wrap section-pad">
-    <span class="sec-ey">Features</span>
-    <div class="sec-title">Everything you need<br>to score higher</div>
-    <div class="feat-grid">
-      <div class="feat"><div class="feat-ic">🧮</div><div class="feat-title">Desmos Calculator</div><div class="feat-sub">The exact same calculator used in the real digital SAT, built directly into every math question. No switching tabs.</div></div>
-      <div class="feat"><div class="feat-ic">📐</div><div class="feat-title">Real SAT Difficulty</div><div class="feat-sub">Questions at 1300–1600 difficulty. Every question is preceded by a concept lesson — so you learn, not just guess.</div></div>
-      <div class="feat"><div class="feat-ic">⚠️</div><div class="feat-title">Weakness Detection</div><div class="feat-sub">Your accuracy per topic is tracked live. Topics below 60% are automatically flagged and prioritised.</div></div>
-      <div class="feat"><div class="feat-ic">📝</div><div class="feat-title">Error Review System</div><div class="feat-sub">Every wrong answer is saved with full explanation. Retry it correctly to remove it from your list.</div></div>
-      <div class="feat"><div class="feat-ic">🤖</div><div class="feat-title">AI Explanations</div><div class="feat-sub">Three AI explanation modes: simple English, step-by-step, and "why is my answer wrong?" — powered by Claude.</div></div>
-      <div class="feat"><div class="feat-ic">📚</div><div class="feat-title">383 Vocab Words</div><div class="feat-sub">High-frequency SAT vocabulary with phonetics, definitions, and real example sentences. Organised by category.</div></div>
-      <div class="feat"><div class="feat-ic">🎯</div><div class="feat-title">Daily Challenges</div><div class="feat-sub">5 questions every day. Complete them to earn XP, grow your streak, and stay consistent.</div></div>
-      <div class="feat"><div class="feat-ic">🎬</div><div class="feat-title">Video Courses</div><div class="feat-sub">Expert-taught SAT prep videos by top Mongolian tutors. 6 courses across Math and Reading & Writing. Pro only.</div></div>
-      <div class="feat"><div class="feat-ic">📊</div><div class="feat-title">Score Prediction</div><div class="feat-sub">Your predicted SAT score updates in real time based on your actual practice accuracy across all topics.</div></div>
+  <!-- HERO -->
+  <section style="width:100%;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 2rem 6rem;text-align:center;position:relative;z-index:10;box-sizing:border-box;">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;color:#22c55e;letter-spacing:1px;text-transform:uppercase;margin-bottom:2.5rem;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;animation:pulse2 2s ease-in-out infinite;"></span>
+      SAT PREP FOR MONGOLIAN STUDENTS
     </div>
-  </div>
-</section>
+    <h1 style="font-family:'Sora',sans-serif;font-size:clamp(64px,11vw,130px);font-weight:900;line-height:.9;letter-spacing:-4px;margin:0 0 2rem;">
+      <span style="display:block;color:#f0f0f2;">WE</span>
+      <span style="display:block;background:linear-gradient(135deg,#60a5fa,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ACE</span>
+      <span style="display:block;color:#f0f0f2;">THE</span>
+      <span style="display:block;color:#f0f0f2;">EXAM<span style="color:#22c55e">.</span></span>
+    </h1>
+    <p id="hero-sub" style="font-size:18px;color:#8a8a9a;max-width:560px;line-height:1.7;margin:0 0 2.5rem;">
+      Real SAT questions. Instant explanations.<br>Smart weakness detection. <strong style="color:#f0f0f2;">Start free today.</strong>
+    </p>
+    <div id="hero-ctas-guest" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;">
+      <button onclick="openAuth('signup')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Create free account →</button>
+      <button onclick="document.getElementById('how-section').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">See how it works</button>
+    </div>
+    <div id="hero-ctas-user" style="display:none;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;">
+      <button onclick="(_sess&&(_sess.email||_sess.name))?showPage('dashboard'):showPage('choose')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue to Dashboard →</button>
+      <button onclick="openAuth('login')" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Sign in to different account</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
+      <span style="font-size:12px;color:#8a8a9a;">✦ 230+ real SAT questions</span>
+      <span style="color:rgba(255,255,255,.1)">|</span>
+      <span style="font-size:12px;color:#8a8a9a;">✦ Desmos calculator built-in</span>
+      <span style="color:rgba(255,255,255,.1)">|</span>
+      <span style="font-size:12px;color:#8a8a9a;">✦ Free to start</span>
+    </div>
+  </section>
 
-<div class="divider"></div>
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="wrap section-pad">
-    <span class="sec-ey">How it works</span>
-    <div class="sec-title">A learning system,<br>not a question dump</div>
-    <div class="how-grid">
-      <div class="step" data-n="1">
-        <div class="step-num">1</div>
-        <div class="step-icon">📖</div>
-        <div class="step-title">Learn the concept</div>
-        <div class="step-sub">Every practice session starts with a short lesson explaining exactly what the question will test.</div>
+  <!-- FEATURES -->
+  <section id="feat-section" style="width:100%;padding:6rem 2rem;background:#060608;box-sizing:border-box;">
+    <div style="max-width:1100px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:4rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">WHY WEACE</div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;">Built different</h2>
       </div>
-      <div class="step" data-n="2">
-        <div class="step-num">2</div>
-        <div class="step-icon">✎</div>
-        <div class="step-title">Answer the question</div>
-        <div class="step-sub">Real SAT-level questions with a countdown timer. Use the built-in Desmos calculator for math.</div>
-      </div>
-      <div class="step" data-n="3">
-        <div class="step-num">3</div>
-        <div class="step-icon">💡</div>
-        <div class="step-title">See the explanation</div>
-        <div class="step-sub">Instant step-by-step explanations. Ask the AI tutor for three different explanation styles.</div>
-      </div>
-      <div class="step" data-n="4">
-        <div class="step-num">4</div>
-        <div class="step-icon">📈</div>
-        <div class="step-title">Track and improve</div>
-        <div class="step-sub">Weak areas flagged. Errors saved. Score prediction updates live. The loop repeats until you ace it.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">📊</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Score-centric</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">See your estimated SAT score after every session. Math + R&W. "+30 pts if you fix these 3 skills."</div></div>
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">🎯</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Adaptive practice</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">Questions target your weak areas automatically. Quick 15-min drills or full mock exams.</div></div>
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;"><div style="font-size:32px;margin-bottom:1rem;">📋</div><div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.75rem;">Real SAT structure</div><div style="font-size:13px;color:#8a8a9a;line-height:1.7;">R&W: 54 Qs, 64 min. Math: 44 Qs, 70 min. Two adaptive modules. Exactly like the real test.</div></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="divider"></div>
-
-<!-- PRICING -->
-<section id="pricing">
-  <div class="wrap section-pad">
-    <span class="sec-ey">Pricing</span>
-    <div class="sec-title" style="text-align:center">Start free.<br>Upgrade when ready.</div>
-    <p class="sec-sub" style="text-align:center;max-width:500px;margin:0 auto 3rem">Everything you need is in the free plan. Plus adds mock exams. Pro adds human tutors &amp; video courses.</p>
-    <div class="pricing-grid" style="grid-template-columns:repeat(3,1fr);max-width:960px;margin:0 auto">
-
-      <div class="price-card">
-        <div class="price-plan">Free</div>
-        <div class="price-amt">₮0</div>
-        <div class="price-per">хязгааргүй · картгүй</div>
-        <ul class="price-features">
-          <li class="pf"><div class="pf-check y">✓</div>100 Math + 100 R&amp;W асуулт</li>
-          <li class="pf"><div class="pf-check y">✓</div>Desmos calculator</li>
-          <li class="pf"><div class="pf-check y">✓</div>Өдрийн даалгавар + streak</li>
-          <li class="pf"><div class="pf-check y">✓</div>383 үгийн сан</li>
-          <li class="pf"><div class="pf-check y">✓</div>AI тайлбар (Claude)</li>
-          <li class="pf"><div class="pf-check y">✓</div>Алдааны дэвтэр</li>
-          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Mock exam engine</span></li>
-          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Human tutor</span></li>
-        </ul>
-        <button class="btn p" style="width:100%;padding:13px" onclick="openAuth('signup')">Үнэгүй эхлэх →</button>
-      </div>
-
-      <div class="price-card" style="border-color:rgba(59,130,246,.4);position:relative">
-        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-family:var(--fm);font-size:9px;font-weight:700;padding:4px 14px;border-radius:10px;letter-spacing:1px">PLUS</div>
-        <div class="price-plan">Plus</div>
-        <div class="price-amt" style="color:#60a5fa">₮19,900</div>
-        <div class="price-per">сард нэг · хүссэн үед цуцлах</div>
-        <ul class="price-features">
-          <li class="pf"><div class="pf-check y">✓</div>Free-ийн бүгд</li>
-          <li class="pf"><div class="pf-check y">✓</div><strong>Mock exam engine</strong></li>
-          <li class="pf"><div class="pf-check y">✓</div>Дэлгэрэнгүй шинжилгээ</li>
-          <li class="pf"><div class="pf-check y">✓</div>SAT оноо таамаглал</li>
-          <li class="pf"><div class="pf-check y">✓</div>Судалгааны хуваарь</li>
-          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Video courses</span></li>
-          <li class="pf"><div class="pf-check n">–</div><span style="color:var(--hint)">Human tutor</span></li>
-        </ul>
-        <button class="btn" style="width:100%;padding:13px;background:var(--blue);color:#fff" onclick="openAuth('signup')">Plus авах →</button>
-      </div>
-
-      <div class="price-card" style="border-color:rgba(245,158,11,.4);background:linear-gradient(160deg,rgba(245,158,11,.05),var(--bg2));position:relative">
-        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--amber);color:#000;font-family:var(--fm);font-size:9px;font-weight:700;padding:4px 14px;border-radius:10px;letter-spacing:1px">PRO</div>
-        <div class="price-plan">Pro</div>
-        <div class="price-amt" style="color:var(--amber)">₮29,900</div>
-        <div class="price-per">сард нэг · хүссэн үед цуцлах</div>
-        <ul class="price-features">
-          <li class="pf"><div class="pf-check y">✓</div>Plus-ийн бүгд</li>
-          <li class="pf"><div class="pf-check y">✓</div><strong>Human tutor 1:1</strong></li>
-          <li class="pf"><div class="pf-check y">✓</div><strong>6 video courses</strong></li>
-          <li class="pf"><div class="pf-check y">✓</div>Багштай чат (2ц дотор)</li>
-          <li class="pf"><div class="pf-check y">✓</div>Хувийн судалгааны план</li>
-          <li class="pf"><div class="pf-check y">✓</div>Сар бүр шинэ контент</li>
-        </ul>
-        <button class="btn" style="width:100%;padding:13px;background:var(--amber);color:#000" onclick="openAuth('signup')">Pro авах →</button>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- TESTIMONIALS -->
-<section>
-  <div class="wrap section-pad">
-    <span class="sec-ey">Student stories</span>
-    <div class="sec-title">Students who used the system</div>
-    <div class="testi-grid">
-      <div class="testi">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"The weakness detection found things I didn't know I was struggling with. My score went from 1180 to 1390 in six weeks."</div>
-        <div class="testi-author">Munkhbayar E.</div>
-        <div class="testi-meta">Ulaanbaatar · SAT 1390</div>
-      </div>
-      <div class="testi">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"Finally a prep platform actually designed for us. The daily challenge keeps me consistent and the explanations are genuinely clear."</div>
-        <div class="testi-author">Ariunaa B.</div>
-        <div class="testi-meta">Ulaanbaatar · SAT 1450</div>
-      </div>
-      <div class="testi">
-        <div class="testi-stars">★★★★★</div>
-        <div class="testi-text">"The Desmos calculator and concept lessons changed everything. I understood WHY answers were wrong, not just what the right answer was."</div>
-        <div class="testi-author">Gantulga S.</div>
-        <div class="testi-meta">Darkhan · SAT 1510</div>
+  <!-- HOW IT WORKS -->
+  <section id="how-section" style="width:100%;padding:6rem 2rem;background:#080808;box-sizing:border-box;">
+    <div style="max-width:900px;margin:0 auto;text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">THE LOOP</div>
+      <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;margin-bottom:4rem;">How WeAce works</h2>
+      <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;">
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#22c55e;color:#000;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">1</div><div style="font-weight:700;margin-bottom:.5rem;">Take a test</div><div style="font-size:12px;color:#8a8a9a;">Full mock or quick drill</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#3b82f6;color:#fff;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">2</div><div style="font-weight:700;margin-bottom:.5rem;">Get analysis</div><div style="font-size:12px;color:#8a8a9a;">Score + weak skills</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#a855f7;color:#fff;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">3</div><div style="font-weight:700;margin-bottom:.5rem;">Fix weak areas</div><div style="font-size:12px;color:#8a8a9a;">Targeted practice</div></div>
+        <div style="font-size:24px;color:#22c55e;padding:0 1rem;">→</div>
+        <div style="text-align:center;padding:1.5rem 2rem;"><div style="width:52px;height:52px;border-radius:50%;background:#f59e0b;color:#000;font-family:'Sora',sans-serif;font-size:20px;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">↑</div><div style="font-weight:700;margin-bottom:.5rem;">Score goes up</div><div style="font-size:12px;color:#8a8a9a;">Repeat and improve</div></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="divider"></div>
-
-<!-- FAQ -->
-<section>
-  <div class="wrap section-pad">
-    <span class="sec-ey">FAQ</span>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start">
-      <div>
-        <div class="sec-title" style="font-size:clamp(28px,3vw,40px)">Questions<br>answered</div>
-        <p class="sec-sub" style="margin-top:1rem">Everything you need to know before you start.</p>
+  <!-- PRICING -->
+  <section id="pricing-section" style="width:100%;padding:6rem 2rem;background:#060608;box-sizing:border-box;">
+    <div style="max-width:900px;margin:0 auto;">
+      <div style="text-align:center;margin-bottom:4rem;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#44444f;margin-bottom:1rem;">PRICING</div>
+        <h2 style="font-family:'Sora',sans-serif;font-size:42px;font-weight:900;letter-spacing:-1.5px;">Simple pricing</h2>
       </div>
-      <div class="faq-wrap">
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFAQ(this)">Is the free plan really free? <span class="faq-arrow">+</span></div>
-          <div class="faq-a">Yes — no credit card, no trial period, no hidden fees. The free plan includes all SAT practice questions, vocabulary, mock exam links, and the daily challenge. Video courses require Pro.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="background:#0e0e12;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:2rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#44444f;margin-bottom:1rem;">FREE</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;margin-bottom:1.5rem;">₮0</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#8a8a9a;">
+            <div>✓ 230+ practice questions</div><div>✓ Desmos calculator</div><div>✓ Score tracking</div><div>✓ 383 vocab words</div>
+          </div>
+          <button onclick="openAuth('signup')" style="width:100%;background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get started free</button>
         </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFAQ(this)">Is the calculator the same as the real SAT? <span class="faq-arrow">+</span></div>
-          <div class="faq-a">Yes. We embed Desmos Scientific, which is the exact same calculator used in the real digital SAT. Practicing with it means you'll be comfortable on exam day.</div>
+        <div style="background:#0e0e12;border:2px solid #22c55e;border-radius:16px;padding:2rem;position:relative;">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;padding:3px 14px;border-radius:100px;white-space:nowrap;">POPULAR</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#22c55e;margin-bottom:1rem;">PLUS</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;color:#22c55e;margin-bottom:.25rem;">₮19,900</div>
+          <div style="font-size:12px;color:#8a8a9a;margin-bottom:1.5rem;">per month</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
+            <div>✓ Everything in Free</div><div>✓ Mock exam engine</div><div>✓ Detailed score analysis</div><div>✓ Study planner</div>
+          </div>
+          <button onclick="activatePlan('plus')" style="width:100%;background:#22c55e;color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Plus →</button>
         </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFAQ(this)">How are the questions made? <span class="faq-arrow">+</span></div>
-          <div class="faq-a">Questions are written to match the exact format, difficulty, and topic distribution of the College Board's digital SAT — targeting the 1300–1600 score range. Every question includes a step-by-step explanation.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFAQ(this)">Does my progress save? <span class="faq-arrow">+</span></div>
-          <div class="faq-a">Yes. Your account, progress, XP, streaks, errors, and vocabulary are all saved to your account using local storage. Cloud sync across devices is coming soon.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFAQ(this)">Can teachers upload courses? <span class="faq-arrow">+</span></div>
-          <div class="faq-a">Yes. Email hello@shalgalt.mn and we'll review your content before publishing. The teacher upload portal is launching soon.</div>
+        <div style="background:#0e0e12;border:1px solid rgba(168,85,247,.3);border-radius:16px;padding:2rem;">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#a855f7;margin-bottom:1rem;">PRO</div>
+          <div style="font-family:'Sora',sans-serif;font-size:36px;font-weight:900;margin-bottom:.25rem;">₮29,900</div>
+          <div style="font-size:12px;color:#8a8a9a;margin-bottom:1.5rem;">per month</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
+            <div>✓ Everything in Plus</div><div>✓ Human tutor 1:1</div><div>✓ Video courses</div><div>✓ Priority support</div>
+          </div>
+          <button onclick="activatePlan('pro')" style="width:100%;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Pro →</button>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<div class="divider"></div>
-
-<!-- CTA -->
-<section>
-  <div class="wrap section-pad">
-    <div class="cta-band">
-      <div class="cta-band-title">Ready to ace the exam?</div>
-      <div class="cta-band-sub">Create a free account and start practicing in under a minute.<br>No credit card. No commitments.</div>
-      <button class="btn p xl" onclick="openAuth('signup')">Create free account →</button>
+  <!-- FOOTER -->
+  <footer style="width:100%;padding:3rem 2rem;border-top:1px solid rgba(255,255,255,.06);box-sizing:border-box;">
+    <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:900;">We<span style="color:#22c55e">Ace</span></div>
+      <div style="font-size:12px;color:#44444f;">© 2025 WeAce Education. Built for Mongolian students.</div>
+      <a href="mailto:hello@weace.mn" style="font-size:12px;color:#8a8a9a;text-decoration:none;">hello@weace.mn</a>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-logo">We<span>Ace</span></div>
-  <div class="footer-links">
-    <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Features</a>
-    <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a>
-    <a href="choose.html">Dashboard</a>
-    <a href="mailto:hello@shalgalt.mn">Contact</a>
-  </div>
-  <div class="footer-copy">© 2026 · Ulaanbaatar, Mongolia</div>
-</footer>
-
+  <!-- AUTH MODAL -->
 <!-- AUTH MODAL -->
 <div class="overlay" id="auth-overlay" onclick="overlayClick(event)">
   <div class="auth-modal">
@@ -533,11 +624,14 @@ section{position:relative;z-index:10}
         </div>
         <div class="auth-field">
           <label class="auth-label">Email address</label>
-          <input class="auth-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <input class="auth-input" id="su-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/>
         </div>
         <div class="auth-field">
           <label class="auth-label">Password</label>
-          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+          <div style="position:relative">
+          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password" style="padding-right:40px"/>
+          <button type="button" onclick="var i=document.getElementById('su-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px">👁</button>
+        </div>
         </div>
         <button class="auth-submit" onclick="doSignup()">Create account →</button>
       </div>
@@ -549,7 +643,7 @@ section{position:relative;z-index:10}
       <div class="auth-form">
         <div class="auth-field">
           <label class="auth-label">Email address</label>
-          <input class="auth-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <input class="auth-input" id="li-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/>
         </div>
         <div class="auth-field">
           <label class="auth-label">Password</label>
@@ -562,111 +656,69 @@ section{position:relative;z-index:10}
   </div>
 </div>
 
+</div>
+
+<!-- ═══════════════ CHOOSE PAGE ═══════════════ -->
+
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="auth-overlay" onclick="overlayClick(event)">
+  <div class="auth-modal">
+    <div class="auth-close" onclick="closeAuth()">&#x2715;</div>
+    <div class="auth-logo">We<span>Ace</span></div>
+    <div class="auth-tabs">
+      <button class="auth-tab on" id="tab-signup" onclick="switchTab('signup')">Create account</button>
+      <button class="auth-tab" id="tab-login" onclick="switchTab('login')">Sign in</button>
+    </div>
+    <div class="auth-pro-badge" id="pro-badge" style="display:none">&#x1F31F; Signing up for Pro</div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+    <div id="form-signup">
+      <div class="auth-form">
+        <button onclick="signInWithGoogle()" style="width:100%;padding:11px;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-family:'Inter',sans-serif"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div style="flex:1;height:1px;background:var(--b2)"></div><div style="font-size:11px;color:var(--hint);font-family:'DM Mono',monospace">or with email</div><div style="flex:1;height:1px;background:var(--b2)"></div></div>
+        <div class="auth-field"><label class="auth-label">Full name</label><input class="auth-input" id="su-name" type="text" placeholder="Baterdene Dolgorsuren" autocomplete="name"/></div>
+        <div class="auth-field"><label class="auth-label">Email address</label><input class="auth-input" id="su-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/></div>
+        <div class="auth-field"><label class="auth-label">Password</label>
+          <div style="position:relative"><input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password" style="padding-right:40px"/>
+          <button type="button" onclick="var i=document.getElementById('su-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px" tabindex="-1">&#x1F441;</button></div>
+        </div>
+        <button class="auth-submit" onclick="doSignup()">Create account &rarr;</button>
+      </div>
+      <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
+    </div>
+    <div id="form-login" style="display:none">
+      <div class="auth-form">
+        <button onclick="signInWithGoogle()" style="width:100%;padding:11px;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;color:var(--text);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;font-family:'Inter',sans-serif"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px"><div style="flex:1;height:1px;background:var(--b2)"></div><div style="font-size:11px;color:var(--hint);font-family:'DM Mono',monospace">or with email</div><div style="flex:1;height:1px;background:var(--b2)"></div></div>
+        <div class="auth-field"><label class="auth-label">Email address</label><input class="auth-input" id="li-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/></div>
+        <div class="auth-field"><label class="auth-label">Password</label>
+          <div style="position:relative"><input class="auth-input" id="li-pass" type="password" placeholder="Your password" autocomplete="current-password" style="padding-right:40px"/>
+          <button type="button" onclick="var i=document.getElementById('li-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px" tabindex="-1">&#x1F441;</button></div>
+        </div>
+        <button class="auth-submit" onclick="doLogin()">Sign in &rarr;</button>
+      </div>
+      <div class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Sign up free</a></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="c" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+
 <script>
-/* ── CANVAS ANIMATION ── */
-var C = document.getElementById('c'), ctx = C.getContext('2d');
-var W, H, particles = [];
-var COLORS = ['#22c55e','#3b82f6','#a855f7','#f59e0b','#ffffff'];
-
-function resize() { W = C.width = window.innerWidth; H = C.height = window.innerHeight; }
-window.addEventListener('resize', resize); resize();
-
-function Particle() { this.init(); }
-Particle.prototype.init = function() {
-  this.x = Math.random() * W; this.y = Math.random() * H;
-  this.vx = (Math.random() - .5) * .45; this.vy = (Math.random() - .5) * .45;
-  this.r = Math.random() * 1.8 + .4;
-  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-  this.alpha = Math.random() * .5 + .1;
-};
-Particle.prototype.update = function() {
-  this.x += this.vx; this.y += this.vy;
-  if (this.x < -10 || this.x > W+10 || this.y < -10 || this.y > H+10) this.init();
-};
-
-for (var i = 0; i < 90; i++) { var p = new Particle(); p.x = Math.random()*W; p.y = Math.random()*H; particles.push(p); }
-
-var gridOff = 0;
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-
-  // Glowing orbs
-  [
-    {x:.12,y:.2,r:260,c:'34,197,94'},
-    {x:.88,y:.12,r:220,c:'59,130,246'},
-    {x:.5,y:.85,r:200,c:'168,85,247'},
-    {x:.75,y:.5,r:180,c:'245,158,11'}
-  ].forEach(function(o) {
-    var g = ctx.createRadialGradient(o.x*W, o.y*H, 0, o.x*W, o.y*H, o.r);
-    g.addColorStop(0, 'rgba('+o.c+',.07)'); g.addColorStop(1, 'rgba('+o.c+',0)');
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(o.x*W, o.y*H, o.r, 0, Math.PI*2); ctx.fill();
-  });
-
-  // Grid
-  gridOff = (gridOff + .25) % 80;
-  ctx.strokeStyle = 'rgba(255,255,255,.018)'; ctx.lineWidth = .5;
-  for (var x = -80+gridOff; x < W+80; x += 80) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + H*.15, H); ctx.stroke();
-  }
-  for (var y = -80+gridOff; y < H+80; y += 80) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-  }
-
-  // Connect particles
-  for (var i = 0; i < particles.length; i++) {
-    for (var j = i+1; j < particles.length; j++) {
-      var dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-      var d = Math.sqrt(dx*dx + dy*dy);
-      if (d < 110) {
-        ctx.strokeStyle = 'rgba(255,255,255,'+(1-d/110)*.07+')';
-        ctx.lineWidth = .5;
-        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
-      }
-    }
-  }
-
-  // Particles
-  ctx.save();
-  particles.forEach(function(p) {
-    p.update();
-    ctx.globalAlpha = p.alpha;
-    ctx.fillStyle = p.color;
-    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-  });
-  ctx.restore();
-
-  requestAnimationFrame(draw);
-}
-draw();
-
-/* ── FAQ ── */
-function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
-
-/* ── AUTH STORAGE ── */
-var USERS_KEY = 'weace_users';
 var SESSION_KEY = 'weace_session';
-
+var USERS_KEY = 'weace_users';
+var SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+var SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+var _supabase = null;
+try { _supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null; } catch(e) {}
+function supabaseReady() { return _supabase && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1; }
 function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch(e) { return {}; } }
 function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
 function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } }
 function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
-
-/* Check if already logged in */
-(function() {
-  var sess = getSession();
-  if (sess && sess.email) {
-    var nav_ctas = document.getElementById('nav-ctas');
-    if (nav_ctas) nav_ctas.innerHTML = '<span style="font-family:var(--fm);font-size:11px;color:var(--muted);margin-right:6px">'+sess.name+'</span><button class="btn p" onclick="goToDashboard()">Open dashboard →</button>';
-  }
-})();
-
 var wantPro = false;
-
-
-
-/* ── INTRO LANGUAGE ── */
 var _introLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
-
 var INTRO_T = {
   mn:{
     signin:'Нэвтрэх', signup:'Үнэгүй эхлэх',
@@ -685,66 +737,37 @@ var INTRO_T = {
     cta:'Start now →'
   }
 };
-
 function setIntroLang(lang){
-  _introLang = lang;
-  try{localStorage.setItem('weace_lang', lang);}catch(e){}
-  var T = INTRO_T[lang]||INTRO_T.mn;
-  var el;
-  el=document.getElementById('nav-signin'); if(el)el.textContent=T.signin;
-  el=document.getElementById('nav-signup'); if(el)el.textContent=T.signup;
-  var mn=document.getElementById('intro-lang-mn');
-  var en=document.getElementById('intro-lang-en');
-  if(mn){mn.style.background=lang==='mn'?'var(--gd)':'transparent';mn.style.color=lang==='mn'?'var(--green)':'var(--muted)';}
-  if(en){en.style.background=lang==='en'?'var(--gd)':'transparent';en.style.color=lang==='en'?'var(--green)':'var(--muted)';}
+  _introLang=lang;
+  try{localStorage.setItem('weace_lang',lang);}catch(e){}
+  var si=document.getElementById('nav-signin');if(si)si.textContent=INTRO_T[lang]&&INTRO_T[lang].signin||'Sign in';
+  var su=document.getElementById('nav-signup');if(su)su.textContent=INTRO_T[lang]&&INTRO_T[lang].signup||'Get started free';
+  var mn=document.getElementById('intro-lang-mn'),en=document.getElementById('intro-lang-en');
+  if(mn)mn.style.background=lang==='mn'?'rgba(34,197,94,.1)':'transparent';
+  if(mn)mn.style.color=lang==='mn'?'#22c55e':'#8a8a9a';
+  if(en)en.style.background=lang==='en'?'rgba(34,197,94,.1)':'transparent';
+  if(en)en.style.color=lang==='en'?'#22c55e':'#8a8a9a';
 }
 
-// Apply on load
-window.addEventListener('DOMContentLoaded', function(){
-  setIntroLang(_introLang);
-  try{
-    var sess = JSON.parse(localStorage.getItem('weace_session')||'null');
-    if(sess && sess.name && sess.email){
-      /* Nav: show Continue, hide Sign in/up */
-      var cont = document.getElementById('nav-continue');
-      var signIn = document.getElementById('nav-signin');
-      var signUp = document.getElementById('nav-signup');
-      if(cont) cont.style.display = 'inline-flex';
-      if(signIn) signIn.style.display = 'none';
-      if(signUp) signUp.style.display = 'none';
-      /* Hero: show user CTAs, hide guest CTAs */
-      var guestCtas = document.getElementById('hero-ctas-guest');
-      var userCtas = document.getElementById('hero-ctas-user');
-      if(guestCtas) guestCtas.style.display = 'none';
-      if(userCtas) userCtas.style.display = 'flex';
-      /* Hero sub: personalize */
-      var heroSub = document.getElementById('hero-sub');
-      if(heroSub){
-        var firstName = sess.name.split(' ')[0];
-        heroSub.textContent = 'Welcome back, ' + firstName + '! Continue your SAT prep.';
-      }
-      /* Update all signup-related buttons to go to dashboard */
-      document.querySelectorAll('button').forEach(function(b){
-        if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf('signup') !== -1 && b.id !== 'nav-signup'){
-          b.textContent = 'Continue to Dashboard →';
-          b.setAttribute('onclick', "window.location.href='choose.html'");
-        }
-      });
-    }
-  }catch(e){ console.error('Session check error:', e); }
-});
 
+var _chooseLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
+var _sessCh=null; try{_sessCh=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
 
+var PLANS={
+  plus:{name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',feats:['Mock exam engine (54+44 Qs)','Detailed score analysis','Predicted SAT score','All Free features']},
+  pro:{name:'Pro Plan',price:'₮29,900',badge:'PRO',badgeClass:'pro',feats:['Everything in Plus','Human Tutor 1:1','6 Video Courses','Personal study plan']}
+};
+
+function showError(m) { var e=document.getElementById('auth-error');if(e){e.textContent=m;e.style.display=m?'block':'none';} }
+function showSuccess(m) { var e=document.getElementById('auth-success');if(e){e.textContent=m;e.style.display=m?'block':'none';} }
 function openAuth(mode, plan) {
   wantPro = plan === 'pro';
   document.getElementById('auth-overlay').classList.add('open');
-  switchTab(mode);
-  showError(''); showSuccess('');
+  switchTab(mode||'signup'); showError(''); showSuccess('');
   document.getElementById('pro-badge').style.display = wantPro ? 'block' : 'none';
 }
 function closeAuth() { document.getElementById('auth-overlay').classList.remove('open'); }
-function overlayClick(e) { if (e.target === document.getElementById('auth-overlay')) closeAuth(); }
-
+function overlayClick(e) { if(e.target===document.getElementById('auth-overlay'))closeAuth(); }
 function switchTab(t) {
   document.getElementById('tab-signup').classList.toggle('on', t==='signup');
   document.getElementById('tab-login').classList.toggle('on', t==='login');
@@ -753,70 +776,110 @@ function switchTab(t) {
   showError(''); showSuccess('');
 }
 
-function showError(msg) { var e=document.getElementById('auth-error'); e.textContent=msg; e.classList.toggle('show', !!msg); }
-function showSuccess(msg) { var e=document.getElementById('auth-success'); e.innerHTML=msg; e.classList.toggle('show', !!msg); }
+function goToDashboard() { window.location.href = 'choose.html'; }
+
+function signInWithGoogle() {
+  if (!supabaseReady()) { showError('Use email signup for now (Supabase not configured).'); return; }
+  _supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/weace/choose.html' } })
+  .catch(function(e) { showError('Google sign-in failed.'); });
+}
 
 function doSignup() {
   var name = document.getElementById('su-name').value.trim();
   var email = document.getElementById('su-email').value.trim().toLowerCase();
   var pass = document.getElementById('su-pass').value;
   showError(''); showSuccess('');
-
   if (!name) { showError('Please enter your full name.'); return; }
   if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
   if (pass.length < 8) { showError('Password must be at least 8 characters.'); return; }
-
-  var users = getUsers();
-  if (users[email]) { showError('An account with this email already exists. Sign in instead.'); return; }
-
-  // Create account
-  var user = { name: name, email: email, password: pass, plan: wantPro ? 'pro' : 'free', createdAt: new Date().toISOString() };
-  users[email] = user;
-  saveUsers(users);
-
-  // Save session
-  var session = { email: email, name: name, plan: user.plan };
-  saveSession(session);
-
-  // Also save user context for dashboard
-  localStorage.setItem('weace_user', JSON.stringify(session));
-
-  showSuccess('&#x1F389; Account created! Redirecting to your dashboard...');
-  setTimeout(goToDashboard, 1200);
+  var btn = document.querySelector('#form-signup .auth-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating...'; }
+  if (supabaseReady()) {
+    _supabase.auth.signUp({ email: email, password: pass, options: { data: { full_name: name } } })
+    .then(function(r) {
+      if (btn) { btn.disabled=false; btn.textContent='Create account →'; }
+      if (r.error) { showError(r.error.message); return; }
+      var session = { email: email, name: name, plan: 'free', uid: r.data.user ? r.data.user.id : null };
+      saveSession(session); localStorage.setItem('weace_user', JSON.stringify(session));
+      showSuccess('Account created! Redirecting...');
+      setTimeout(goToDashboard, 1000);
+    }).catch(function() { if(btn){btn.disabled=false;btn.textContent='Create account →';} showError('Network error. Please try again.'); });
+  } else {
+    var users = getUsers();
+    if (users[email]) { if(btn){btn.disabled=false;btn.textContent='Create account →';} showError('Account already exists. Sign in instead.'); return; }
+    users[email] = { name: name, email: email, password: pass, plan: 'free', createdAt: new Date().toISOString() };
+    saveUsers(users);
+    var session = { email: email, name: name, plan: 'free' };
+    saveSession(session); localStorage.setItem('weace_user', JSON.stringify(session));
+    if(btn){btn.disabled=false;btn.textContent='Create account →';}
+    showSuccess('Account created! Redirecting...');
+    setTimeout(goToDashboard, 1000);
+  }
 }
 
 function doLogin() {
   var email = document.getElementById('li-email').value.trim().toLowerCase();
   var pass = document.getElementById('li-pass').value;
   showError(''); showSuccess('');
-
-  if (!email) { showError('Please enter your email address.'); return; }
+  if (!email) { showError('Please enter your email.'); return; }
   if (!pass) { showError('Please enter your password.'); return; }
-
-  var users = getUsers();
-  var user = users[email];
-
-  if (!user) { showError('No account found with this email. Create one for free!'); return; }
-  if (user.password !== pass) { showError('Incorrect password. Please try again.'); return; }
-
-  var session = { email: email, name: user.name, plan: user.plan };
-  saveSession(session);
-  localStorage.setItem('weace_user', JSON.stringify(session));
-
-  showSuccess('&#x2713; Welcome back, ' + user.name + '! Redirecting...');
-  setTimeout(goToDashboard, 1000);
+  var btn = document.querySelector('#form-login .auth-submit');
+  if (btn) { btn.disabled=true; btn.textContent='Signing in...'; }
+  if (supabaseReady()) {
+    _supabase.auth.signInWithPassword({ email: email, password: pass })
+    .then(function(r) {
+      if(btn){btn.disabled=false;btn.textContent='Sign in →';}
+      if (r.error) { showError('Incorrect email or password.'); return; }
+      var user = r.data.user; var meta = user.user_metadata || {};
+      var name = meta.full_name || meta.name || email.split('@')[0];
+      var session = { email: email, name: name, plan: 'free', uid: user.id };
+      saveSession(session); localStorage.setItem('weace_user', JSON.stringify(session));
+      showSuccess('Welcome back, ' + name.split(' ')[0] + '!');
+      setTimeout(goToDashboard, 700);
+    }).catch(function() { if(btn){btn.disabled=false;btn.textContent='Sign in →';} showError('Network error.'); });
+  } else {
+    var users = getUsers(); var user = users[email];
+    if (!user) { if(btn){btn.disabled=false;btn.textContent='Sign in →';} showError('No account found. Create one free!'); return; }
+    if (user.password !== pass) { if(btn){btn.disabled=false;btn.textContent='Sign in →';} showError('Incorrect password.'); return; }
+    var session = { email: email, name: user.name, plan: user.plan };
+    saveSession(session); localStorage.setItem('weace_user', JSON.stringify(session));
+    if(btn){btn.disabled=false;btn.textContent='Sign in →';}
+    showSuccess('Welcome back, ' + user.name.split(' ')[0] + '!');
+    setTimeout(goToDashboard, 700);
+  }
 }
 
-function goToDashboard() { window.location.href = 'choose.html'; }
-
-/* Enter key support */
+// Keyboard: Enter to submit
 document.addEventListener('keydown', function(e) {
-  if (e.key !== 'Enter') return;
-  var overlay = document.getElementById('auth-overlay');
-  if (!overlay.classList.contains('open')) return;
-  var tabOn = document.getElementById('tab-signup').classList.contains('on');
-  if (tabOn) doSignup(); else doLogin();
+  if (e.key === 'Enter' && document.getElementById('auth-overlay').classList.contains('open')) {
+    var tab = document.getElementById('tab-signup').classList.contains('on') ? 'signup' : 'login';
+    if (tab === 'signup') doSignup(); else doLogin();
+  }
 });
+
+// Check if already logged in - skip intro
+(function() {
+  var sess = getSession();
+  if (sess && (sess.email || sess.name)) {
+    window.location.href = 'choose.html';
+    return;
+  }
+  setIntroLang(_introLang);
+})();
+
+// Handle Supabase OAuth redirect
+(function() {
+  if (!supabaseReady()) return;
+  _supabase.auth._supabase && _supabase.auth.getSession().then(function(result) {
+    if (!result.data || !result.data.session) return;
+    var user = result.data.session.user;
+    var meta = user.user_metadata || {};
+    var name = meta.full_name || meta.name || user.email.split('@')[0];
+    var localSession = { email: user.email, name: name, plan: 'free', uid: user.id };
+    saveSession(localSession); localStorage.setItem('weace_user', JSON.stringify(localSession));
+    window.location.href = 'choose.html';
+  }).catch(function(){});
+})();
 </script>
 </body>
 </html>

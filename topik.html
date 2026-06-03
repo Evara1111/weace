@@ -2,6 +2,7 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8"/>
+<meta name="theme-color" content="#060608"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>WeAce — TOPIK Prep Mongolia</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
@@ -12,7 +13,7 @@
 html,body{width:100%;min-height:100%;background:#060608;color:#f0f0f2;font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;overflow-x:hidden;}
 
 /* PAGES */
-.wa-page{display:none;width:100%;}
+.wa-page{display:none;width:100%;min-height:100vh;flex-direction:column;}
 
 /* DASHBOARD CSS */
 
@@ -59,7 +60,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .nb.a{background:var(--ad);color:var(--amber);border:1px solid var(--am)}
 .nb.b{background:var(--bd);color:var(--blue);border:1px solid var(--bm);font-size:7px}
 .nb.p{background:var(--ad);color:var(--amber);border:1px solid var(--am);font-size:7px}
-.main{margin-left:var(--sw);flex:1;min-width:0}
+.main{margin-left:var(--sw);flex:1;min-width:0;min-height:100vh;overflow-y:auto;}
 .topbar{height:52px;background:rgba(6,6,8,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:40}
 .tb-l{display:flex;align-items:center;gap:10px}
 .tb-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.3px}
@@ -505,17 +506,111 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
 .tpk-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--hint);margin-bottom:.4rem}
 
-@media(max-width:768px){
-  .sb{display:none}
-  .main{margin-left:0!important}
-  .mode-cards{grid-template-columns:1fr}
-  .home-stats{grid-template-columns:repeat(2,1fr)}
-  .dojo-card-wrap{padding:1rem}
-  .mt-q-wrap{padding:1rem}
+
+
+/* ── TOPIK MOBILE NAV ── */
+#topik-menu-btn {
+  display: none;
+  position: fixed;
+  top: 10px; left: 10px;
+  z-index: 600;
+  width: 40px; height: 40px;
+  background: var(--bg2);
+  border: 1.5px solid var(--b2);
+  border-radius: 9px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+}
+#topik-menu-btn span {
+  display: block; width: 18px; height: 2px;
+  background: var(--text); border-radius: 2px;
+}
+#topik-topbar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 52px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--b1);
+  align-items: center;
+  padding: 0 1rem 0 3.75rem;
+  z-index: 597;
+  font-family: 'Sora', sans-serif;
+  font-size: 15px; font-weight: 800;
+}
+#topik-topbar span { color: var(--red); }
+#topik-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 598;
+}
+
+@media (max-width: 768px) {
+  #topik-menu-btn { display: flex !important; }
+  #topik-topbar { display: flex !important; }
+
+  .sidebar {
+    position: fixed;
+    left: -240px; top: 0;
+    height: 100vh; width: 240px;
+    z-index: 599;
+    transition: left .25s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar.mob-open { left: 0; box-shadow: 6px 0 32px rgba(0,0,0,.6); }
+  #topik-overlay.visible { display: block; }
+
+  .main { margin-left: 0 !important; padding-top: 52px !important; }
+  .wa-page { padding-left: .75rem !important; padding-right: .75rem !important; }
+
+  /* ── HOME MODE CARDS ── */
+  .mode-cards { grid-template-columns: 1fr !important; padding: 1rem .75rem !important; }
+  .home-stats { grid-template-columns: 1fr 1fr !important; }
+
+  /* ── SENTENCE BREAKDOWN ── */
+  .sent-list { padding: .75rem !important; }
+  .bk-parts { gap: 5px !important; }
+
+  /* ── DOJO ── */
+  .dojo-wrap { padding: 1rem .75rem !important; }
+  .dojo-card-wrap { padding: .75rem !important; }
+  .dojo-fc { padding: 1.5rem 1rem !important; }
+  .dojo-word { font-size: 32px !important; }
+  .dojo-btns { flex-direction: column !important; }
+  .d-btn { width: 100% !important; }
+
+  /* ── MINI TEST ── */
+  .mt-setup { padding: 1rem .75rem !important; }
+  .mt-q-wrap { padding: .75rem !important; }
+  .mt-opt { font-size: 13px !important; padding: .75rem 1rem !important; min-height: 48px; }
+
+  /* ── WORD BOOK ── */
+  .wb-grid { grid-template-columns: 1fr 1fr !important; gap: 7px !important; padding: .75rem !important; }
+
+  /* ── OVERFLOW SAFETY ── */
+  * { max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .wb-grid { grid-template-columns: 1fr !important; }
+  .dojo-word { font-size: 28px !important; }
+  .home-stats { grid-template-columns: 1fr 1fr !important; }
 }
 </style>
 </head>
 <body>
+
+<!-- TOPIK MOBILE NAV -->
+<button id="topik-menu-btn" onclick="topikToggleNav()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="topik-topbar">We<span>Ace</span>&nbsp;<span style="font-size:11px;font-weight:400;color:var(--muted)">TOPIK</span></div>
+<div id="topik-overlay" onclick="topikCloseNav()"></div>
+
 <div class="shell">
 
 <!-- SIDEBAR (exact SAT style) -->
@@ -550,7 +645,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 </aside>
 
 <!-- MAIN -->
-<div class="main" style="margin-left:var(--sw);display:flex;flex-direction:column;min-height:100vh">
+<div<div class="main" style="margin-left:var(--sw);display:flex;flex-direction:column;min-height:100vh;">
 
 <!-- ── HOME ── -->
 <div class="wa-page" id="pg-home">
@@ -1684,6 +1779,31 @@ window.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('.wa-page').forEach(function(p){p.style.display='none';});
   initUI();
 });
+
+/* ── TOPIK MOBILE NAV ── */
+function topikToggleNav() {
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('topik-overlay');
+  if (!sb) return;
+  var open = sb.classList.contains('mob-open');
+  if (open) { sb.classList.remove('mob-open'); ov && ov.classList.remove('visible'); }
+  else { sb.classList.add('mob-open'); ov && ov.classList.add('visible'); }
+}
+function topikCloseNav() {
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('topik-overlay');
+  if (sb) sb.classList.remove('mob-open');
+  if (ov) ov.classList.remove('visible');
+}
+// Close nav on page change
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.ni, [onclick*="goTo"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      if (window.innerWidth <= 768) topikCloseNav();
+    });
+  });
+});
+
 </script>
 </body>
 </html>

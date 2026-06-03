@@ -2,6 +2,8 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8"/>
+<meta name="theme-color" content="#060608"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>WeAce — SAT Prep Mongolia</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>"/>
@@ -356,7 +358,134 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 /* KEYFRAMES */
 @keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.95)}}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── MOBILE NAV ── */
+#mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 500;
+  width: 40px;
+  height: 40px;
+  background: var(--bg2);
+  border: 1.5px solid var(--b2);
+  border-radius: 9px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  transition: border-color .12s;
+}
+#mobile-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all .2s;
+}
+#mobile-menu-btn:hover { border-color: var(--purple); }
+
+/* Mobile overlay when sidebar open */
+#sb-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 498;
+}
+
+
+
+
+/* ── BETA BANNER ── */
+#beta-banner {
+  background: linear-gradient(90deg, rgba(168,85,247,.15), rgba(59,130,246,.15));
+  border-bottom: 1px solid rgba(168,85,247,.3);
+  padding: 7px 1rem;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+#beta-banner strong { color: var(--purple); }
+#beta-banner a { color: #60a5fa; text-decoration: none; margin-left: 4px; }
+#beta-banner a:hover { text-decoration: underline; }
+.beta-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--hint);
+  font-size: 14px;
+  line-height: 1;
+  padding: 4px;
+}
+.beta-close:hover { color: var(--text); }
+
+
+
+/* ══════════════════════════════════
+   RESPONSIVE — MOBILE FIRST
+══════════════════════════════════ */
+
+/* Tablet: 2 columns */
+
+
+/* Mobile: 768px and below */
+
+
+/* Small phones: 480px and below */
+
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 900px) {
+  .tier-grid { grid-template-columns: 1fr 1fr !important; }
+  .g3 { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 768px) {
+  #mobile-menu-btn { display: flex !important; }
+  .sb { position:fixed;left:-240px;top:0;height:100vh;z-index:499;transition:left .25s ease;width:240px; }
+  .sb.mob-open { left:0;box-shadow:6px 0 32px rgba(0,0,0,.6); }
+  #sb-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:498; }
+  #sb-overlay.visible { display:block; }
+  #mob-topbar { display:flex!important;position:fixed;top:0;left:0;right:0;height:52px;background:var(--bg2);border-bottom:1px solid var(--b1);align-items:center;padding:0 1rem 0 3.75rem;z-index:497;font-family:'Sora',sans-serif;font-size:15px;font-weight:800; }
+  #mob-topbar em { color:var(--green);font-style:normal; }
+  .main { margin-left:0!important;padding-top:52px; }
+  .page { padding:1rem!important; }
+  .wa-page { padding-left:.75rem!important;padding-right:.75rem!important; }
+  #beta-banner { top:52px;font-size:10px;padding:6px .75rem; }
+  .g2,.g3,.g4,.tgrid,.tier-grid,.sum-grid { grid-template-columns:1fr!important; }
+  .ps-body { grid-template-columns:1fr!important;overflow-y:auto; }
+  .ps-left { min-height:55vh; }
+  .ps-right { border-left:none!important;border-top:1px solid var(--b1);overflow-y:auto;max-height:40vh; }
+  .opt { padding:.75rem 1rem!important;font-size:13px!important;min-height:48px; }
+  .auth-modal { width:95vw!important;max-width:95vw!important;max-height:90vh;overflow-y:auto;margin:5vh auto; }
+  .daily-banner { flex-direction:column;gap:.5rem; }
+  #waitlist-modal > div { width:95vw!important; }
+  * { max-width:100%; }
+}
+@media (max-width:480px) {
+  .auth-modal { width:100vw!important;border-radius:12px 12px 0 0!important;position:fixed;bottom:0;top:auto;margin:0!important; }
+  .overlay { align-items:flex-end!important; }
+  .sum-pct,.vocab-word { font-size:48px!important; }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
 </head>
 <body>
 
@@ -403,7 +532,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <button onclick="document.getElementById('how-section').scrollIntoView({behavior:'smooth'})" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">See how it works</button>
     </div>
     <div id="hero-ctas-user" style="display:none;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:3rem;">
-      <button onclick="showPage('choose')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue to Dashboard →</button>
+      <button onclick="(_sess&&(_sess.email||_sess.name))?showPage('dashboard'):showPage('choose')" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Continue to Dashboard →</button>
       <button onclick="openAuth('login')" style="background:rgba(255,255,255,.07);color:#f0f0f2;border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Sign in to different account</button>
     </div>
     <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;">
@@ -471,7 +600,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
           <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
             <div>✓ Everything in Free</div><div>✓ Mock exam engine</div><div>✓ Detailed score analysis</div><div>✓ Study planner</div>
           </div>
-          <button onclick="activatePlan('plus')" style="width:100%;background:#22c55e;color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Plus →</button>
+          <button onclick="openWaitlist()" style="width:100%;background:#22c55e;color:#000;border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Join Beta Waitlist →</button>
         </div>
         <div style="background:#0e0e12;border:1px solid rgba(168,85,247,.3);border-radius:16px;padding:2rem;">
           <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#a855f7;margin-bottom:1rem;">PRO</div>
@@ -480,7 +609,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
           <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;font-size:13px;color:#f0f0f2;">
             <div>✓ Everything in Plus</div><div>✓ Human tutor 1:1</div><div>✓ Video courses</div><div>✓ Priority support</div>
           </div>
-          <button onclick="activatePlan('pro')" style="width:100%;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Get Pro →</button>
+          <button onclick="openWaitlist()" style="width:100%;background:rgba(168,85,247,.15);color:#a855f7;border:1px solid rgba(168,85,247,.3);border-radius:8px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;">Join Beta Waitlist →</button>
         </div>
       </div>
     </div>
@@ -518,12 +647,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
         </div>
         <div class="auth-field">
           <label class="auth-label">Email address</label>
-          <input class="auth-input" id="su-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <input class="auth-input" id="su-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/>
         </div>
         <div class="auth-field">
           <label class="auth-label">Password</label>
-          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password"/>
+          <div style="position:relative">
+          <input class="auth-input" id="su-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password" style="padding-right:40px"/>
+          <button type="button" onclick="var i=document.getElementById('su-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:13px">👁</button>
         </div>
+        </div>
+        <button onclick="signInWithGoogle()" style="width:100%;padding:11px;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>
+        <div style="display:flex;align-items:center;gap:10px;margin:10px 0"><div style="flex:1;height:1px;background:var(--b2)"></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--hint)">or</div><div style="flex:1;height:1px;background:var(--b2)"></div></div>
         <button class="auth-submit" onclick="doSignup()">Create account →</button>
       </div>
       <div class="auth-switch">Already have an account? <a onclick="switchTab('login')">Sign in</a></div>
@@ -534,12 +668,14 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div class="auth-form">
         <div class="auth-field">
           <label class="auth-label">Email address</label>
-          <input class="auth-input" id="li-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+          <input class="auth-input" id="li-email" type="email" inputmode="email" placeholder="you@example.com" autocomplete="email"/>
         </div>
         <div class="auth-field">
           <label class="auth-label">Password</label>
-          <input class="auth-input" id="li-pass" type="password" placeholder="Your password" autocomplete="current-password"/>
+          <div style="position:relative"><input class="auth-input" id="li-pass" type="password" placeholder="Your password" autocomplete="current-password" style="padding-right:42px"/><button type="button" onclick="var i=document.getElementById('li-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1" tabindex="-1">&#128065;</button></div>
         </div>
+        <button onclick="signInWithGoogle()" style="width:100%;padding:11px;background:var(--bg3);border:1.5px solid var(--b2);border-radius:9px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continue with Google</button>
+        <div style="display:flex;align-items:center;gap:10px;margin:10px 0"><div style="flex:1;height:1px;background:var(--b2)"></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--hint)">or</div><div style="flex:1;height:1px;background:var(--b2)"></div></div>
         <button class="auth-submit" onclick="doLogin()">Sign in →</button>
       </div>
       <div class="auth-switch">Don't have an account? <a onclick="switchTab('signup')">Create one free</a></div>
@@ -598,7 +734,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 
 <!-- ═══════════════ DASHBOARD PAGE ═══════════════ -->
 <div id="app-dashboard" class="wa-page" style="display:none;">
-  <div class="shell">
+  
+<!-- MOBILE NAV -->
+<button id="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+  <span></span><span></span><span></span>
+</button>
+<div id="sb-overlay" onclick="closeMobileNav()"></div>
+<div id="mob-topbar" style="display:none">We<em>Ace</em></div>
+
+<div class="shell">
 <aside class="sb">
   <div class="sb-logo"><div class="logo" onclick="goNav('home')">We<em>Ace</em></div><div class="logo-sub">SAT Prep · Mongolia</div></div>
   <div class="sb-user"><div class="ava" id="sb-ava">W</div><div><div style="font-size:12.5px;font-weight:600;line-height:1.2" id="sb-name">Оюутан</div><span class="chip free" id="sb-chip">Free</span></div></div>
@@ -627,6 +771,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
   </nav>
 </aside>
 <div class="main">
+<div id="beta-banner">
+  <span>🚀 <strong>WeAce Beta</strong> — features are actively improving.</span>
+  <span>Found a bug?<a href="mailto:hello@weace.mn">Tell us</a></span>
+  <span class="beta-close" onclick="this.parentElement.style.display='none'" title="Dismiss">✕</span>
+</div>
+
 <div class="topbar">
   <div class="tb-l"><div class="tb-title" id="pg-title">Dashboard</div><div class="streak">🔥 <span id="streak-num">0</span> хоног</div></div>
   <div class="tb-r"><button class="btn sec" onclick="goNav('daily',document.querySelector('[data-pg=daily]'))">Daily</button><button class="btn pri" onclick="go('mixed',null)">Practice Now →</button></div>
@@ -723,7 +873,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
       <div style="font-size:14px;font-weight:700;margin-bottom:3px">Plus plan required</div>
       <div style="font-size:12px;color:var(--muted)">₮19,900/month</div>
     </div>
-    <button class="btn blue" onclick="activatePlan('plus')">Get Plus →</button>
+    <button class="btn blue" onclick="openWaitlist()">Join Beta Waitlist →</button>
   </div>
 
   <!-- Correct SAT Structure -->
@@ -953,395 +1103,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:
 </div>
 
 <!-- ═══════════════ PAYMENT PAGE ═══════════════ -->
-<div id="app-payment" class="wa-page" style="display:none;min-height:100vh;background:#060608;box-sizing:border-box;">
-  <div style="min-height:100vh;background:var(--bg);display:flex;flex-direction:column;align-items:center;padding:2rem">
-<div class="wrap">
-  <!-- Header -->
-  <div class="logo" onclick="goBack()">We<em>Ace</em></div>
-  <div class="back-link" onclick="goBack()">← Back to dashboard</div>
-
-  <!-- Step 1: Choose method -->
-  <div class="pay-step on" id="step-choose">
-    <!-- Plan summary -->
-    <div class="plan-card" id="plan-display">
-      <div class="plan-badge plus" id="plan-badge-el">PLUS</div>
-      <div class="plan-header">
-        <div>
-          <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">You are subscribing to</div>
-          <div class="plan-name" id="plan-name-el">Plus Plan</div>
-        </div>
-        <div style="text-align:right">
-          <div class="plan-price" id="plan-price-el">₮19,900 <span>/month</span></div>
-        </div>
-      </div>
-      <div class="plan-feats" id="plan-feats-el">
-        <div class="pf"><div class="pf-ic">✓</div>Mock exam engine (54+44 questions)</div>
-        <div class="pf"><div class="pf-ic">✓</div>Detailed score analysis</div>
-        <div class="pf"><div class="pf-ic">✓</div>Predicted SAT score</div>
-        <div class="pf"><div class="pf-ic">✓</div>All Free features</div>
-      </div>
-    </div>
-
-    <!-- Payment methods -->
-    <span class="section-title">Payment method</span>
-    <div class="method-grid">
-      <div class="method-card selected" id="method-qpay" onclick="selectMethod('qpay')">
-        <div class="qpay-logo">Q</div>
-        <div class="method-name">QPay</div>
-        <div class="method-desc">Most popular in MN</div>
-      </div>
-      <div class="method-card" id="method-socialpay" onclick="selectMethod('socialpay')">
-        <div class="khan-logo">Khan</div>
-        <div class="method-name">SocialPay</div>
-        <div class="method-desc">Khan Bank</div>
-      </div>
-      <div class="method-card" id="method-bank" onclick="selectMethod('bank')">
-        <div class="method-logo">🏦</div>
-        <div class="method-name">Bank Transfer</div>
-        <div class="method-desc">Any Mongolian bank</div>
-      </div>
-      <div class="method-card" id="method-card" onclick="selectMethod('card')">
-        <div class="method-logo">💳</div>
-        <div class="method-name">Card</div>
-        <div class="method-desc">Visa · Mastercard</div>
-      </div>
-    </div>
-
-    <button class="btn pri" onclick="proceedPayment()">Continue to payment →</button>
-
-    <div class="security">
-      <span class="security-ic">🔒</span>
-      Secure payment · SSL encrypted · No card data stored
-    </div>
-  </div>
-
-  <!-- Step 2a: QPay QR -->
-  <div class="pay-step" id="step-qpay">
-    <div class="qr-panel">
-      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Scan with QPay</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Open QPay app → Scan QR → Confirm payment</div>
-      <div class="qr-box" id="qr-container">
-        <!-- Generated QR code via JS -->
-        <div id="qr-svg-holder"></div>
-      </div>
-      <div class="qr-timer">⏱ Expires in: <strong id="qr-countdown">10:00</strong></div>
-      <div class="qr-hint">Amount: <strong id="qr-amount">₮19,900</strong> · WeAce SAT Prep</div>
-      <div class="qr-apps">
-        <div class="qr-app">QPay</div>
-        <div class="qr-app">Khan Bank</div>
-        <div class="qr-app">Golomt</div>
-        <div class="qr-app">TDB</div>
-      </div>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change method</button>
-      <button class="btn pri" onclick="simulatePaymentSuccess()">✓ I've paid (Demo)</button>
-    </div>
-
-    <div style="margin-top:1rem;text-align:center">
-      <span class="status-dot checking"></span>
-      <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)" id="status-text">Waiting for payment...</span>
-    </div>
-  </div>
-
-  <!-- Step 2b: SocialPay -->
-  <div class="pay-step" id="step-socialpay">
-    <div class="qr-panel">
-      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">SocialPay (Khan Bank)</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">Khan Bank app-аар төлбөр хийнэ үү</div>
-      <div style="font-size:48px;margin-bottom:1rem">📱</div>
-      <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:10px;padding:1rem;text-align:left;margin-bottom:1rem">
-        <div class="bank-row"><span class="bank-lbl">Дансны дугаар</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000 1234 5678',this)">Copy</button></span></div>
-        <div class="bank-row"><span class="bank-lbl">Банк</span><span class="bank-val">Khan Bank (Хаан банк)</span></div>
-        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" id="socialpay-amount">₮19,900</span></div>
-        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="socialpay-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
-      </div>
-      <div style="font-size:11.5px;color:var(--hint);line-height:1.65">Гүйлгээний утгыг заавал оруулна уу — таны эрхийг идэвхжүүлэхэд ашиглагдана.</div>
-    </div>
-    <div class="btn-row">
-      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
-      <button class="btn khan-btn" onclick="simulatePaymentSuccess()">Төлбөр хийсэн ✓</button>
-    </div>
-  </div>
-
-  <!-- Step 2c: Bank Transfer -->
-  <div class="pay-step" id="step-bank">
-    <div class="qr-panel" style="text-align:left">
-      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem;text-align:center">Bank Transfer</div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem;text-align:center">Дараах дансанд шилжүүлэг хийнэ үү</div>
-      <div class="bank-info">
-        <div class="bank-row"><span class="bank-lbl">Байгууллагын нэр</span><span class="bank-val">WeAce Education LLC</span></div>
-        <div class="bank-row"><span class="bank-lbl">Гolomt Bank</span><span class="bank-val">1301 2345 6789 <button class="copy-btn" onclick="copyText('1301234567890',this)">Copy</button></span></div>
-        <div class="bank-row"><span class="bank-lbl">Khan Bank</span><span class="bank-val">5000 1234 5678 <button class="copy-btn" onclick="copyText('5000123456780',this)">Copy</button></span></div>
-        <div class="bank-row"><span class="bank-lbl">TDB</span><span class="bank-val">4921 0000 1234 <button class="copy-btn" onclick="copyText('4921000012340',this)">Copy</button></span></div>
-        <div class="bank-row"><span class="bank-lbl">Дүн</span><span class="bank-val" style="color:var(--green)" id="bank-amount">₮19,900</span></div>
-        <div class="bank-row"><span class="bank-lbl">Гүйлгээний утга</span><span class="bank-val">WEACE <span id="bank-ref"></span> <button class="copy-btn" onclick="copyRef(this)">Copy</button></span></div>
-      </div>
-      <div style="background:var(--ad);border:1px solid var(--am);border-radius:8px;padding:10px 14px;font-size:11.5px;color:var(--amber);line-height:1.65">
-        ⚠️ <strong>Гүйлгээний утгыг заавал оруулна уу.</strong> Таны гүйлгээ 1–2 цагийн дотор баталгаажна. Асуулт байвал: hello@weace.mn
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
-      <button class="btn pri" onclick="simulatePaymentSuccess()">Шилжүүлэг хийсэн ✓</button>
-    </div>
-  </div>
-
-  <!-- Step 2d: Card -->
-  <div class="pay-step" id="step-card">
-    <div class="qr-panel" style="text-align:left">
-      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:1.25rem;text-align:center">Card Payment</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:1rem">
-        <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Card number</label>
-          <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none;letter-spacing:2px" oninput="formatCard(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div>
-            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Expiry</label>
-            <input type="text" placeholder="MM/YY" maxlength="5" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" oninput="formatExpiry(this)" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
-          </div>
-          <div>
-            <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">CVV</label>
-            <input type="password" placeholder="•••" maxlength="4" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:14px;color:var(--text);outline:none" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
-          </div>
-        </div>
-        <div>
-          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:5px">Cardholder name</label>
-          <input type="text" placeholder="BATERDENE GANTULGA" style="width:100%;background:var(--bg3);border:1.5px solid var(--b2);border-radius:8px;padding:11px 13px;font-family:'DM Mono',monospace;font-size:13px;color:var(--text);outline:none;text-transform:uppercase" onfocus="this.style.borderColor='var(--green)'" onblur="this.style.borderColor='var(--b2)'"/>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--hint);margin-bottom:1rem">
-        🔒 Card data is processed securely. WeAce does not store your card details.
-      </div>
-      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:.5rem">
-        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">VISA</div>
-        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">Mastercard</div>
-        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:5px;padding:4px 10px;font-size:12px">UnionPay</div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn sec" style="width:auto;padding:12px 20px" onclick="goToStep('choose')">← Change</button>
-      <button class="btn pri" id="card-pay-btn" onclick="processCard()">Pay <span id="card-amount-btn">₮19,900</span> →</button>
-    </div>
-  </div>
-
-  <!-- Step 3: Processing -->
-  <div class="pay-step" id="step-processing">
-    <div style="text-align:center;padding:3rem 1rem">
-      <div class="spinner"></div>
-      <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin-bottom:.5rem">Processing payment...</div>
-      <div style="font-size:12px;color:var(--muted)">Please wait a moment</div>
-    </div>
-  </div>
-
-  <!-- Step 4: Success -->
-  <div class="pay-step" id="step-success">
-    <div class="success-panel">
-      <div class="success-icon">🎉</div>
-      <div class="success-title">Payment Successful!</div>
-      <div class="success-sub" id="success-msg">
-        Your <strong id="success-plan">Plus</strong> plan is now active.<br>
-        All features have been unlocked for your account.
-      </div>
-      <div style="background:var(--bg2);border:1px solid var(--b2);border-radius:12px;padding:1rem 1.25rem;text-align:left;margin-bottom:1.75rem;max-width:320px;margin-left:auto;margin-right:auto">
-        <div class="bank-row"><span class="bank-lbl">Plan</span><span class="bank-val" id="rec-plan">Plus</span></div>
-        <div class="bank-row"><span class="bank-lbl">Amount</span><span class="bank-val" id="rec-amount">₮19,900/month</span></div>
-        <div class="bank-row"><span class="bank-lbl">Date</span><span class="bank-val" id="rec-date"></span></div>
-        <div class="bank-row"><span class="bank-lbl">Ref</span><span class="bank-val" style="font-family:'DM Mono',monospace;font-size:10px" id="rec-ref"></span></div>
-      </div>
-      <button class="btn pri" style="max-width:280px;margin:0 auto" onclick="goToDashboard()">Go to Dashboard →</button>
-    </div>
-  </div>
-</div>
-</div>
-</div>
+<div id="app-payment" class="wa-page" style="display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:3rem 1.5rem;min-height:100vh;">
+  <div style="font-size:48px;margin-bottom:1rem">🚀</div>
+  <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:900;margin-bottom:.5rem">Premium Plans Coming Soon</div>
+  <div style="color:var(--muted);font-size:14px;max-width:400px;line-height:1.7;margin-bottom:2rem">WeAce Plus and Pro are launching soon with real payment. Join the waitlist for early access and a founding member discount.</div>
+  <a href="mailto:hello@weace.mn?subject=WeAce%20Beta%20Waitlist" style="display:inline-block;padding:13px 26px;background:var(--purple);color:#fff;border-radius:9px;font-weight:700;font-size:14px;text-decoration:none;margin-bottom:.75rem">✉️ Join Beta Waitlist</a><br>
+  <button onclick="showPage('dashboard')" style="padding:10px 20px;background:var(--bg3);border:1px solid var(--b2);border-radius:8px;color:var(--muted);font-size:13px;cursor:pointer;margin-top:.5rem">← Back to Dashboard</button>
 </div>
 
 <script>
-
-/* ── ROUTER ── */
-var _currentPage='intro';
-function showPage(page){
-  ['intro','choose','dashboard','payment'].forEach(function(p){
-    var el=document.getElementById('app-'+p);
-    if(el){ el.style.display='none'; }
-  });
-  var target=document.getElementById('app-'+page);
-  if(target){ target.style.display='block'; _currentPage=page; }
-  window.scrollTo(0,0);
-  /* Show/hide canvas */
-  var cv=document.getElementById('bg-canvas');
-  if(cv) cv.style.display=(page==='intro')?'block':'none';
-  /* Page init */
-  if(page==='dashboard'){
-    try{buildTGrids();vcRender();updateAll();applyLang();renderMockResults();}catch(e){console.log('dash:',e.message);}
-  }
-  if(page==='choose'){ try{initChoosePage();}catch(e){} }
-  if(page==='payment'){ try{initPaymentPage();}catch(e){} }
-  if(page==='intro'){
-    try{setIntroLang(_introLang||'mn');}catch(e){}
-    /* Check session for logged-in state */
-    try{
-      var s=JSON.parse(localStorage.getItem('weace_session')||'null');
-      if(s&&s.name&&s.email){
-        var cont=document.getElementById('nav-continue');if(cont)cont.style.display='inline-block';
-        var si=document.getElementById('nav-signin');if(si)si.style.display='none';
-        var su=document.getElementById('nav-signup');if(su)su.style.display='none';
-        var g=document.getElementById('hero-ctas-guest');if(g)g.style.display='none';
-        var u=document.getElementById('hero-ctas-user');if(u)u.style.display='flex';
-        var hs=document.getElementById('hero-sub');if(hs)hs.textContent='Welcome back, '+s.name.split(' ')[0]+'! Continue your SAT prep.';
-      }else{
-        var cont2=document.getElementById('nav-continue');if(cont2)cont2.style.display='none';
-        var si2=document.getElementById('nav-signin');if(si2)si2.style.display='';
-        var su2=document.getElementById('nav-signup');if(su2)su2.style.display='';
-        var g2=document.getElementById('hero-ctas-guest');if(g2)g2.style.display='flex';
-        var u2=document.getElementById('hero-ctas-user');if(u2)u2.style.display='none';
-      }
-    }catch(e){}
-  }
-}
-function logout(){
-  localStorage.removeItem('weace_session');
-  localStorage.removeItem('weace_user');
-  localStorage.removeItem('weace_exam');
-  showPage('intro');
-}
-/* On load */
-(function(){
-  /* Start on intro */
-  showPage('intro');
-  /* Canvas animation */
-  try{
-    var cv=document.getElementById('bg-canvas');
-    if(cv&&cv.getContext){
-      var ctx=cv.getContext('2d');
-      var particles=[];
-      var COLORS=['#22c55e','#3b82f6','#a855f7','#f59e0b'];
-      function resize(){ cv.width=window.innerWidth; cv.height=window.innerHeight; }
-      function Particle(){ this.x=Math.random()*cv.width; this.y=Math.random()*cv.height; this.r=Math.random()*2+1; this.vx=(Math.random()-.5)*.4; this.vy=(Math.random()-.5)*.4; this.color=COLORS[Math.floor(Math.random()*COLORS.length)]; this.alpha=Math.random()*.5+.2; }
-      Particle.prototype.update=function(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0)this.x=cv.width; if(this.x>cv.width)this.x=0; if(this.y<0)this.y=cv.height; if(this.y>cv.height)this.y=0; };
-      function animate(){ if(!ctx||document.getElementById('app-intro').style.display==='none')return; ctx.clearRect(0,0,cv.width,cv.height); particles.forEach(function(p){p.update();ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.globalAlpha=p.alpha;ctx.fill();ctx.globalAlpha=1;}); requestAnimationFrame(animate); }
-      window.addEventListener('resize',resize);
-      resize();
-      for(var i=0;i<60;i++) particles.push(new Particle());
-      animate();
-    }
-  }catch(e){}
-})();
-
-
-var _introLang=(function(){try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';}})();
-var INTRO_T={mn:{signin:'Нэвтрэх',signup:'Үнэгүй эхлэх'},en:{signin:'Sign in',signup:'Get started free'}};
-function setIntroLang(lang){
-  _introLang=lang;
-  try{localStorage.setItem('weace_lang',lang);}catch(e){}
-  var si=document.getElementById('nav-signin');if(si)si.textContent=INTRO_T[lang]&&INTRO_T[lang].signin||'Sign in';
-  var su=document.getElementById('nav-signup');if(su)su.textContent=INTRO_T[lang]&&INTRO_T[lang].signup||'Get started free';
-  var mn=document.getElementById('intro-lang-mn'),en=document.getElementById('intro-lang-en');
-  if(mn)mn.style.background=lang==='mn'?'rgba(34,197,94,.1)':'transparent';
-  if(mn)mn.style.color=lang==='mn'?'#22c55e':'#8a8a9a';
-  if(en)en.style.background=lang==='en'?'rgba(34,197,94,.1)':'transparent';
-  if(en)en.style.color=lang==='en'?'#22c55e':'#8a8a9a';
-}
-
-
-var _chooseLang = (function(){ try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';} })();
-var _sessCh=null; try{_sessCh=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
-
-function initChoosePage(){
-  try{
-    var sess=JSON.parse(localStorage.getItem('weace_session')||'null');
-    if(!sess||!sess.name){showPage('intro');return;}
-    var p=(sess.name||'').trim().split(' ');
-    var ini=((p[0]?p[0][0]:'')+(p[1]?p[1][0]:'')).toUpperCase()||'W';
-    var a=document.getElementById('ch-ava');if(a)a.textContent=ini;
-    var n=document.getElementById('ch-name');if(n)n.textContent=sess.name;
-    var pl=document.getElementById('ch-plan');if(pl)pl.textContent={free:'Free',plus:'Plus',pro:'Pro'}[sess.plan||'free']||'Free';
-    chooseApplyLang(_chooseLang||'mn');
-  }catch(e){ console.log('choose init:',e.message); }
-}
-function chooseExam(exam){
-  if(exam==='sat'){
-    try{ var s=JSON.parse(localStorage.getItem('weace_session')||'{}'); s.exam=exam; localStorage.setItem('weace_session',JSON.stringify(s)); }catch(e){}
-    showPage('dashboard');
-    try{buildTGrids();vcRender();updateAll();applyLang();renderMockResults();}catch(e){}
-  }else{ alert('Coming soon! Join waitlist: hello@weace.mn'); }
-}
-function chooseApplyLang(lang){
-  _chooseLang=lang;
-  try{localStorage.setItem('weace_lang',lang);}catch(e){}
-  var mn=document.getElementById('ch-lang-mn'),en=document.getElementById('ch-lang-en');
-  if(mn)mn.className='lang-btn'+(lang==='mn'?' on':'');
-  if(en)en.className='lang-btn'+(lang==='en'?' on':'');
-}
-function chooseSetLang(lang){ chooseApplyLang(lang); }
-
-
-var _payRef='WEACE-'+Math.random().toString(36).substr(2,8).toUpperCase();
-var PLANS={
-  plus:{name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',feats:['Mock exam engine (54+44 Qs)','Detailed score analysis','Predicted SAT score','All Free features']},
-  pro:{name:'Pro Plan',price:'₮29,900',badge:'PRO',badgeClass:'pro',feats:['Everything in Plus','Human Tutor 1:1','6 Video Courses','Personal study plan']}
-};
-function initPaymentPage(){
-  try{
-    var plan=PLANS[window._payPlan||'plus']||PLANS.plus;
-    var el;
-    el=document.getElementById('plan-name-el');if(el)el.textContent=plan.name;
-    el=document.getElementById('plan-price-el');if(el)el.innerHTML=plan.price+' <span>/month</span>';
-    el=document.getElementById('plan-badge-el');if(el){el.textContent=plan.badge;el.className='plan-badge '+plan.badgeClass;}
-    el=document.getElementById('plan-feats-el');if(el)el.innerHTML=plan.feats.map(function(f){return'<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>';}).join('');
-    ['qr-amount','socialpay-amount','bank-amount'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=plan.price;});
-    el=document.getElementById('card-amount-btn');if(el)el.textContent=plan.price;
-    document.querySelectorAll('[id$="-ref"]').forEach(function(e){e.textContent=_payRef;});
-    el=document.getElementById('socialpay-ref');if(el)el.textContent=_payRef;
-    el=document.getElementById('bank-ref');if(el)el.textContent=_payRef;
-    el=document.getElementById('rec-date');if(el)el.textContent=new Date().toLocaleDateString();
-    el=document.getElementById('rec-ref');if(el)el.textContent=_payRef;
-    el=document.getElementById('success-plan');if(el)el.textContent=plan.name;
-    el=document.getElementById('rec-plan');if(el)el.textContent=plan.name;
-    el=document.getElementById('rec-amount');if(el)el.textContent=plan.price+'/month';
-    try{generateQR();}catch(e){}
-    startQrTimer();
-  }catch(e){ console.log('pay init:',e.message); }
-}
-function simulatePaymentSuccess(){
-  try{ var s=JSON.parse(localStorage.getItem('weace_session')||'{}'); s.plan=window._payPlan||'plus'; localStorage.setItem('weace_session',JSON.stringify(s)); var st=JSON.parse(localStorage.getItem('weace_v9')||'{}'); st.plan=window._payPlan||'plus'; localStorage.setItem('weace_v9',JSON.stringify(st)); localStorage.removeItem('weace_pending_plan'); }catch(e){}
-  goToStep('processing');
-  setTimeout(function(){ goToStep('success'); },1500);
-}
-function goBack(){ showPage('dashboard'); }
-function goToDashboard(){ showPage('dashboard'); }
-function copyText(text,btn){ try{navigator.clipboard.writeText(text);}catch(e){} btn.textContent='Copied!'; btn.className=(btn.className||'')+' copied'; setTimeout(function(){btn.textContent='Copy';btn.className=(btn.className||'').replace(' copied','');},2000); }
-function copyRef(btn){ copyText(_payRef,btn); }
-function selectMethod(m){
-  document.querySelectorAll('.method-card').forEach(function(c){c.classList.remove('selected');});
-  var el=document.getElementById('method-'+m); if(el)el.classList.add('selected');
-}
-function proceedPayment(){
-  var sel='qpay';
-  document.querySelectorAll('.method-card').forEach(function(c){if(c.classList.contains('selected'))sel=c.id.replace('method-','');});
-  if(sel==='qpay'){goToStep('qpay');try{startQrTimer();}catch(e){}}
-  else if(sel==='socialpay')goToStep('socialpay');
-  else if(sel==='bank')goToStep('bank');
-  else if(sel==='card')goToStep('card');
-}
-function goToStep(step){ document.querySelectorAll('.pay-step').forEach(function(s){s.classList.remove('on');}); var el=document.getElementById('step-'+step);if(el)el.classList.add('on'); }
-var _qrTimer=null;
-function startQrTimer(){ var secs=600; clearInterval(_qrTimer); _qrTimer=setInterval(function(){ secs--; var m=Math.floor(secs/60),s=secs%60; var el=document.getElementById('qr-countdown');if(el)el.textContent=m+':'+(s<10?'0':'')+s; if(secs<=0){clearInterval(_qrTimer);} },1000); }
-function generateQR(){ var h=document.getElementById('qr-svg-holder');if(!h)return; var size=21,cells=[]; for(var r=0;r<size;r++){cells[r]=[];for(var c=0;c<size;c++){if((r<7&&c<7)||(r<7&&c>13)||(r>13&&c<7)){cells[r][c]=1;}else{cells[r][c]=(Math.floor(Math.random()*2));}}} var cell=8,svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(size*cell)+' '+(size*cell)+'"><rect width="100%" height="100%" fill="white"/>'; for(var r2=0;r2<size;r2++)for(var c2=0;c2<size;c2++)if(cells[r2][c2])svg+='<rect x="'+(c2*cell)+'" y="'+(r2*cell)+'" width="'+cell+'" height="'+cell+'" fill="#000"/>'; svg+='</svg>'; h.innerHTML=svg; }
-function formatCard(input){var v=input.value.replace(/\D/g,'').substr(0,16);input.value=v.replace(/(.{4})/g,'$1 ').trim();}
-function formatExpiry(input){var v=input.value.replace(/\D/g,'').substr(0,4);if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2);input.value=v;}
-function processCard(){ var btn=document.getElementById('card-pay-btn');if(btn){btn.textContent='Processing...';btn.disabled=true;} goToStep('processing'); setTimeout(simulatePaymentSuccess,2000); }
-
-
-function goBack(){ showPage('dashboard'); }
-function goToDashboardFromPay(){ showPage('dashboard'); }
-
-
-
-/* ── APP ROUTER ── */
 var _currentPage = 'intro';
 
 function showPage(page) {
@@ -1387,23 +1157,7 @@ function initChoosePage() {
   }catch(e){ console.log('choose init:', e.message); }
 }
 
-function initPaymentPage() {
-  try{
-    var plan = (typeof PLANS !== 'undefined' ? PLANS : {})[window._payPlan||'plus'];
-    if(!plan) plan = {name:'Plus Plan',price:'₮19,900',badge:'PLUS',badgeClass:'plus',feats:['Mock exams','Score analysis','All free features']};
-    var el;
-    el = document.getElementById('plan-name-el'); if(el) el.textContent = plan.name;
-    el = document.getElementById('plan-price-el'); if(el) el.innerHTML = plan.price + ' <span>/month</span>';
-    el = document.getElementById('plan-badge-el'); if(el){ el.textContent = plan.badge; el.className = 'plan-badge ' + plan.badgeClass; }
-    el = document.getElementById('plan-feats-el');
-    if(el && plan.feats) el.innerHTML = plan.feats.map(function(f){ return '<div class="pf"><div class="pf-ic">✓</div>'+f+'</div>'; }).join('');
-    ['qr-amount','socialpay-amount','bank-amount'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=plan.price; });
-    el = document.getElementById('card-amount-btn'); if(el) el.textContent = plan.price;
-    el = document.getElementById('rec-date'); if(el) el.textContent = new Date().toLocaleDateString();
-    el = document.getElementById('success-plan'); if(el) el.textContent = plan.name;
-    if(typeof generateQR === 'function') generateQR();
-  }catch(e){ console.log('pay init:', e.message); }
-}
+function initPaymentPage(){ openWaitlist(); }
 
 /* Override logout */
 function _orig_logout() { /* replaced */ }
@@ -1526,21 +1280,28 @@ function toggleFAQ(el) { el.parentElement.classList.toggle('open'); }
 
 /* ── AUTH STORAGE ── */
 var USERS_KEY = 'weace_users';
-var SESSION_KEY = 'weace_session';
+// ── SUPABASE AUTH ──
+// Project URL and anon key (safe to expose in client-side code)
+var SUPABASE_URL = 'https://YOUR_PROJECT_ID.supabase.co';
+var SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';
+var _supabase = null;
+try {
+  _supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+} catch(e) { console.warn('Supabase init failed, falling back to localStorage:', e.message); }
 
+var SESSION_KEY = 'weace_session';
+var USERS_KEY = 'weace_users';
+
+// Legacy localStorage helpers (fallback when Supabase not configured)
 function getUsers() { try { return JSON.parse(localStorage.getItem(USERS_KEY) || '{}'); } catch(e) { return {}; } }
 function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
 function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch(e) { return null; } }
 function saveSession(s) { localStorage.setItem(SESSION_KEY, JSON.stringify(s)); }
 
-/* Check if already logged in */
-(function() {
-  var sess = getSession();
-  if (sess && sess.email) {
-    var nav_ctas = document.getElementById('nav-ctas');
-    if (nav_ctas) nav_ctas.innerHTML = '<span style="font-family:var(--fm);font-size:11px;color:var(--muted);margin-right:6px">'+sess.name+'</span><button class="btn p" onclick="goToDashboard()">Open dashboard →</button>';
-  }
-})();
+// Check if Supabase is configured (not placeholder values)
+function supabaseReady() {
+  return _supabase && SUPABASE_URL.indexOf('YOUR_PROJECT') === -1;
+}
 
 }catch(e){/* no canvas in this context */}
 })();
@@ -1651,23 +1412,48 @@ function doSignup() {
   if (!email || !email.includes('@')) { showError('Please enter a valid email address.'); return; }
   if (pass.length < 8) { showError('Password must be at least 8 characters.'); return; }
 
-  var users = getUsers();
-  if (users[email]) { showError('An account with this email already exists. Sign in instead.'); return; }
+  var btn = document.querySelector('.auth-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating account…'; }
 
-  // Create account
-  var user = { name: name, email: email, password: pass, plan: wantPro ? 'pro' : 'free', createdAt: new Date().toISOString() };
-  users[email] = user;
-  saveUsers(users);
-
-  // Save session
-  var session = { email: email, name: name, plan: user.plan };
-  saveSession(session);
-
-  // Also save user context for dashboard
-  localStorage.setItem('weace_user', JSON.stringify(session));
-
-  showSuccess('&#x1F389; Account created! Redirecting to your dashboard...');
-  setTimeout(goToDashboard, 1200);
+  if (supabaseReady()) {
+    // ── REAL SUPABASE SIGNUP ──
+    _supabase.auth.signUp({
+      email: email,
+      password: pass,
+      options: { data: { full_name: name } }
+    }).then(function(result) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Create account →'; }
+      var err = result.error;
+      if (err) { showError(err.message); return; }
+      var user = result.data.user;
+      if (!user) { showError('Signup failed. Please try again.'); return; }
+      var session = { email: email, name: name, plan: 'free', uid: user.id };
+      saveSession(session);
+      localStorage.setItem('weace_user', JSON.stringify(session));
+      showSuccess('🎉 Account created! Redirecting...');
+      setTimeout(goToDashboard, 1000);
+    }).catch(function(e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Create account →'; }
+      showError('Network error. Please try again.');
+    });
+  } else {
+    // ── FALLBACK: localStorage (dev mode) ──
+    var users = getUsers();
+    if (users[email]) { 
+      if (btn) { btn.disabled = false; btn.textContent = 'Create account →'; }
+      showError('An account with this email already exists. Sign in instead.'); 
+      return; 
+    }
+    var user = { name: name, email: email, password: pass, plan: 'free', createdAt: new Date().toISOString() };
+    users[email] = user;
+    saveUsers(users);
+    var session = { email: email, name: name, plan: 'free' };
+    saveSession(session);
+    localStorage.setItem('weace_user', JSON.stringify(session));
+    if (btn) { btn.disabled = false; btn.textContent = 'Create account →'; }
+    showSuccess('🎉 Account created! Redirecting...');
+    setTimeout(goToDashboard, 1000);
+  }
 }
 
 function doLogin() {
@@ -1678,21 +1464,58 @@ function doLogin() {
   if (!email) { showError('Please enter your email address.'); return; }
   if (!pass) { showError('Please enter your password.'); return; }
 
-  var users = getUsers();
-  var user = users[email];
+  var btn = document.querySelector('#form-login .auth-submit');
+  if (btn) { btn.disabled = true; btn.textContent = 'Signing in…'; }
 
-  if (!user) { showError('No account found with this email. Create one for free!'); return; }
-  if (user.password !== pass) { showError('Incorrect password. Please try again.'); return; }
-
-  var session = { email: email, name: user.name, plan: user.plan };
-  saveSession(session);
-  localStorage.setItem('weace_user', JSON.stringify(session));
-
-  showSuccess('&#x2713; Welcome back, ' + user.name + '! Redirecting...');
-  setTimeout(goToDashboard, 1000);
+  if (supabaseReady()) {
+    // ── REAL SUPABASE LOGIN ──
+    _supabase.auth.signInWithPassword({ email: email, password: pass })
+    .then(function(result) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Sign in →'; }
+      var err = result.error;
+      if (err) { 
+        showError(err.message === 'Invalid login credentials' ? 'Incorrect email or password.' : err.message); 
+        return; 
+      }
+      var user = result.data.user;
+      var meta = user.user_metadata || {};
+      var name = meta.full_name || meta.name || email.split('@')[0];
+      var session = { email: email, name: name, plan: 'free', uid: user.id };
+      saveSession(session);
+      localStorage.setItem('weace_user', JSON.stringify(session));
+      showSuccess('✓ Welcome back, ' + name.split(' ')[0] + '!');
+      // Load progress from Supabase
+      loadProgressFromSupabase(user.id).then(function() {
+        setTimeout(goToDashboard, 700);
+      });
+    }).catch(function(e) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Sign in →'; }
+      showError('Network error. Please try again.');
+    });
+  } else {
+    // ── FALLBACK: localStorage ──
+    var users = getUsers();
+    var user = users[email];
+    if (!user) { 
+      if (btn) { btn.disabled = false; btn.textContent = 'Sign in →'; }
+      showError('No account found with this email. Create one for free!'); 
+      return; 
+    }
+    if (user.password !== pass) { 
+      if (btn) { btn.disabled = false; btn.textContent = 'Sign in →'; }
+      showError('Incorrect password. Please try again.'); 
+      return; 
+    }
+    var session = { email: email, name: user.name, plan: user.plan };
+    saveSession(session);
+    localStorage.setItem('weace_user', JSON.stringify(session));
+    if (btn) { btn.disabled = false; btn.textContent = 'Sign in →'; }
+    showSuccess('✓ Welcome back, ' + user.name.split(' ')[0] + '!');
+    setTimeout(goToDashboard, 700);
+  }
 }
 
-function goToDashboard() { showPage('choose'); }
+function goToDashboard() { showPage('dashboard'); try{buildTGrids();vcRender();updateAll();applyLang();}catch(e){} }
 
 /* Enter key support */
 document.addEventListener('keydown', function(e) {
@@ -1778,12 +1601,7 @@ function chooseExam(exam){
 }
 
 function _orig_logout2(){/* replaced */}
-function logout(){
-  localStorage.removeItem('weace_session');
-  localStorage.removeItem('weace_user');
-  localStorage.removeItem('weace_exam');
-  showPage('intro');
-}
+
 
 // Apply saved language on load
 
@@ -2995,6 +2813,10 @@ function loadS(){
     var s=JSON.parse(d);
     // Migrate: ensure all required fields exist
     if(!s.vocabKnown)s.vocabKnown=[];
+    if(!s.math||typeof s.math.c==='undefined')s.math={c:0,w:0};
+    if(!s.rw||typeof s.rw.c==='undefined')s.rw={c:0,w:0};
+    if(!s.topics)s.topics={};
+    if(!s.wrongQ)s.wrongQ=[];
     if(!s.wrongQ)s.wrongQ=[];
     if(!s.activity)s.activity=[];
     if(!s.topics)s.topics={};
@@ -3112,7 +2934,7 @@ function fmt(v){return v!==null?v+'%':'—';}
 function sv(id,val,dim){var e=document.getElementById(id);if(!e)return;e.textContent=val;if(dim)e.classList.add('cm');else e.classList.remove('cm');}
 function shuf(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var x=b[i];b[i]=b[j];b[j]=x;}return b;}
 function getWeak(){return Object.entries(S.topics).filter(function(e){var v=e[1];var t=v.c+v.w;return t>=3&&v.c/t<0.6;}).map(function(e){return{topic:e[0],acc:Math.round(e[1].c/(e[1].c+e[1].w)*100),isMath:e[1].isMath};}).sort(function(a,b){return a.acc-b.acc;});}
-function totalAns(){return S.math.c+S.math.w+S.rw.c+S.rw.w;}
+function totalAns(){if(!S||!S.math||!S.rw)return 0;return (S.math.c||0)+(S.math.w||0)+(S.rw.c||0)+(S.rw.w||0);}
 function overallAcc(){var t=totalAns();return t>0?Math.round((S.math.c+S.rw.c)/t*100):null;}
 
 /* NAV */
@@ -3456,13 +3278,7 @@ function renderFB(ok,q,ci){
     +'<div class="fb-explain">'+q.ex+'</div>'
     +mnH
     +'<div style="margin-bottom:1rem">'+acts+'</div>'
-    +'<div class="ai-box"><div class="ai-lbl">🤖 AI Тайлбар (Claude)</div>'
-    +'<div class="ai-btns">'
-    +'<button class="ai-btn" onclick="aiX(\'simple\',this)">Энгийнээр тайлбарла</button>'
-    +'<button class="ai-btn" onclick="aiX(\'step\',this)">Алхам алхмаар</button>'
-    +'<button class="ai-btn" onclick="aiX(\'mn\',this)">Монголоор 🇲🇳</button>'
-    +(ok?'':'<button class="ai-btn" onclick="aiX(\'why\',this)">Яагаад '+L[ci]+' буруу вэ?</button>')
-    +'</div><div class="ai-resp" id="ai-resp"></div></div>'
+    +''  /* AI explanation: coming soon */
     +'</div>';
 }
 
@@ -3923,7 +3739,7 @@ function renderPlanContent(){
 function toggleTask(el,key){el.classList.toggle('done');var d=el.classList.contains('done');el.textContent=d?'✓':'';var nm=el.nextElementSibling&&el.nextElementSibling.querySelector('div');if(nm){nm.style.textDecoration=d?'line-through':'';nm.style.color=d?'var(--hint)':'';}if(key){S.planDone[key]=d;save();}}
 
 /* PLAN ACTIVATION */
-function activatePlan(plan){ window._payPlan=plan; showPage('payment'); initPaymentPage(); }
+function activatePlan(plan){ openWaitlist(); }
 
 /* ── LANGUAGE SYSTEM ── */
 var LANG=(function(){try{return localStorage.getItem('weace_lang')||'mn';}catch(e){return 'mn';}}());
@@ -4076,12 +3892,7 @@ function switchCalc(type){
 
 /* ── AUTH ── */
 function _orig_logout2(){/* replaced */}
-function logout(){
-  localStorage.removeItem('weace_session');
-  localStorage.removeItem('weace_user');
-  localStorage.removeItem('weace_exam');
-  showPage('intro');
-}
+
 
 function resetAll(){
   if(!confirm(LANG==='mn'?'Бүх өгөгдлийг устгах уу?':'Delete all data?'))return;
@@ -4097,7 +3908,7 @@ function resetAll(){
 
 /* ── SESSION CHECK ── */
 var _sess=null;try{_sess=JSON.parse(localStorage.getItem('weace_session')||'null');}catch(e){}
-if(!_sess){showPage('intro');}
+if(_sess&&(_sess.email||_sess.name)){showPage('dashboard');}else{showPage('intro');}
 
 /* ── URL PARAMS ── */
 var urlParams={get:function(k){ return window._payPlan||'plus'; }};
@@ -4240,9 +4051,138 @@ function simulatePaymentSuccess(){
 }
 
 function goBack(){showPage('dashboard');}
-function goToDashboard(){showPage('dashboard');}
 
+
+function saveS(){
+  try{
+    localStorage.setItem(LS,JSON.stringify(S));
+    // Sync to Supabase for cross-device persistence
+    var sess = getSession();
+    if(sess && sess.uid) {
+      saveProgressToSupabase(sess.uid, S);
+    }
+  }catch(e){}
+}
+/* ── ROUTER ── */
+
+function openWaitlist() {
+  var email = (_sess && _sess.email) ? _sess.email : '';
+  var url = 'mailto:hello@weace.mn?subject=WeAce%20Beta%20Waitlist&body=I%20want%20early%20access%20to%20WeAce%20Plus%2FPro.%0A%0AEmail%3A%20' + encodeURIComponent(email);
+  // Simple inline modal
+  var existing = document.getElementById('waitlist-modal');
+  if (existing) { existing.remove(); return; }
+  var modal = document.createElement('div');
+  modal.id = 'waitlist-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem';
+  modal.innerHTML = '<div style="background:var(--bg2);border:1.5px solid var(--b2);border-radius:16px;padding:2rem;max-width:400px;width:100%;text-align:center">'
+    + '<div style="font-size:36px;margin-bottom:.75rem">🚀</div>'
+    + '<div style="font-family:Sora,sans-serif;font-size:20px;font-weight:800;margin-bottom:.5rem">Premium Coming Soon</div>'
+    + '<div style="color:var(--muted);font-size:13px;line-height:1.7;margin-bottom:1.5rem">WeAce Plus and Pro are launching soon with real payment processing. Join the waitlist to get early access and a founding member discount.</div>'
+    + '<a href="' + url + '" style="display:block;width:100%;padding:12px;background:var(--purple);color:#fff;border-radius:9px;font-weight:700;font-size:14px;text-decoration:none;margin-bottom:.75rem">✉️ Join Beta Waitlist</a>'
+    + '<button onclick="document.getElementById(\'waitlist-modal\').remove()" style="width:100%;padding:10px;background:var(--bg3);border:1px solid var(--b2);border-radius:9px;color:var(--muted);font-size:13px;cursor:pointer">Maybe later</button>'
+    + '</div>';
+  modal.onclick = function(e) { if(e.target === modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+function signInWithGoogle() {
+  if (!supabaseReady()) {
+    showError('Google sign-in requires Supabase setup. Use email for now.');
+    return;
+  }
+  _supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.href }
+  }).catch(function(e) { showError('Google sign-in failed: ' + e.message); });
+}
+
+function handleAuthCallback() {
+  if (!supabaseReady()) return;
+  _supabase.auth.getSession().then(function(result) {
+    var session = result.data && result.data.session;
+    if (!session) return;
+    var user = session.user;
+    var meta = user.user_metadata || {};
+    var name = meta.full_name || meta.name || user.email.split('@')[0];
+    var localSession = { email: user.email, name: name, plan: 'free', uid: user.id };
+    saveSession(localSession);
+    localStorage.setItem('weace_user', JSON.stringify(localSession));
+    loadProgressFromSupabase(user.id).then(function() { goToDashboard(); });
+  });
+}
+
+function saveProgressToSupabase(uid, data) {
+  if (!supabaseReady() || !uid) return Promise.resolve();
+  return _supabase.from('progress').upsert({
+    user_id: uid,
+    data: data,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' }).then(function(r) {
+    if (r.error) console.warn('Progress save error:', r.error.message);
+  });
+}
+
+function loadProgressFromSupabase(uid) {
+  if (!supabaseReady() || !uid) return Promise.resolve();
+  return _supabase.from('progress').select('data').eq('user_id', uid).single()
+  .then(function(result) {
+    if (result.error || !result.data) return;
+    try {
+      var saved = result.data.data;
+      if (saved && typeof saved === 'object') {
+        // Merge remote data with local (remote wins for cross-device sync)
+        var local = JSON.parse(localStorage.getItem('weace_v9') || '{}');
+        // Take the higher XP (user may have done work on both devices)
+        if (saved.xp > (local.xp || 0)) {
+          localStorage.setItem('weace_v9', JSON.stringify(Object.assign(local, saved)));
+          S = loadS(); // reload state
+        }
+      }
+    } catch(e) { console.warn('Progress load error:', e.message); }
+  });
+}
+
+function toggleMobileNav() {
+  var sb = document.querySelector('.sb');
+  var overlay = document.getElementById('sb-overlay');
+  if (!sb) return;
+  var isOpen = sb.classList.contains('mob-open');
+  if (isOpen) {
+    sb.classList.remove('mob-open');
+    overlay.classList.remove('visible');
+  } else {
+    sb.classList.add('mob-open');
+    overlay.classList.add('visible');
+  }
+}
+
+function closeMobileNav() {
+  var sb = document.querySelector('.sb');
+  var overlay = document.getElementById('sb-overlay');
+  if (sb) sb.classList.remove('mob-open');
+  if (overlay) overlay.classList.remove('visible');
+}
+
+function checkMobileUI() {
+  var topbar = document.getElementById('mob-topbar');
+  var menuBtn = document.getElementById('mobile-menu-btn');
+  var isMobile = window.innerWidth <= 768;
+  if (topbar) topbar.style.display = isMobile ? 'flex' : 'none';
+  if (menuBtn) menuBtn.style.display = isMobile ? 'flex' : 'none';
+}
+
+
+window.addEventListener('resize', checkMobileUI);
+document.addEventListener('DOMContentLoaded', function() {
+  checkMobileUI();
+  document.querySelectorAll('.ni').forEach(function(ni) {
+    ni.addEventListener('click', function() {
+      if (window.innerWidth <= 768) closeMobileNav();
+    });
+  });
+});
 
 </script>
+
 </body>
 </html>
